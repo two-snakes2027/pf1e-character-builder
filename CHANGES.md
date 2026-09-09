@@ -4,6 +4,36 @@ Newest first. Each entry says what changed, why, and how to undo it.
 
 ---
 
+## 2026-09-09 — (j) SPELLS LIVE ON TAB 1
+
+The full spell list — per-spell school, effect, casting time, range, duration, save, SR,
+components and computed DC — now sits on **tab 1 directly under Spellcasting**, where the owner
+looked for it. Tab 2 was already the fullest tab even without spells. The compact duplicate
+summary added in (i) is gone; the real list is right beneath the slots.
+
+**Two self-inflicted breakages while doing it, both from editing HTML and JS by naive text
+search.** Worth recording because the pattern is the same one twice:
+
+1. **`node --check` is not a completeness check.** A python edit cut a block from `ui.js` by
+   line number and removed `wireTab2`, `renderSkills` and everything between. The file was still
+   *syntactically valid*, so `--check` passed cleanly while tab 2 was dead. Restored from the
+   pushed commit and redone with content-anchored boundaries plus a brace-balance assertion.
+
+2. **A 4-space search string matched inside a 6-space line.** Extracting the spells card ended
+   at `'    </div>\n'`, which occurs as a substring of `'      </div>\n'`. That truncated the
+   card and left a stray `</div>`, which closes `<section>` early — so Skills, Feats, Class
+   Features and Arduin all fell OUT of tab 2 and rendered orphaned outside any panel. The page
+   still looked plausible; only a DOM query found it.
+
+The move is now done by **matching `<div>` depth**, with assertions that the extracted block is
+balanced, contains the fields it should, and swallows no named function — and every panel's
+div balance is checked before writing, and again against the served page after deploying.
+
+**Verified live:** p1–p4 all balanced; skills, feats, class features and Arduin back inside p2;
+Spellcasting and Spells both in p1; 4 spell entries rendering for Rango.
+
+---
+
 ## 2026-09-09 — (i) SPELLS WHERE PEOPLE LOOK · SKILL RANKS · SEIZED GEAR
 
 **"Spells are not displayed" — and the spells were rendering perfectly.** On tab 2. The owner

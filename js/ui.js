@@ -708,58 +708,6 @@
       body.appendChild(box);
     });
 
-    /* THE SPELLS THEMSELVES, HERE. A card headed "Spellcasting" that lists only slots reads
-       as "my spells are missing" — which is exactly how it was reported. The full detail
-       stays on tab 2; this is the at-a-glance list where anyone looking for spells looks. */
-    if (known.length) {
-      const byLevel = {};
-      known.forEach(function (nm) {
-        const def = D.SPELL_BY_NAME[nm];
-        let lv = null;
-        if (def) {
-          cs.forEach(function (c) {
-            if (c.listKey && def.lv[c.listKey] !== undefined) {
-              lv = lv === null ? def.lv[c.listKey] : Math.min(lv, def.lv[c.listKey]);
-            }
-          });
-          if (lv === null) {
-            Object.keys(def.lv).forEach(function (k) {
-              lv = lv === null ? def.lv[k] : Math.min(lv, def.lv[k]);
-            });
-          }
-        }
-        const bucket = lv === null ? 'x' : lv;
-        (byLevel[bucket] = byLevel[bucket] || []).push(nm);
-      });
-
-      const box = el('div', 'entry');
-      const head = el('div', 'e-head');
-      head.appendChild(el('span', 'e-name', 'Spells known'));
-      head.appendChild(el('span', 'e-meta', known.length + ' recorded'));
-      box.appendChild(head);
-
-      const order = Object.keys(byLevel).filter(function (k) { return k !== 'x'; })
-        .map(Number).sort(function (a, b) { return a - b; });
-      if (byLevel.x) order.push('x');
-      order.forEach(function (lv) {
-        const row = el('div', 'spellfacts');
-        const label = el('span', 'sf');
-        label.appendChild(el('b', '', lv === 'x' ? 'unmatched'
-          : (lv === 0 ? ((cs[0] && cs[0].zeroLabel) || 'cantrips') : ordinal(lv))));
-        row.appendChild(label);
-        row.appendChild(el('span', '', byLevel[lv].join(', ')));
-        box.appendChild(row);
-      });
-      const jump = el('button', 'btn sm no-print', 'Full details on the Skills, Feats & Abilities tab →');
-      jump.style.marginTop = '8px';
-      jump.onclick = function () {
-        document.querySelector('[data-panel="p2"]').click();
-        const t = $('spellsCard');
-        if (t) window.scrollTo(0, window.scrollY + t.getBoundingClientRect().top - 12);
-      };
-      box.appendChild(jump);
-      body.appendChild(box);
-    }
   }
 
   /* ---------------------------------------------------------------- tab 2 */
