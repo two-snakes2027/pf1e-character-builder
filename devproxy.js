@@ -24,7 +24,8 @@ const BUILDER_PORT = Number(process.env.PF1CB_PORT || 8732);
 const SESSIONS = { toka: { user: 'melicious', role: 'player' }, tokdm: { user: 'dm', role: 'dm' } };
 
 function loadSnapshot() {
-  const p = path.join(process.env.HOME, 'Documents', 'Two_Snakes', 'two_snakes_data.json');
+  const p = process.env.PF1CB_SNAPSHOT
+    || path.join(process.env.HOME, 'Documents', 'Two_Snakes', 'two_snakes_data.json');
   try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch (e) { return {}; }
 }
 const SNAP = loadSnapshot();

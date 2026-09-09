@@ -48,6 +48,8 @@
 
     /* Is there a server behind this page? If so, sign in and pull; if not, stay local
        and say nothing — a file:// or static deployment is a supported way to run this. */
+    if (PF.STALE) PF.STALE.start();
+
     S.probe().then(function (r) {
       renderSync();
       if (r.active && r.status === 'signed-out') openLogin();
@@ -262,6 +264,12 @@
 
   function doSave() {
     if (saving) return;
+    /* Unlike import, a save is NOT refused — the character on screen is the player's real work
+       and losing it would be worse than storing an old-shaped record. Warn, then save. */
+    if (PF.STALE && PF.STALE.isStale()) {
+      toast('Heads up: this tab is running an older version. Saving anyway so nothing is lost — '
+        + 'reload afterwards.', 'warn', 9000);
+    }
     clearTimeout(saveTimer);
     S.saveLocalOnly(CH);
     if (E.isPristine(CH)) { toast('Nothing to save yet.', 'info'); return; }
@@ -1201,6 +1209,53 @@
     }, { placeholder: 'Search adventuring gear…' });
   }
 
+  /* Replaces every build previously imported from this same Two Snakes record, reusing the
+     first one's id so the stored file is overwritten instead of multiplied. */
+  function adoptImport(rec, existing) {
+    existing = existing || [];
+    const ch = IMP.toCharacter(rec);
+    let replaced = 0;
+
+    if (existing.length) {
+      ch.id = existing[0].id;                 /* overwrite the file already on record */
+      existing.slice(1).forEach(function (c) { S.remove(c.id); replaced++; });
+      replaced++;
+    }
+
+    CH = ch; S.saveLocalOnly(CH); S.setLast(CH.id); dirty = true;
+    document.querySelectorAll('.modal-back').forEach(function (n) { n.remove(); });
+    render();
+    renderSync();       /* renderAll does not touch the badge; without this it reads stale */
+    renderPicker();
+    toast((replaced ? 'Replaced your existing ' + (CH.name || 'character') + ' build'
+                    : 'Imported ' + (CH.name || 'character'))
+      + ' — ability scores, hit points and known spells came across. '
+      + 'The rules check will show how far the scores sit outside a legal point buy. '
+      + 'Press Save to keep it.', 'info', 11000);
+  }
+
+  function confirmReimport(rec, existing, higher, incomingLevel) {
+    const lv = E.totalLevel(higher);
+    modal('Replace a level ' + lv + ' ' + rec.name + '?', function (body) {
+      body.appendChild(el('p', '',
+        'The ' + rec.name + ' already on file is level ' + lv + ' — '
+        + (higher.levels || []).map(function (l) { return l.cls + ' ' + l.n; }).join(' / ')
+        + (higher.feats && higher.feats.length ? ', ' + higher.feats.length + ' feat(s)' : '')
+        + '. A fresh import arrives at level ' + incomingLevel
+        + ', so replacing it throws away that levelling. The pregame record cannot give it back.'));
+      body.appendChild(el('p', 'tiny',
+        'If you only meant to get back to that character, cancel and pick it from the '
+        + 'character list in the top bar instead.'));
+    }, [
+      { label: 'Cancel', fn: function (close) { close(); } },
+      {
+        label: 'Replace it', primary: true, fn: function (close) {
+          close(); adoptImport(rec, existing);
+        }
+      }
+    ]);
+  }
+
   /* ================================================================ modals */
   function modal(title, buildBody, buttons) {
     const back = el('div', 'modal-back');
@@ -1451,6 +1506,34 @@
      seen — your own current and archived characters, or everyone's if you are the DM. Building
      from scratch stays available through New. */
   function openImport() {
+    /* An import from a stale tab is what produced three wrong Rangos on 2026-09-09: it looks
+       like it worked and silently writes a character with no ability scores and no spells.
+       This is the one place worth refusing rather than warning. */
+    if (PF.STALE && PF.STALE.isStale()) return refuseStale('import');
+    if (PF.STALE) {
+      PF.STALE.check().then(function (isStale) {
+        if (isStale) refuseStale('import'); else reallyOpenImport();
+      });
+      return;
+    }
+    reallyOpenImport();
+  }
+
+  function refuseStale(what) {
+    modal('Reload before you ' + what, function (body) {
+      body.appendChild(el('p', '',
+        'This tab loaded an older version of the builder, and a stale tab ' + what + 's '
+        + 'characters wrongly — it looks like it worked and quietly leaves out ability scores '
+        + 'and spells.'));
+      body.appendChild(el('p', 'tiny',
+        'Nothing you have on screen is lost by reloading: the draft is kept in this browser.'));
+      const b = el('button', 'btn primary', 'Reload now');
+      b.onclick = function () { window.location.reload(true); };
+      body.appendChild(b);
+    }, [{ label: 'Not now', fn: function (close) { close(); } }]);
+  }
+
+  function reallyOpenImport() {
     modal('Import a Two Snakes character', function (body) {
       const status = el('div', 'tiny', 'Reading your Two Snakes characters…');
       body.appendChild(status);
@@ -1491,15 +1574,22 @@
             [rec.cls, rec.land, mine && rec.player ? 'player: ' + rec.player : '',
              rec.encounterCount ? rec.encounterCount + ' encounters' : ''].filter(Boolean).join(' · ')));
           row.onclick = function () {
-            const ch = IMP.toCharacter(rec);
-            CH = ch; S.saveLocalOnly(CH); dirty = true;
+            /* One Two Snakes character should not become a pile of near-identical files.
+               If a build from this exact record already exists, say so and let the player
+               choose — opening it is almost always what they meant. A second build is still
+               allowed, because the same character at two different levels is legitimate. */
+            /* A re-import REPLACES the build already on file for this character rather than
+               adding another near-identical one (owner) — UNLESS the build on file is a
+               HIGHER LEVEL than the import would produce, in which case replacing it would
+               throw away levelling that the pregame record cannot give back, so it has to be
+               a confirmed choice (owner). An import always arrives at level 1. */
+            const existing = S.findByTwoSnakesKey(rec.key);
+            const incomingLevel = E.totalLevel(IMP.toCharacter(rec));
+            const higher = existing.filter(function (c) { return E.totalLevel(c) > incomingLevel; })
+              .sort(function (a, b) { return E.totalLevel(b) - E.totalLevel(a); });
             document.querySelectorAll('.modal-back').forEach(function (n) { n.remove(); });
-            render();
-            renderSync();     /* renderAll does not touch the badge; without this it reads stale */
-            toast('Imported ' + (CH.name || 'character')
-              + ' — ability scores, hit points and known spells came across. '
-              + 'The rules check will show how far the scores sit outside a legal point buy. '
-              + 'Press Save to keep it.', 'info', 11000);
+            if (higher.length) return confirmReimport(rec, existing, higher[0], incomingLevel);
+            adoptImport(rec, existing);
           };
           results.appendChild(row);
         });

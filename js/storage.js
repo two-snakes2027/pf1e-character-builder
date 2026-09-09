@@ -69,6 +69,15 @@
     if (lsGet(LAST) === id) lsDel(LAST);
   };
 
+  /* Every imported build records which Two Snakes record it came from. That makes a
+     re-import detectable, which is what stops the same character quietly accumulating one
+     new file per attempt. */
+  S.findByTwoSnakesKey = function (key) {
+    if (!key) return [];
+    return S.list().map(function (row) { return S.load(row.id); })
+      .filter(function (c) { return c && c.twoSnakes && c.twoSnakes.key === key; });
+  };
+
   S.lastId = function () { return lsGet(LAST); };
   S.setLast = function (id) { lsSet(LAST, id); };
 

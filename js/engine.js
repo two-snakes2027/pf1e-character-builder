@@ -73,6 +73,24 @@
     return true;
   };
 
+  /* Has anyone actually built on this character since it was imported? A freshly imported
+     record carries one seeded class level and nothing else; anything beyond that is work a
+     re-import would destroy. */
+  E.hasBuildWork = function (ch) {
+    if (!ch) return false;
+    if ((ch.feats || []).length) return true;
+    if ((ch.specials || []).length) return true;
+    if ((ch.magic || []).length) return true;
+    if (Object.keys(ch.skills || {}).some(function (k) { return (ch.skills[k].ranks || 0) > 0; })) return true;
+    if (E.totalLevel(ch) > 1) return true;
+    if (ch.armor !== 'None' || ch.shield !== 'None') return true;
+    if ((ch.notes || {}).session && ch.notes.session.trim()) return true;
+    if ((ch.notes || {}).personality && ch.notes.personality.trim()) return true;
+    if ((ch.notes || {}).appearance && ch.notes.appearance.trim()) return true;
+    if ((ch.notes || {}).allies && ch.notes.allies.trim()) return true;
+    return false;
+  };
+
   /* ------------------------------------------------------------------ levels */
   E.totalLevel = function (ch) {
     return (ch.levels || []).reduce(function (s, l) { return s + (l.n || 0); }, 0);

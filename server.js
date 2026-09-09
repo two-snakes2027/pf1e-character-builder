@@ -27,6 +27,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { URL } = require('url');
 
 const PORT = Number(process.env.PF1CB_PORT || 8732);
@@ -153,13 +154,69 @@ function serveStatic(req, res, urlPath) {
       'X-Content-Type-Options': 'nosniff',
       'Cache-Control': 'no-cache'
     });
+    if (req.method === 'HEAD') return res.end();
     res.end(buf);
   });
+}
+
+/* ------------------------------------------------------------------ build stamp
+   WHY THIS EXISTS. On 2026-09-09 a tab left open across a deploy imported a character three
+   times using the previous version's code: all-10 ability scores, no spells, saved to the
+   server twice more two hours after the fix was live. Nothing in the app could tell, and the
+   reload was a spoken instruction — which is a hope, not a mechanism.
+
+   Two Snakes already solved this for itself (GET /build, the served file's own md5). The
+   difference here is that this app is NOT one file: the stale asset was js/ui.js and
+   js/import_twosnakes.js, so hashing character_builder.html alone would have missed the very
+   bug that motivated this. The stamp covers EVERY file this server will serve. */
+let _buildCache = { key: '', hash: '' };
+
+function servableFiles() {
+  const out = [];
+  SERVE_FILES.forEach(function (f) { out.push(path.join(ROOT, f)); });
+  SERVE_DIRS.forEach(function (d) {
+    const dir = path.join(ROOT, d);
+    let names = [];
+    try { names = fs.readdirSync(dir); } catch (e) { return; }
+    names.forEach(function (n) {
+      const full = path.join(dir, n);
+      let st; try { st = fs.statSync(full); } catch (e) { return; }
+      if (st.isDirectory()) {
+        let sub = []; try { sub = fs.readdirSync(full); } catch (e) { return; }
+        sub.forEach(function (m) { out.push(path.join(full, m)); });
+      } else out.push(full);
+    });
+  });
+  return out.sort();
+}
+
+function buildStamp() {
+  try {
+    const files = servableFiles();
+    /* cheap key first: any change to any served file moves an mtime or a size */
+    const key = files.map(function (f) {
+      try { const st = fs.statSync(f); return f + ':' + st.mtimeMs + ':' + st.size; }
+      catch (e) { return f + ':0'; }
+    }).join('|');
+    if (key === _buildCache.key) return _buildCache.hash;
+    const h = crypto.createHash('md5');
+    files.forEach(function (f) {
+      try { h.update(f); h.update(fs.readFileSync(f)); } catch (e) { /* removed mid-scan */ }
+    });
+    _buildCache = { key: key, hash: h.digest('hex').slice(0, 12) };
+    return _buildCache.hash;
+  } catch (e) { return ''; }
 }
 
 /* ------------------------------------------------------------------ routes */
 const server = http.createServer(function (req, res) {
   const url = req.url || '/';
+
+  /* Pre-auth on purpose: a signed-out or long-idle tab is exactly the one most likely to be
+     running old code, and it must be able to find that out. */
+  if (url === '/api/build') {
+    return send(res, 200, { build: buildStamp() });
+  }
 
   if (url === '/api/health') {
     return send(res, 200, { ok: true, characters: Object.keys(DATA.characters).length });
@@ -178,7 +235,12 @@ const server = http.createServer(function (req, res) {
     });
   }
 
-  if (req.method !== 'GET') return send(res, 405, { error: 'method not allowed' });
+  /* HEAD is a legitimate way to inspect a static asset. It used to fall through to a 405,
+     which quietly misled a `curl -I` check of the cache headers into reading an error
+     response instead of the file's. */
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    return send(res, 405, { error: 'method not allowed' });
+  }
   return serveStatic(req, res, url);
 });
 

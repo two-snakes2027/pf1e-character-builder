@@ -4,6 +4,56 @@ Newest first. Each entry says what changed, why, and how to undo it.
 
 ---
 
+## 2026-09-09 — (g) STALE-TAB GUARD · RE-IMPORT OVERWRITES
+
+**The bug that caused this.** A tab left open across the (f) deploy imported Rango three times
+using the *previous* version's code — all-10 ability scores, no spells — and saved it to the
+server twice more **two hours after the fix was live**. The served files were correct the whole
+time. Nothing in the app could tell, and the remedy was a spoken "hard-reload", which is a hope
+rather than a mechanism. A fix nobody loads is not deployed.
+
+Two Snakes had already been bitten by this and built `GET /build` for it. **The difference here
+is that this app is not one file:** the stale assets were `js/ui.js` and `js/import_twosnakes.js`,
+so a stamp over `character_builder.html` alone would have missed the very bug that motivated it.
+
+**`GET /api/build` hashes every file the server will actually serve** — the allowlisted files
+plus everything under `js/` and `css/` — keyed on mtime+size so it is cheap to re-check.
+**Proved on the live box:** appending one comment to `js/ui.js` moved the stamp
+`403e0a8e…` → `09194910…` and restoring it moved it back.
+
+**`js/staleguard.js`** compares the stamp against the one the tab loaded with, on a 5-minute
+timer and on window focus / tab-visible — the moments a left-open tab is picked back up. It
+**fails open always** (a blip, a 404 mid-restart, or an empty stamp is never treated as stale)
+and **once stale, never flips back**. The banner is built in JS and appended to `<body>` so it
+cannot be styled away, is not a modal, and its exit is the reload button.
+
+**Import from a stale tab is refused, not warned** — it is the one action that looks like it
+worked while silently producing a character with no scores and no spells. **Save is only warned**,
+never blocked: the character on screen is the player's real work and losing it would be worse
+than storing an old-shaped record.
+
+### Re-import overwrites (owner)
+
+One Two Snakes character should not become a pile of near-identical files — that is how three
+Rangos happened. A re-import now **replaces** the build already on file, reusing its id so the
+stored record is overwritten rather than multiplied, and clearing any extra copies.
+
+**Unless the build on file is a HIGHER LEVEL than the import** (owner) — an import always
+arrives at level 1, so replacing a level-3 build throws away levelling the pregame record cannot
+give back. That case is a confirmed choice naming the level and classes at risk.
+
+*Known gap, stated rather than hidden:* a level-1 build carrying feats, skill ranks or armour is
+overwritten without a prompt, because the rule is level-based as specified. Say the word if that
+should also prompt.
+
+**Also fixed:** `HEAD` returned 405, which silently misled my own `curl -I` check of the cache
+headers into reading an error response instead of the file's. It now serves headers without a body.
+
+**Duplicates cleared:** all three stored Rangos deleted through the API with a DM session — never
+by hand-editing the data file under a running server. Store is empty and ready for a clean import.
+
+---
+
 ## 2026-09-09 — (f) EXPLICIT SAVE · RICHER IMPORT · SPELL SUMMARIES
 
 **1. Saving is explicit.** The server used to be written on a 900ms debounce after every edit,
