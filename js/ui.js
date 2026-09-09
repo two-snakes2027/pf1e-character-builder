@@ -24,6 +24,10 @@
     return n;
   };
   const sign = E.sign;
+  /* "1th 2 (DC 14)" was on the live sheet: the level was being concatenated with a hardcoded
+     "th". Spell levels only run 0-9 here, so a small table is enough and cannot go wrong. */
+  const ORDINAL = ['0th', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th'];
+  const ordinal = function (n) { return ORDINAL[n] || (n + 'th'); };
   const esc = function (s) { return String(s === undefined || s === null ? '' : s); };
 
   /* ================================================================ boot */
@@ -639,6 +643,9 @@
 
       const nameTd = el('td');
       nameTd.appendChild(el('span', w.equipped ? 'rowmark' : '', w.name));
+      /* A weapon keeps its rulebook name, so the seizure has to be shown rather than spelled
+         into the name the way an item's is. */
+      if (w.seized) nameTd.appendChild(el('span', ' badge warn', 'seized'));
       if (!w.proficient) nameTd.appendChild(el('span', ' badge warn', 'not proficient'));
       if (w.usesDex && w.hand !== 'ranged') nameTd.appendChild(el('span', ' tiny dim', ' finesse'));
       if (w.note) nameTd.appendChild(el('div', 'tiny dim', w.note));
@@ -668,9 +675,13 @@
   function renderCasting() {
     const card = $('castingCard'), body = $('castingBody');
     const cs = DER.casting || [];
-    card.hidden = cs.length === 0;
-    if (!cs.length) return;
+    const known = (CH.spells && CH.spells.known) || [];
+    /* Show it when there are spells even without caster levels — an imported character has
+       its spells before its class levels are rebuilt. */
+    card.hidden = cs.length === 0 && known.length === 0;
+    if (card.hidden) return;
     body.innerHTML = '';
+
     cs.forEach(function (c) {
       const box = el('div', 'entry');
       const head = el('div', 'e-head');
@@ -684,17 +695,71 @@
       const slots = Object.keys(c.slots).map(Number).sort(function (a, b) { return a - b; });
       const line = slots.map(function (L) {
         const n = c.slots[L];
-        const label = L === 0 ? (c.cantripsAtWill ? 'cantrips at will' : 'orisons ' + n) : L + 'th ' + n;
-        return label + (L > 0 ? ' (DC ' + (c.saveDcBase + L) + ')' : '');
+        if (L === 0) return c.cantripsAtWill ? (c.zeroLabel || 'cantrips') + ' at will'
+                                             : (c.zeroLabel || 'cantrips') + ' ' + n;
+        return ordinal(L) + ' ' + n + ' (DC ' + (c.saveDcBase + L) + ')';
       }).join('  ·  ');
       box.appendChild(el('div', 'e-body', line || 'No spell slots at this level.'));
       if (c.known) {
         const kn = Object.keys(c.known).map(Number).sort(function (a, b) { return a - b; })
-          .map(function (L) { return L + ': ' + c.known[L]; }).join('  ·  ');
+          .map(function (L) { return ordinal(L) + ' ' + c.known[L]; }).join('  ·  ');
         box.appendChild(el('div', 'tiny dim', 'spells known — ' + kn));
       }
       body.appendChild(box);
     });
+
+    /* THE SPELLS THEMSELVES, HERE. A card headed "Spellcasting" that lists only slots reads
+       as "my spells are missing" — which is exactly how it was reported. The full detail
+       stays on tab 2; this is the at-a-glance list where anyone looking for spells looks. */
+    if (known.length) {
+      const byLevel = {};
+      known.forEach(function (nm) {
+        const def = D.SPELL_BY_NAME[nm];
+        let lv = null;
+        if (def) {
+          cs.forEach(function (c) {
+            if (c.listKey && def.lv[c.listKey] !== undefined) {
+              lv = lv === null ? def.lv[c.listKey] : Math.min(lv, def.lv[c.listKey]);
+            }
+          });
+          if (lv === null) {
+            Object.keys(def.lv).forEach(function (k) {
+              lv = lv === null ? def.lv[k] : Math.min(lv, def.lv[k]);
+            });
+          }
+        }
+        const bucket = lv === null ? 'x' : lv;
+        (byLevel[bucket] = byLevel[bucket] || []).push(nm);
+      });
+
+      const box = el('div', 'entry');
+      const head = el('div', 'e-head');
+      head.appendChild(el('span', 'e-name', 'Spells known'));
+      head.appendChild(el('span', 'e-meta', known.length + ' recorded'));
+      box.appendChild(head);
+
+      const order = Object.keys(byLevel).filter(function (k) { return k !== 'x'; })
+        .map(Number).sort(function (a, b) { return a - b; });
+      if (byLevel.x) order.push('x');
+      order.forEach(function (lv) {
+        const row = el('div', 'spellfacts');
+        const label = el('span', 'sf');
+        label.appendChild(el('b', '', lv === 'x' ? 'unmatched'
+          : (lv === 0 ? ((cs[0] && cs[0].zeroLabel) || 'cantrips') : ordinal(lv))));
+        row.appendChild(label);
+        row.appendChild(el('span', '', byLevel[lv].join(', ')));
+        box.appendChild(row);
+      });
+      const jump = el('button', 'btn sm no-print', 'Full details on the Skills, Feats & Abilities tab →');
+      jump.style.marginTop = '8px';
+      jump.onclick = function () {
+        document.querySelector('[data-panel="p2"]').click();
+        const t = $('spellsCard');
+        if (t) window.scrollTo(0, window.scrollY + t.getBoundingClientRect().top - 12);
+      };
+      box.appendChild(jump);
+      body.appendChild(box);
+    }
   }
 
   /* ---------------------------------------------------------------- tab 2 */
@@ -928,7 +993,8 @@
 
     order.forEach(function (lv) {
       const heading = lv === 'x' ? 'Not found in the Core / APG data'
-        : (lv === 0 ? 'Cantrips / Orisons' : 'Level ' + lv);
+        : (lv === 0 ? ((cs[0] && cs[0].zeroLabel === 'orisons') ? 'Orisons' : 'Cantrips')
+                    : ordinal(lv) + '-level spells');
       const h = el('div', 'tiny', heading);
       h.style.cssText = 'margin:10px 0 4px;font-weight:700;letter-spacing:.06em;text-transform:uppercase';
       host.appendChild(h);
@@ -1041,6 +1107,22 @@
   function renderGear() {
     const tb = $('gearTable').querySelector('tbody');
     tb.innerHTML = '';
+    const seizedCount = (CH.items || []).filter(function (i) { return i.seized; }).length
+      + (CH.weapons || []).filter(function (w) { return w.seized; }).length;
+    let banner = $('seizedBanner');
+    if (seizedCount) {
+      if (!banner) {
+        banner = el('div', 'wmsg warn');
+        banner.id = 'seizedBanner';
+        banner.style.marginBottom = '10px';
+        $('gearTable').parentNode.parentNode.insertBefore(banner, $('gearTable').parentNode);
+      }
+      banner.innerHTML = '';
+      banner.appendChild(el('span', 'wtag', 'Seized'));
+      banner.appendChild(el('span', '', seizedCount + ' item(s) came from the pregame and were '
+        + 'taken when this character was captured. They are listed so the gear that mattered is '
+        + 'not forgotten — but the character does not have them at the start of the Main Game.'));
+    } else if (banner) { banner.remove(); }
     $('gearEmpty').hidden = CH.items.length > 0;
     $('gearTable').hidden = CH.items.length === 0;
     CH.items.forEach(function (it, i) {

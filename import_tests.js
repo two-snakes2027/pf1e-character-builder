@@ -22,6 +22,19 @@ if (MUT === 'nostats') {   /* the old behaviour: leave every score at 10 */
     return ch;
   };
 }
+if (MUT === 'noskillranks') {
+  const o = I.toCharacter;
+  I.toCharacter = function (rec) { const ch = o(rec); ch.skills = {}; return ch; };
+}
+if (MUT === 'notseized') {
+  const o = I.toCharacter;
+  I.toCharacter = function (rec) {
+    const ch = o(rec);
+    ch.items.forEach(function (i) { i.name = i.name.replace(/ \(seized\)$/, ''); i.seized = false; });
+    ch.weapons.forEach(function (w) { w.seized = false; });
+    return ch;
+  };
+}
 if (MUT === 'nospells') {
   const o = I.toCharacter;
   I.toCharacter = function (rec) { const ch = o(rec); ch.spells.known = []; return ch; };
@@ -165,8 +178,10 @@ const FIXTURE = {
   const weaponNames = ch.weapons.map(function (w) { return w.name; });
   ok('sickle recognised as a weapon', weaponNames.indexOf('Sickle') >= 0, 'got ' + JSON.stringify(weaponNames));
   const itemNames = ch.items.map(function (i) { return i.name; });
-  ok('robes kept as an item', itemNames.indexOf('rough-spun green robes') >= 0, JSON.stringify(itemNames));
-  ok('waterskin kept as an item', itemNames.indexOf('waterskin') >= 0, JSON.stringify(itemNames));
+  ok('robes kept as an item, marked seized',
+    itemNames.indexOf('rough-spun green robes (seized)') >= 0, JSON.stringify(itemNames));
+  ok('waterskin kept as an item, marked seized',
+    itemNames.indexOf('waterskin (seized)') >= 0, JSON.stringify(itemNames));
   ok('gear descriptions survive as notes',
     ch.items.some(function (i) { return /Wool dyed/.test(i.note); }));
   eq('nothing from the pregame inventory is lost',
@@ -184,9 +199,43 @@ const FIXTURE = {
   /* coin */
   eq('coin carried', ch.wealth, { pp: 0, gp: 0, sp: 6, cp: 3 });
 
-  /* skills: mapped as hints, not as ranks */
+  /* Every pregame skill earns exactly one rank (owner). */
   const spent = Object.keys(ch.skills).reduce(function (s, k) { return s + ch.skills[k].ranks; }, 0);
-  eq('no skill ranks are auto-spent', spent, 0);
+  eq('each pregame skill earns one rank', spent, ch.twoSnakes.skillHints.length);
+  ok('every rank is exactly 1, never more',
+    Object.keys(ch.skills).every(function (k) { return ch.skills[k].ranks === 1; }),
+    JSON.stringify(ch.skills));
+  ok('a mapped skill actually has its rank', (ch.skills['Survival'] || {}).ranks === 1,
+    'Track should have become one rank of Survival');
+  ok('only mapped skills get ranks',
+    Object.keys(ch.skills).every(function (k) { return ch.twoSnakes.skillHints.indexOf(k) >= 0; }));
+  (function () {
+    /* One rank is inside the 1st-level cap, so the import is not instantly illegal there. */
+    const dd = E.derive(ch);
+    ok('no skill exceeds the rank cap on import',
+      !dd.warnings.some(function (w) { return /the cap is your character level/.test(w.msg); }),
+      JSON.stringify(dd.warnings.filter(function (w) { return /cap/.test(w.msg); }).map(function (w) { return w.msg; })));
+    ok('a class skill with a rank gets its +3',
+      dd.skills.some(function (sk) { return sk.ranks === 1 && sk.isClass && sk.classBonus === 3; }));
+  })();
+
+  /* Gear was taken when they were captured. */
+  ok('every imported item is marked seized in its NAME',
+    ch.items.every(function (i) { return / \(seized\)$/.test(i.name); }),
+    JSON.stringify(ch.items.map(function (i) { return i.name; })));
+  ok('every imported item carries the seized flag',
+    ch.items.every(function (i) { return i.seized === true; }));
+  ok('imported weapons are flagged seized too',
+    ch.weapons.every(function (w) { return w.seized === true; }));
+  ok('no seized weapon arrives equipped',
+    ch.weapons.every(function (w) { return !w.equipped; }));
+  ok('the note says what happened',
+    ch.items.every(function (i) { return /Taken when captured/.test(i.note); }));
+  ok('a weapon keeps its rulebook name so the rules still find it',
+    ch.weapons.every(function (w) { return !/\(seized\)/.test(w.name); }),
+    JSON.stringify(ch.weapons.map(function (w) { return w.name; })));
+  ok('the seized flag survives derivation onto the weapon line',
+    E.derive(ch).weapons.every(function (w) { return w.seized === true; }));
   ok('Knowledge (Nature) normalised to PF1E casing',
     ch.twoSnakes.skillHints.indexOf('Knowledge (nature)') >= 0, JSON.stringify(ch.twoSnakes.skillHints));
   ok('Track maps onto Survival', ch.twoSnakes.skillHints.indexOf('Survival') >= 0);
@@ -347,6 +396,11 @@ const FIXTURE = {
       }), JSON.stringify(ch.abilities.base));
     ok(rec.name + ': spells are entries, not prose',
       Array.isArray(ch.spells.known));
+    ok(rec.name + ': every skill rank is exactly 1',
+      Object.keys(ch.skills).every(function (k) { return ch.skills[k].ranks === 1; }));
+    ok(rec.name + ': all gear marked seized',
+      ch.items.every(function (i) { return i.seized && / \(seized\)$/.test(i.name); })
+      && ch.weapons.every(function (w) { return w.seized && !w.equipped; }));
     ok(rec.name + ': spells are name-only strings',
       ch.spells.known.every(function (x) { return typeof x === 'string'; }));
     /* whatever prose the pregame stored for this character's spells must not have come along */

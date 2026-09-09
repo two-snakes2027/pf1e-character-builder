@@ -4,6 +4,49 @@ Newest first. Each entry says what changed, why, and how to undo it.
 
 ---
 
+## 2026-09-09 — (i) SPELLS WHERE PEOPLE LOOK · SKILL RANKS · SEIZED GEAR
+
+**"Spells are not displayed" — and the spells were rendering perfectly.** On tab 2. The owner
+was on **tab 1**, which carries a card headed **SPELLCASTING** that showed slots and nothing
+else. Looking at the card called Spellcasting and seeing no spells is a completely reasonable
+way to conclude the spells are missing. The information architecture was wrong, not the code.
+
+I made this worse by diagnosing from the wrong evidence twice: first I checked a **fresh
+import** when the owner was looking at a **saved character reloaded from the server**, and
+declared it fine; then I verified the live files and the stored record and still could not
+reproduce it. Both times the correct move was to ask what was on screen. A screenshot settled
+it in seconds.
+
+**Fixed:** the tab 1 Spellcasting card now lists the spells themselves, grouped by level, with a
+button that jumps to the full detail on tab 2. Tab 2 keeps the per-spell summaries.
+
+**Also fixed, visible in that same screenshot:** slot lines read **"1th 2"**. The level was being
+concatenated with a hardcoded `'th'`, so every level was wrong except 4th. Now a lookup table —
+1st, 2nd, 3rd, 4th. And a wizard's 0-level spells were labelled **orisons**; arcane casters call
+them cantrips. `zeroLabel` is set per class (divine → orisons, everything else → cantrips).
+
+### One rank per pregame skill (owner)
+
+Every skill on the Two Snakes sheet now earns exactly **1 rank**. A rank is the smallest unit
+that actually means "this character can do this": it switches on the +3 class-skill bonus and
+lifts a trained-only skill out of unusable. One rank stays inside the 1st-level cap, so an
+import is not instantly illegal on that axis — the skill-point budget is separate and the rules
+check reports it plainly. Rango picks up Spellcraft, Knowledge (arcana), Knowledge (history),
+Linguistics, Stealth and Survival (his "Track").
+
+### Imported gear is seized (owner)
+
+These characters come out of three years at the wheel and the Main Game opens with their
+possessions taken. Items import as `name (seized)` with a note saying what happened. **Weapons
+keep their rulebook name** — renaming them would break the weapon-table lookup that produces
+attack and damage — so they carry a `seized` badge in the weapons table instead, and none
+arrive equipped. Tab 3 shows a banner with the count and what it means.
+
+**Tests:** engine 112 · import 379 · server 73 = **564**, all 15 mutations caught, including two
+new ones: `noskillranks` and `notseized`.
+
+---
+
 ## 2026-09-09 — (h) ONE BUILD PER PREGAME CHARACTER, ENFORCED ON THE SERVER
 
 **Found by making the mistake.** Entry (g) stopped a re-import from creating a second file —

@@ -432,7 +432,7 @@
       threat: threat, crit: 'x' + def.cm,
       type: def.t, range: def.rng ? def.rng + ' ft.' : '—',
       hand: def.hand, cat: def.cat, special: (def.sp || []).join(', ') || '—',
-      ranged: ranged,
+      ranged: ranged, seized: !!w.seized,
       weight: def.w, proficient: prof, usesDex: useDex, note: w.note || ''
     };
   };
@@ -544,7 +544,9 @@
         slots[L] = base;
       });
       const maxLv = Object.keys(table).map(Number).reduce(function (a, b) { return Math.max(a, b); }, -1);
+      const divine = ['Cleric', 'Druid', 'Oracle', 'Inquisitor', 'Paladin', 'Ranger'];
       out.push({
+        zeroLabel: divine.indexOf(c.name) >= 0 ? 'orisons' : 'cantrips',
         cls: c.name, type: cast.type, ability: cast.ability, abilityMod: abilityMod,
         casterLevel: n, slots: slots, known: cast.known ? cast.known[n] : null,
         maxSpellLevel: maxLv, cantripsAtWill: !!cast.cantripsAtWill,

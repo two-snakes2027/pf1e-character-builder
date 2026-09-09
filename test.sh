@@ -11,7 +11,7 @@ for m in bab save mod crit skillrank hp ac bonusspells; do
     echo "  !! engine --mutate=$m PASSED — that formula is not covered"; exit 1
   else echo "  ok engine --mutate=$m fails as it should"; fi
 done
-for m in nostats nospells dropgear dropard weaponmatch; do
+for m in nostats nospells noskillranks notseized dropgear dropard weaponmatch; do
   if node import_tests.js --mutate="$m" >/dev/null 2>&1; then
     echo "  !! import --mutate=$m PASSED — that mapping is not covered"; exit 1
   else echo "  ok import --mutate=$m fails as it should"; fi

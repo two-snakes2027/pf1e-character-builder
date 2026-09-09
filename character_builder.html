@@ -162,7 +162,19 @@
 
   <!-- ================================================= TAB 2 -->
   <section class="panel" id="p2">
-    <div class="card">
+    <div class="card" id="spellsCard" hidden>
+      <h2>Spells <span class="hint" id="spellHint"></span>
+        <span class="spacer"></span>
+        <button class="btn sm no-print" id="btnAddSpell">+ Add spell</button>
+      </h2>
+      <div id="spellPicker" class="no-print" hidden></div>
+      <div id="spellList"></div>
+      <div class="field no-print" style="margin-top:10px">
+        <label for="spellNotes">Prepared list / notes</label>
+        <textarea id="spellNotes" data-bind="spells.notes" style="min-height:80px"></textarea>
+      </div>
+    </div>
+      <div class="card">
       <h2>Skills
         <span class="hint" id="skillHint"></span>
         <span class="spacer"></span>
@@ -217,19 +229,7 @@
       <div class="emptystate" id="specialEmpty">Nothing yet.</div>
     </div>
 
-    <div class="card" id="spellsCard" hidden>
-      <h2>Spells <span class="hint" id="spellHint"></span>
-        <span class="spacer"></span>
-        <button class="btn sm no-print" id="btnAddSpell">+ Add spell</button>
-      </h2>
-      <div id="spellPicker" class="no-print" hidden></div>
-      <div id="spellList"></div>
-      <div class="field no-print" style="margin-top:10px">
-        <label for="spellNotes">Prepared list / notes</label>
-        <textarea id="spellNotes" data-bind="spells.notes" style="min-height:80px"></textarea>
-      </div>
-    </div>
-  </section>
+</section>
 
   <!-- ================================================= TAB 3 -->
   <section class="panel" id="p3">

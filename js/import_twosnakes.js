@@ -188,20 +188,35 @@
 
     /* Named gear — the part §2 explicitly says to keep. Weapons in the pregame inventory
        are matched against the weapon table where the name is recognisable; everything else
-       becomes an item carrying its pregame description as a note. */
+       becomes an item carrying its pregame description as a note.
+
+       EVERY IMPORTED ITEM IS MARKED "(seized)" (owner). These characters come out of three
+       years at the wheel: the Main Game opens with their possessions taken. The gear is still
+       imported, because what a character owned is part of who they are and some of it is
+       named in the story — but it is not equipment they have. Marking it in the NAME rather
+       than a note means it cannot be missed on the sheet or on a printout, and no weapon
+       arrives pre-equipped. */
     (cd.inv || []).forEach(function (it) {
       const nm = (it.name || '').trim();
       if (!nm) return;
+      const seizedNote = [it.desc || '', 'Taken when captured — recover, replace or have the DM restore it.']
+        .filter(Boolean).join(' ');
       const weapon = matchWeapon(nm);
       if (weapon) {
-        ch.weapons.push({ name: weapon, enh: 0, mw: false, equipped: false, qty: 1, note: it.desc || nm });
+        ch.weapons.push({
+          name: weapon, enh: 0, mw: false, equipped: false, qty: 1,
+          seized: true, note: seizedNote
+        });
       } else {
-        ch.items.push({ name: nm, qty: 1, w: 0, c: 0, note: it.desc || '' });
+        ch.items.push({ name: nm + ' (seized)', qty: 1, w: 0, c: 0, seized: true, note: seizedNote });
       }
     });
 
-    /* Pregame skills become suggestions: 0 ranks, but the name is preserved in the note so
-       the player can see what the character was known for. */
+    /* Each skill the pregame recorded earns ONE RANK (owner). A rank is the smallest unit
+       that actually means "this character can do this" — it turns a class skill on (+3) and
+       lifts a trained-only skill out of unusable. One rank per skill also stays inside the
+       cap at 1st level, so an imported sheet is not instantly illegal on that axis; the
+       skill-point budget is a separate matter and the rules check reports it plainly. */
     const skillHints = [], unmatched = [];
     (cd.sheet && cd.sheet.skills || []).forEach(function (s) {
       const key = String(s).toLowerCase().trim();
@@ -209,6 +224,9 @@
         ? D.SKILLS.find(function (x) { return x.name.toLowerCase() === key; }).name : null);
       if (mapped2) { if (skillHints.indexOf(mapped2) < 0) skillHints.push(mapped2); }
       else unmatched.push(s);
+    });
+    skillHints.forEach(function (name) {
+      ch.skills[name] = { ranks: 1, misc: 0 };
     });
 
     /* Class feature and spells from the pregame become special-ability notes. */
