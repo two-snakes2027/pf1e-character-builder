@@ -185,6 +185,86 @@ async function waitUp(ms) {
   r = await req('GET', '/api/characters', { cookie: 'ts_sess=revokedtoken' });
   eq('a revoked session loses access immediately', r.status, 401);
 
+  /* ------------------------------------------- one build per pregame character ----
+     THE GAP THIS CLOSES. The browser also checks, but only against its own localStorage:
+     importing the same character on a laptop and then on a phone finds nothing locally
+     either time, and produced two server records. The server is the one place every device
+     shares, so the rule is enforced here as well. */
+  const withKey = function (id, key, levels, name) {
+    return { id: id, name: name || 'Rango', levels: levels || [{ cls: 'Wizard', n: 1 }],
+             twoSnakes: { key: key } };
+  };
+
+  /* device 1 */
+  r = await req('PUT', '/api/characters/dev1', {
+    cookie: mikeCookie, body: { character: withKey('dev1', 'ts_hist:michael:rango') } });
+  eq('first device saves the build', r.status, 200);
+
+  /* device 2: a different id, empty local storage, same pregame character */
+  r = await req('PUT', '/api/characters/dev2', {
+    cookie: mikeCookie, body: { character: withKey('dev2', 'ts_hist:michael:rango') } });
+  eq('second device also saves', r.status, 200);
+  ok('and the first copy is folded away', r.json.merged && r.json.merged.indexOf('dev1') >= 0,
+    JSON.stringify(r.json));
+
+  r = await req('GET', '/api/characters', { cookie: mikeCookie });
+  const rangos = r.json.characters.filter(function (c) { return c.name === 'Rango'; });
+  eq('exactly one build of that character survives', rangos.length, 1);
+  eq('and it is the one just saved', rangos[0].id, 'dev2');
+  r = await req('GET', '/api/characters/dev1', { cookie: mikeCookie });
+  eq('the superseded copy is gone', r.status, 404);
+
+  /* a HIGHER-level build is never discarded without being asked */
+  await req('PUT', '/api/characters/hi', {
+    cookie: mikeCookie, body: { character: withKey('hi', 'ts_hist:michael:brona',
+      [{ cls: 'Rogue', n: 5 }], 'Brona') } });
+  r = await req('PUT', '/api/characters/lo', {
+    cookie: mikeCookie, body: { character: withKey('lo', 'ts_hist:michael:brona',
+      [{ cls: 'Rogue', n: 1 }], 'Brona') } });
+  eq('a fresh import over a higher-level build is refused', r.status, 409);
+  /* Guarded: without the conflict block these must FAIL, not throw — a crashing assertion
+     reports worse than a failing one. */
+  const cf = (r.json && r.json.conflict) || {};
+  eq('and it says what is at risk', [cf.level, cf.incomingLevel], [5, 1]);
+  eq('the conflict names the record', cf.id, 'hi');
+  r = await req('GET', '/api/characters/hi', { cookie: mikeCookie });
+  eq('the higher-level build is untouched by the refusal', r.status, 200);
+
+  /* ...but the player can insist */
+  r = await req('PUT', '/api/characters/lo', {
+    cookie: mikeCookie, body: { character: withKey('lo', 'ts_hist:michael:brona',
+      [{ cls: 'Rogue', n: 1 }], 'Brona'), force: true } });
+  eq('force replaces it', r.status, 200);
+  r = await req('GET', '/api/characters/hi', { cookie: mikeCookie });
+  eq('and the higher-level copy is now gone', r.status, 404);
+
+  /* a LOWER-level existing build is folded away without asking */
+  await req('PUT', '/api/characters/small', {
+    cookie: mikeCookie, body: { character: withKey('small', 'ts_hist:michael:dude',
+      [{ cls: 'Bard', n: 1 }], 'Dude') } });
+  r = await req('PUT', '/api/characters/big', {
+    cookie: mikeCookie, body: { character: withKey('big', 'ts_hist:michael:dude',
+      [{ cls: 'Bard', n: 4 }], 'Dude') } });
+  eq('a higher-level save over a lower one needs no confirmation', r.status, 200);
+
+  /* the rule is per-player: two players may each build from their own record */
+  await req('PUT', '/api/characters/mine', {
+    cookie: mikeCookie, body: { character: withKey('mine', 'ts_hist:shared:same') } });
+  r = await req('PUT', '/api/characters/theirs', {
+    cookie: huckCookie, body: { character: withKey('theirs', 'ts_hist:shared:same') } });
+  eq('another player is not affected by my builds', r.status, 200);
+  r = await req('GET', '/api/characters/mine', { cookie: mikeCookie });
+  eq('and my copy survives', r.status, 200);
+
+  /* a character with no pregame provenance is never deduplicated */
+  await req('PUT', '/api/characters/scratch1', {
+    cookie: mikeCookie, body: { character: { id: 'scratch1', name: 'From Scratch', levels: [] } } });
+  r = await req('PUT', '/api/characters/scratch2', {
+    cookie: mikeCookie, body: { character: { id: 'scratch2', name: 'From Scratch', levels: [] } } });
+  eq('two from-scratch characters can coexist', r.status, 200);
+  r = await req('GET', '/api/characters/scratch1', { cookie: mikeCookie });
+  eq('neither is folded away', r.status, 200);
+
   /* ---------------------------------------------------------- static & leakage */
   r = await req('GET', '/character_builder.html');
   eq('character_builder.html is served', r.status, 200);

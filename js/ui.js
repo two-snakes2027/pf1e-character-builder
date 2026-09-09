@@ -273,17 +273,48 @@
     clearTimeout(saveTimer);
     S.saveLocalOnly(CH);
     if (E.isPristine(CH)) { toast('Nothing to save yet.', 'info'); return; }
+    commitNow(false);
+  }
+
+  function commitNow(force) {
     saving = true; renderSync();
-    S.commit(CH).then(function (r) {
+    S.commit(CH, force).then(function (r) {
       saving = false; dirty = false; renderSync(); renderPicker();
-      if (r && r.saved) toast('Saved.', 'info', 2200);
-      else if (r && r.signedOut) toast('Saved in this browser. Sign in to Two Snakes to keep it on the server.', 'warn', 7000);
-      else toast('Saved in this browser.', 'info', 3000);
+      if (r && r.saved) {
+        toast(r.merged && r.merged.length
+          ? 'Saved — and folded in ' + r.merged.length + ' duplicate build(s) of this character '
+            + 'left behind on another device.'
+          : 'Saved.', 'info', r.merged && r.merged.length ? 7000 : 2200);
+      } else if (r && r.signedOut) {
+        toast('Saved in this browser. Sign in to Two Snakes to keep it on the server.', 'warn', 7000);
+      } else toast('Saved in this browser.', 'info', 3000);
     }).catch(function (e) {
       saving = false; renderSync();
+      if (e && e.code === 'CONFLICT') return conflictModal(e.conflict);
       toast('Could not save to the server: ' + e.message
         + ' Your work is still here in this browser — try Save again.', 'warn', 9000);
     });
+  }
+
+  /* Raised when ANOTHER device already holds a higher-level build of the same pregame
+     character. The local check cannot see that, which is why the server also enforces it. */
+  function conflictModal(c) {
+    modal('A higher-level ' + c.name + ' already exists', function (body) {
+      body.appendChild(el('p', '',
+        'Another device has already saved a build of this same Two Snakes character at level '
+        + c.level + ' — ' + (c.levels || []).map(function (l) { return l.cls + ' ' + l.n; }).join(' / ')
+        + '. What you have here is level ' + c.incomingLevel + '.'));
+      body.appendChild(el('p', 'tiny',
+        'Saving over it throws away that levelling, and the pregame record cannot give it back. '
+        + 'If you would rather keep it, cancel — nothing here is lost, your copy stays in this '
+        + 'browser — then pick that character from the list in the top bar to carry on with it.'));
+    }, [
+      { label: 'Cancel', fn: function (close) { close(); dirty = true; renderSync(); } },
+      {
+        label: 'Replace the level ' + c.level + ' build', primary: true,
+        fn: function (close) { close(); commitNow(true); }
+      }
+    ]);
   }
 
   /* Re-rendering a panel replaces the very input the user is typing into, which would drop

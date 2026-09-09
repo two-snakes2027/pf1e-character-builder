@@ -224,20 +224,32 @@
      The browser still keeps a working DRAFT on every edit — that is a crash/refresh net, not a
      save, and the UI labels it "unsaved". What another device sees, and what you get back next
      time you sign in, is the last COMMITTED version. */
-  S.commit = function (ch) {
+  S.commit = function (ch, force) {
     if (!R.active) return Promise.resolve({ local: true });
     if (R.status === 'signed-out') return Promise.resolve({ local: true, signedOut: true });
     if (PF.ENGINE.isPristine(ch)) return Promise.resolve({ local: true, empty: true });
     R.status = 'syncing'; announce();
-    return api('PUT', 'api/characters/' + encodeURIComponent(ch.id), { character: ch })
+    const payload = { character: ch };
+    if (force) payload.force = true;
+    return api('PUT', 'api/characters/' + encodeURIComponent(ch.id), payload)
       .then(function (res) {
         if (res.status !== 200) {
           return res.json().catch(function () { return {}; }).then(function (j) {
+            /* 409: another device already holds a HIGHER-level build of this same pregame
+               character. Carry the details up so the UI can ask rather than silently pick. */
+            if (res.status === 409 && j.conflict) {
+              const e = new Error(j.error || 'A higher-level build already exists.');
+              e.code = 'CONFLICT'; e.conflict = j.conflict;
+              R.status = 'signed-in'; announce();
+              throw e;
+            }
             throw new Error(j.error || ('the server answered ' + res.status));
           });
         }
-        R.status = 'signed-in'; R.lastError = null; R.pending = 0; announce();
-        return { saved: true };
+        return res.json().catch(function () { return {}; }).then(function (j) {
+          R.status = 'signed-in'; R.lastError = null; R.pending = 0; announce();
+          return { saved: true, merged: j.merged };
+        });
       })
       .catch(function (e) {
         R.status = 'error'; R.lastError = e.message; announce();

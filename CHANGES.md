@@ -4,6 +4,46 @@ Newest first. Each entry says what changed, why, and how to undo it.
 
 ---
 
+## 2026-09-09 — (h) ONE BUILD PER PREGAME CHARACTER, ENFORCED ON THE SERVER
+
+**Found by making the mistake.** Entry (g) stopped a re-import from creating a second file —
+but only in the browser that already held the first, because `findByTwoSnakesKey` scans
+*localStorage*. I then imported Rango through the API while the owner's own import already sat
+on the server, and produced exactly the duplicate (g) was supposed to prevent.
+
+That is not just my slip. **Importing on a laptop and again on a phone** finds nothing locally
+either time and writes two server records. With nine players on their own devices it was going
+to happen. The client check cannot see other devices; the server is the one place they share.
+
+**The rule now lives in the PUT handler**, keyed on `twoSnakes.key`, and mirrors the client's:
+
+- a save that supersedes **lower- or equal-level** copies of the same pregame character folds
+  them away silently and reports `merged: [ids]`
+- a save that would discard a **higher-level** build is refused with **409** carrying the
+  conflicting id, name, level and class line, so the UI can ask instead of the server guessing
+- `force: true` carries out the replacement once the player has said so
+- it is **per owner** — two players may each build from the same shared record
+- a character with **no** `twoSnakes` provenance is never deduplicated, so from-scratch builds
+  are untouched
+
+The server computes level straight off the stored shape (`levelOf`); it has no engine and needs
+none for this.
+
+**Client:** `S.commit(ch, force)` passes the flag, surfaces a 409 as a typed `CONFLICT` error,
+and `conflictModal()` names the level and classes at risk before offering to replace. A silent
+fold-in is reported too, so a player is told when a stale copy from another device was absorbed.
+
+**Tests:** server 56 → **73**. The two-device case, the higher-level refusal, `force`, the
+per-owner boundary, and the from-scratch exemption. Mutation-proved by making the server ignore
+`twoSnakes.key` — seven assertions fail. One of them originally *threw* rather than failing;
+guarded, because a crashing assertion reports worse than a failing one (the same fix entry (c)
+needed).
+
+**Live:** deployed after backing up `pf1cb_data.json`; the owner's Rango (Wizard 1, saved 04:15)
+survived intact. My duplicate was deleted before the deploy.
+
+---
+
 ## 2026-09-09 — (g) STALE-TAB GUARD · RE-IMPORT OVERWRITES
 
 **The bug that caused this.** A tab left open across the (f) deploy imported Rango three times

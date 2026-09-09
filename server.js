@@ -244,6 +244,12 @@ const server = http.createServer(function (req, res) {
   return serveStatic(req, res, url);
 });
 
+/* Total character level straight off the stored shape — the server has no engine and does
+   not need one for this. */
+function levelOf(ch) {
+  return ((ch && ch.levels) || []).reduce(function (a, l) { return a + (Number(l.n) || 0); }, 0);
+}
+
 function handleApi(req, res, url, who) {
   if (url === '/api/me') {
     if (!who) return send(res, 401, { error: 'not signed in' });
@@ -282,14 +288,54 @@ function handleApi(req, res, url, who) {
         if (existing && who.role !== 'dm' && existing.owner !== who.user) {
           return send(res, 403, { error: 'not yours' });
         }
+
+        /* ONE BUILD PER PREGAME CHARACTER, ENFORCED HERE RATHER THAN IN THE BROWSER.
+           The client also checks, but it can only see its OWN localStorage: importing Rango
+           on a laptop and again on a phone finds nothing locally either time and produced two
+           server records. The server is the one place every device shares, so the rule lives
+           here too. */
+        const incoming = body.character || {};
+        const key = incoming.twoSnakes && incoming.twoSnakes.key;
+        const dupes = key ? Object.keys(DATA.characters).filter(function (k) {
+          const c = DATA.characters[k];
+          return k !== id && c.owner === (existing ? existing.owner : who.user)
+            && c.data && c.data.twoSnakes && c.data.twoSnakes.key === key;
+        }) : [];
+
+        if (dupes.length && !body.force) {
+          /* Same rule the client uses: a HIGHER-LEVEL build is never thrown away without
+             the player saying so, because the pregame record cannot give those levels back. */
+          const incomingLevel = levelOf(incoming);
+          const higher = dupes.map(function (k) { return DATA.characters[k]; })
+            .filter(function (c) { return levelOf(c.data) > incomingLevel; })
+            .sort(function (a, b) { return levelOf(b.data) - levelOf(a.data); });
+          if (higher.length) {
+            return send(res, 409, {
+              error: 'A higher-level build of this character already exists.',
+              conflict: {
+                id: higher[0].id,
+                name: (higher[0].data && higher[0].data.name) || '(unnamed)',
+                level: levelOf(higher[0].data),
+                levels: (higher[0].data && higher[0].data.levels) || [],
+                incomingLevel: incomingLevel
+              }
+            });
+          }
+        }
+
         DATA.characters[id] = {
           id: id,
           owner: existing ? existing.owner : who.user,
           data: body.character,
           savedAt: Date.now()
         };
+        /* Fold away the other copies of the same pregame character. */
+        dupes.forEach(function (k) { delete DATA.characters[k]; });
         saveData();
-        return send(res, 200, { ok: true, savedAt: DATA.characters[id].savedAt });
+        return send(res, 200, {
+          ok: true, savedAt: DATA.characters[id].savedAt,
+          merged: dupes.length ? dupes : undefined
+        });
       });
     }
 
