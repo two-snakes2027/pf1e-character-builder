@@ -4,6 +4,62 @@ Newest first. Each entry says what changed, why, and how to undo it.
 
 ---
 
+## 2026-09-09 — (f) EXPLICIT SAVE · RICHER IMPORT · SPELL SUMMARIES
+
+**1. Saving is explicit.** The server used to be written on a 900ms debounce after every edit,
+so the status badge churned on every keystroke and the stored copy moved while the player was
+still deciding. Now `S.commit()` writes the server and only the **Save** button (or ⌘/Ctrl-S)
+calls it.
+
+The browser still writes a **draft** on every edit — that is a refresh/crash net, not a save,
+and the UI says "unsaved changes" while one exists. What another device sees, and what comes
+back next sign-in, is the last **committed** version. Closing the tab with unsaved work now
+raises the browser's own confirm dialog.
+
+The badge shows `saved` / `unsaved changes` / `saving…` / `save failed` and only re-renders on
+a real transition, not per keystroke. Verified: seven ability edits plus a rename, waited 2.2s
+(well past the old auto-push), server **unchanged**; pressed Save, it landed; wiped local
+storage and reloaded, and the saved version came back with the unsaved rename correctly gone.
+
+**2. Ability scores, hit points and known spells now import** (owner). This reverses the
+original call, which left every score at 10 because a pregame line like 18/12/14/16/17/12 is far
+outside any point buy. It still is — the difference is that the rules check now *says so* ("Point
+buy spends 33 of 20 points — 13 over budget") and the player trims from a real starting point
+instead of a row of tens. Warn, never block, doing its job.
+
+`chr` maps to `cha`; `luck` has no PF1E equivalent and stays reference-only. Current HP carries
+across **unless the run ended at or below 0** — a character being rebuilt should not open dead.
+Every derived Vital Statistic (AC, saves, initiative, CMB/CMD) now recomputes close to the
+pregame sheet *because* the scores came across; copying those outputs directly would be wrong,
+since the first armour or class change would contradict them.
+
+**3. Spells import as NAMES ONLY** (owner, explicitly). Two Snakes writes its own flavour text
+and it differs from the Pathfinder rules, so nothing from `spellDescs` is read. Names are matched
+case- and punctuation-insensitively against the Core+APG data, and every detail shown comes from
+there. Pinned by tests that plant a `TWOSNAKES FLAVOUR` string in the fixture and assert it never
+appears in the imported character, plus the same check across all 17 real characters — and
+mutation-proved by deliberately carrying the prose across (3 assertions fire).
+
+**4. Each spell now carries its essential line**: school, effect, then Casting / Range / Duration
+/ Save / SR / Components as a fact strip, plus the computed save DC per casting class. Grouped by
+spell level, with anything above the character's caster level badged, and anything absent from
+the Core/APG data kept and labelled rather than dropped.
+
+### Bugs found while doing it
+
+10. **The status badge went stale after an import.** `renderSync()` is not part of `renderAll()`,
+    so an import set `dirty = true` and then re-rendered everything *except* the badge, which
+    kept reading "saved" over unsaved work.
+11. **A dead character imported at 0 current HP.** Faithful to the record, useless on a sheet
+    being rebuilt for the Main Game.
+12. Two test expectations of mine were wrong, not the code: I forgot the fixture's Arduin grants
+    +2 STR when predicting the imported total.
+
+**Tests:** engine 112 · import 333 · server 56 = **501**, all 13 mutations caught. The
+`copystats` mutation is now inverted to `nostats`, and `nospells` is new.
+
+---
+
 ## 2026-09-09 — (e) RENAMED, WIRED TO TWO SNAKES, AND DEPLOYED
 
 **Live at https://reunion2027-twosnakes.com/builder/**

@@ -7,6 +7,8 @@
   let CH = null;            /* current character */
   let DER = null;           /* last derivation */
   let onlyRanked = false;
+  let dirty = false;          /* edited since the last successful Save */
+  let saving = false;
   /* Collapsed state for the Rules Check panel. Kept outside render, because the panel is
      rebuilt on every recompute and would otherwise spring open on each keystroke. */
   let warnsCollapsed = (function () {
@@ -66,8 +68,9 @@
       }
     }
     renderPicker();
+    dirty = false;
     renderSync();
-    if (n) toast('Synced ' + n + ' character(s) from the server.', 'info');
+    if (n) toast('Loaded ' + n + ' saved character(s) from the server.', 'info');
   }
 
   function wireAuth() {
@@ -82,15 +85,16 @@
     const R = S.remote, badge = $('syncBadge'), btn = $('btnAuth');
     if (!R.active) { badge.hidden = true; btn.hidden = true; return; }
     badge.hidden = false; btn.hidden = false;
-    const label = {
-      'signed-in': R.pending ? 'saving…' : 'synced',
-      'syncing': 'syncing…',
-      'signed-out': 'not signed in',
-      'error': 'sync error'
-    }[R.status] || R.status;
+    let label, cls;
+    if (saving) { label = 'saving…'; cls = 'warn'; }
+    else if (R.status === 'signed-out') { label = 'not signed in'; cls = 'warn'; }
+    else if (R.status === 'error') { label = 'save failed'; cls = 'bad'; }
+    else if (dirty) { label = 'unsaved changes'; cls = 'warn'; }
+    else { label = 'saved'; cls = 'ok'; }
     badge.textContent = label + (R.user ? ' · ' + R.user + (R.role === 'dm' ? ' (DM)' : '') : '');
-    badge.className = 'badge ' + (R.status === 'error' ? 'bad'
-      : R.status === 'signed-in' ? 'ok' : 'warn');
+    badge.className = 'badge ' + cls;
+    const sv = $('btnSave');
+    if (sv) { sv.textContent = saving ? 'Saving…' : (dirty ? 'Save *' : 'Save'); sv.disabled = !!saving; }
     badge.title = R.lastError ? R.lastError + ' — your local copy is safe; it will retry on the next edit.' : '';
     btn.textContent = R.status === 'signed-in' ? 'Back to Two Snakes' : 'Sign in to Two Snakes';
   }
@@ -146,8 +150,8 @@
   /* ================================================================ chrome */
   function wireChrome() {
     $('btnNew').onclick = function () {
-      CH = E.blankCharacter(); S.save(CH); render();
-      toast('New character started.', 'info');
+      CH = E.blankCharacter(); render(); dirty = false; renderSync();
+      toast('New character started. Press Save when you want to keep it.', 'info', 5000);
     };
     $('btnExport').onclick = function () { S.download(CH); };
     $('btnPrint').onclick = function () { window.print(); };
@@ -159,7 +163,7 @@
           S.remove(CH.id);
           const rest = S.list();
           CH = rest.length ? S.load(rest[0].id) : E.blankCharacter();
-          if (!rest.length) S.save(CH);
+          if (!rest.length) S.saveLocalOnly(CH);
           render(); toast('Character deleted.', 'info');
         });
     };
@@ -177,18 +181,26 @@
         S.readFile(inp.files[0], function (err, ch) {
           if (err) { toast(err.message, 'warn', 7000); return; }
           ch.id = ch.id || E.blankCharacter().id;
-          CH = ch; S.save(CH); render();
-          toast('Loaded ' + (CH.name || 'character') + '.', 'info');
+          CH = ch; S.saveLocalOnly(CH); render(); dirty = true; renderSync();
+          toast('Loaded ' + (CH.name || 'character') + '. Press Save to keep it on the server.', 'info', 6000);
         });
       };
       inp.click();
     };
+    $('btnSave').onclick = doSave;
+    document.addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); doSave(); }
+    });
+    window.addEventListener('beforeunload', function (e) {
+      if (!dirty) return;
+      e.preventDefault(); e.returnValue = '';   /* browsers show their own wording */
+    });
     $('btnImport').onclick = openImport;
     $('charPicker').onchange = function () {
       const id = $('charPicker').value;
-      if (id === '__new__') { CH = E.blankCharacter(); S.save(CH); render(); return; }
+      if (id === '__new__') { CH = E.blankCharacter(); render(); dirty = false; renderSync(); return; }
       const c = S.load(id);
-      if (c) { CH = c; S.setLast(id); render(); }
+      if (c) { CH = c; S.setLast(id); render(); dirty = false; renderSync(); }
     };
     $('btnEditLevels').onclick = openLevels;
   }
@@ -236,9 +248,34 @@
   }
 
   let saveTimer = null;
+  /* Local draft only — a refresh/crash net. The server is written by doSave(). */
   function persist() {
+    if (!E.isPristine(CH)) markDirty();
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(function () { S.save(CH); }, 250);
+    saveTimer = setTimeout(function () { S.saveLocalOnly(CH); }, 250);
+  }
+
+  function markDirty() {
+    if (dirty) return;                 /* only re-render the badge on the transition */
+    dirty = true; renderSync();
+  }
+
+  function doSave() {
+    if (saving) return;
+    clearTimeout(saveTimer);
+    S.saveLocalOnly(CH);
+    if (E.isPristine(CH)) { toast('Nothing to save yet.', 'info'); return; }
+    saving = true; renderSync();
+    S.commit(CH).then(function (r) {
+      saving = false; dirty = false; renderSync(); renderPicker();
+      if (r && r.saved) toast('Saved.', 'info', 2200);
+      else if (r && r.signedOut) toast('Saved in this browser. Sign in to Two Snakes to keep it on the server.', 'warn', 7000);
+      else toast('Saved in this browser.', 'info', 3000);
+    }).catch(function (e) {
+      saving = false; renderSync();
+      toast('Could not save to the server: ' + e.message
+        + ' Your work is still here in this browser — try Save again.', 'warn', 9000);
+    });
   }
 
   /* Re-rendering a panel replaces the very input the user is typing into, which would drop
@@ -806,46 +843,96 @@
   function renderSpells() {
     const card = $('spellsCard');
     const cs = DER.casting || [];
-    card.hidden = cs.length === 0;
-    if (!cs.length) return;
+    const list = (CH.spells && CH.spells.known) || [];
+    /* Show the card whenever there are spells to show, even if the class levels do not
+       currently grant casting — an imported character has spells before it has a caster level. */
+    card.hidden = cs.length === 0 && list.length === 0;
+    if (card.hidden) return;
+
     const maxLv = cs.reduce(function (a, c) { return Math.max(a, c.maxSpellLevel); }, 0);
-    $('spellHint').textContent = 'up to level ' + maxLv;
+    $('spellHint').textContent = cs.length
+      ? (list.length + ' recorded · castable up to level ' + maxLv)
+      : (list.length + ' recorded · no caster levels yet');
+
     const host = $('spellList');
     host.innerHTML = '';
-    const list = CH.spells.known || [];
     if (!list.length) {
       host.appendChild(el('div', 'emptystate', 'No spells recorded yet.'));
+      return;
     }
+
+    /* The class letters this character actually casts from, used to decide a spell's level. */
+    const keys = cs.map(function (c) { return c.listKey; }).filter(Boolean);
+
     const byLevel = {};
     list.forEach(function (nm, i) {
       const def = D.SPELL_BY_NAME[nm];
-      const keys = cs.map(function (c) { return c.listKey; });
-      let lv = 0;
+      let lv = null;
       if (def) {
-        keys.forEach(function (k) { if (def.lv[k] !== undefined) lv = Math.max(lv, def.lv[k]); });
-        const anyKey = keys.find(function (k) { return def.lv[k] !== undefined; });
-        lv = anyKey !== undefined ? def.lv[anyKey] : 0;
+        /* prefer this character's own lists; fall back to the lowest level any class gets it */
+        keys.forEach(function (k) {
+          if (def.lv[k] !== undefined) lv = lv === null ? def.lv[k] : Math.min(lv, def.lv[k]);
+        });
+        if (lv === null) {
+          Object.keys(def.lv).forEach(function (k) {
+            lv = lv === null ? def.lv[k] : Math.min(lv, def.lv[k]);
+          });
+        }
       }
-      (byLevel[lv] = byLevel[lv] || []).push({ nm: nm, def: def, i: i });
+      const bucket = lv === null ? 'x' : lv;
+      (byLevel[bucket] = byLevel[bucket] || []).push({ nm: nm, def: def, i: i, lv: lv });
     });
-    Object.keys(byLevel).map(Number).sort(function (a, b) { return a - b; }).forEach(function (lv) {
-      host.appendChild(el('div', 'tiny', (lv === 0 ? 'Cantrips / Orisons' : 'Level ' + lv)));
+
+    const order = Object.keys(byLevel).filter(function (k) { return k !== 'x'; })
+      .map(Number).sort(function (a, b) { return a - b; });
+    if (byLevel.x) order.push('x');
+
+    order.forEach(function (lv) {
+      const heading = lv === 'x' ? 'Not found in the Core / APG data'
+        : (lv === 0 ? 'Cantrips / Orisons' : 'Level ' + lv);
+      const h = el('div', 'tiny', heading);
+      h.style.cssText = 'margin:10px 0 4px;font-weight:700;letter-spacing:.06em;text-transform:uppercase';
+      host.appendChild(h);
+
       byLevel[lv].forEach(function (row) {
         const box = el('div', 'entry');
         const head = el('div', 'e-head');
         head.appendChild(el('span', 'e-name', row.nm));
-        if (row.def) {
-          head.appendChild(el('span', 'e-meta', row.def.school + ' · ' + row.def.ct
-            + ' · ' + row.def.rng + ' · ' + row.def.dur));
+        if (row.def) head.appendChild(el('span', 'e-meta', row.def.school));
+        if (lv !== 'x' && cs.length && lv > maxLv) {
+          head.appendChild(el('span', ' badge warn', 'above your caster level'));
         }
         const x = el('button', 'btn sm e-x no-print', '×');
+        x.title = 'Remove';
         x.onclick = function () { CH.spells.known.splice(row.i, 1); recompute(); };
         head.appendChild(x);
         box.appendChild(head);
+
         if (row.def) {
+          /* The essential line: what it does, then the numbers you need at the table. */
           box.appendChild(el('div', 'e-body', row.def.desc));
-          box.appendChild(el('div', 'tiny dim', 'Components ' + row.def.comp
-            + ' · Save ' + row.def.save + ' · SR ' + row.def.sr));
+          const facts = el('div', 'spellfacts');
+          [['Casting', row.def.ct], ['Range', row.def.rng], ['Duration', row.def.dur],
+           ['Save', row.def.save], ['SR', row.def.sr], ['Comp.', row.def.comp]
+          ].forEach(function (pair) {
+            if (!pair[1]) return;
+            const f = el('span', 'sf');
+            f.appendChild(el('b', '', pair[0]));
+            f.appendChild(document.createTextNode(' ' + pair[1]));
+            facts.appendChild(f);
+          });
+          box.appendChild(facts);
+          if (cs.length) {
+            const dcs = cs.filter(function (c) { return c.listKey && row.def.lv[c.listKey] !== undefined; })
+              .map(function (c) {
+                return c.cls + ' DC ' + (c.saveDcBase + row.def.lv[c.listKey]);
+              });
+            if (dcs.length) box.appendChild(el('div', 'tiny dim', 'Save DC — ' + dcs.join(' · ')));
+          }
+        } else {
+          box.appendChild(el('div', 'tiny dim',
+            'No Core or APG entry with this name, so there is no summary to show. '
+            + 'Kept exactly as the pregame recorded it.'));
         }
         host.appendChild(box);
       });
@@ -1405,11 +1492,14 @@
              rec.encounterCount ? rec.encounterCount + ' encounters' : ''].filter(Boolean).join(' · ')));
           row.onclick = function () {
             const ch = IMP.toCharacter(rec);
-            CH = ch; S.save(CH);
+            CH = ch; S.saveLocalOnly(CH); dirty = true;
             document.querySelectorAll('.modal-back').forEach(function (n) { n.remove(); });
             render();
+            renderSync();     /* renderAll does not touch the badge; without this it reads stale */
             toast('Imported ' + (CH.name || 'character')
-              + '. Ability scores were NOT copied — do a real point buy.', 'info', 9000);
+              + ' — ability scores, hit points and known spells came across. '
+              + 'The rules check will show how far the scores sit outside a legal point buy. '
+              + 'Press Save to keep it.', 'info', 11000);
           };
           results.appendChild(row);
         });

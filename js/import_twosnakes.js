@@ -4,10 +4,18 @@
    pregame and "rebuilds to PF1E-legal, keeping identity and named gear", then levels to 3rd
    and applies +2 STR / +2 CON.
 
-   So this import deliberately does NOT copy the pregame ability scores into the build. Those
-   sheets were characterization, never stat blocks — a typical one is 18/12/14/16/17/12, which
-   no point buy can produce. They are carried into `twoSnakes.pregameStats` and shown as
-   reference on the Notes tab, while the player does a real point buy alongside.
+   ABILITY SCORES ARE IMPORTED (owner, 2026-09-09). They come straight across as the base
+   scores. Note what this means and why it is fine: those sheets were characterization, not
+   stat blocks, so a typical line like 18/12/14/16/17/12 is far outside any point buy. The
+   builder does not hide that — the rules check reports exactly how far over budget it is, and
+   the player trims from a real starting point instead of a row of tens. Warn, never block.
+
+   The `luck` stat has no PF1E equivalent and stays reference-only.
+
+   Every derived Vital Statistic — AC, saves, initiative, CMB/CMD, BAB — recomputes from the
+   imported scores, which is why they now come out close to the pregame sheet instead of being
+   copied. Copying them would be wrong: they are outputs, and the first armour or class change
+   would contradict them. The pregame's own numbers stay visible on the Notes tab to compare.
 
    What IS carried across: name, gender, alignment, homeland, deity, class as a starting
    suggestion, named gear, coin, the rolled Arduin, and the pregame's skills and spells as
@@ -137,6 +145,25 @@
 
     if (cd.alignment && D.ALIGNMENTS.indexOf(cd.alignment) >= 0) ch.alignment = cd.alignment;
 
+    /* Ability scores. `chr` is the pregame's name for Charisma; `luck` has no PF1E home. */
+    const st = cd.stats || {};
+    const pick = function (v, dflt) {
+      const n = Number(v);
+      return isFinite(n) && n > 0 ? n : dflt;
+    };
+    ch.abilities.base = {
+      str: pick(st.str, 10), dex: pick(st.dex, 10), con: pick(st.con, 10),
+      int: pick(st.int, 10), wis: pick(st.wis, 10), cha: pick(st.chr !== undefined ? st.chr : st.cha, 10)
+    };
+
+    /* Current hit points carry across so the sheet opens where the character actually was.
+       Maximum HP stays derived from class, level and CON — it is an output, not an input.
+       A run that ended in death recorded 0, and a character being rebuilt for the Main Game
+       should not open at 0 hp, so anything at or below zero falls back to full. */
+    if (cd.sheet && isFinite(Number(cd.sheet.hp)) && Number(cd.sheet.hp) > 0) {
+      ch.hp.current = Number(cd.sheet.hp);
+    }
+
     /* Class is a suggestion, not a copy: §2 lets them multiclass freely. Seed 1 level so the
        sheet is not empty, and let the player rebuild from there. */
     const mapped = CLASS_MAP[cd.cls];
@@ -188,9 +215,23 @@
     if (cd.sheet && cd.sheet.classFeature) {
       ch.specials.push({ name: 'Pregame class feature', text: cd.sheet.classFeature });
     }
+    /* Known spells become real entries, so each one shows its own save / range / duration /
+       components summary instead of sitting in a prose note nobody can act on. Names are
+       matched case-insensitively against the Core+APG data; anything unmatched is still kept
+       (the player keeps the spell, it just has no summary to show). */
     const pregameSpells = (cd.sheet && cd.sheet.spells) || [];
-    if (pregameSpells.length) {
-      ch.spells.notes = 'Knew in the pregame: ' + pregameSpells.join(', ') + '.';
+    const unmatchedSpells = [];
+    ch.spells.known = [];
+    pregameSpells.forEach(function (raw) {
+      const nm = String(raw || '').trim();
+      if (!nm) return;
+      const hit = matchSpell(nm);
+      if (hit) { if (ch.spells.known.indexOf(hit) < 0) ch.spells.known.push(hit); }
+      else { ch.spells.known.push(nm); unmatchedSpells.push(nm); }
+    });
+    if (unmatchedSpells.length) {
+      ch.spells.notes = 'No Core/APG entry found for: ' + unmatchedSpells.join(', ')
+        + '. They are listed above without a summary.';
     }
 
     /* Background seed. */
@@ -205,8 +246,7 @@
       + 'do what they now do, and most of those people did not survive.');
     ch.notes.background = bits.join('\n');
 
-    /* Provenance, including the pregame ability line kept purely for reference. */
-    const st = cd.stats || {};
+    /* Provenance: what the pregame recorded, kept so the rebuild can be compared against it. */
     ch.twoSnakes = {
       importedAt: new Date().toISOString(),
       key: rec.key || '',
@@ -224,6 +264,22 @@
 
     return ch;
   };
+
+  /* Tolerant name match against the Core+APG spell list: case, punctuation and a trailing
+     "(mass)"/"greater"/"lesser" ordering are all things the pregame wrote loosely. */
+  function matchSpell(name) {
+    const norm = function (x) { return String(x).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(); };
+    const want = norm(name);
+    if (!want) return null;
+    let exact = null, loose = null;
+    D.SPELLS.forEach(function (sp) {
+      const have = norm(sp.name);
+      if (have === want) { exact = sp.name; return; }
+      if (!loose && (have.indexOf(want) === 0 || want.indexOf(have) === 0)) loose = sp.name;
+    });
+    return exact || loose;
+  }
+  I.matchSpell = matchSpell;
 
   function matchWeapon(name) {
     const n = name.toLowerCase();

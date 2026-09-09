@@ -207,48 +207,45 @@
     });
   };
 
-  /* Push one character. Failures are retried on the next save rather than surfaced as
-     modal errors — the local copy is authoritative for the player either way. */
-  const queue = new Map();
-  let flushTimer = null;
-  S.push = function (ch) {
-    if (!R.active || R.status !== 'signed-in') return;
-    if (PF.ENGINE.isPristine(ch)) return;      /* an untouched placeholder is not worth a row */
-    queue.set(ch.id, ch);
-    R.pending = queue.size; announce();
-    clearTimeout(flushTimer);
-    flushTimer = setTimeout(flush, 900);
+  /* SAVING IS EXPLICIT. It used to push to the server on a 900ms debounce after every edit,
+     which meant the status badge churned on every keystroke and the server copy moved under
+     the player while they were still deciding. Now the server is written only by S.commit(),
+     which the Save button calls.
+
+     The browser still keeps a working DRAFT on every edit — that is a crash/refresh net, not a
+     save, and the UI labels it "unsaved". What another device sees, and what you get back next
+     time you sign in, is the last COMMITTED version. */
+  S.commit = function (ch) {
+    if (!R.active) return Promise.resolve({ local: true });
+    if (R.status === 'signed-out') return Promise.resolve({ local: true, signedOut: true });
+    if (PF.ENGINE.isPristine(ch)) return Promise.resolve({ local: true, empty: true });
+    R.status = 'syncing'; announce();
+    return api('PUT', 'api/characters/' + encodeURIComponent(ch.id), { character: ch })
+      .then(function (res) {
+        if (res.status !== 200) {
+          return res.json().catch(function () { return {}; }).then(function (j) {
+            throw new Error(j.error || ('the server answered ' + res.status));
+          });
+        }
+        R.status = 'signed-in'; R.lastError = null; R.pending = 0; announce();
+        return { saved: true };
+      })
+      .catch(function (e) {
+        R.status = 'error'; R.lastError = e.message; announce();
+        throw e;
+      });
   };
 
-  function flush() {
-    const batch = Array.from(queue.values());
-    queue.clear();
-    if (!batch.length) return;
-    R.status = 'syncing'; announce();
-    Promise.all(batch.map(function (ch) {
-      return api('PUT', 'api/characters/' + encodeURIComponent(ch.id), { character: ch })
-        .then(function (res) {
-          if (res.status !== 200) { queue.set(ch.id, ch); throw new Error('save rejected (' + res.status + ')'); }
-        });
-    })).then(function () {
-      R.pending = queue.size; R.status = 'signed-in'; R.lastError = null; announce();
-    }).catch(function (e) {
-      R.pending = queue.size; R.status = 'error'; R.lastError = e.message; announce();
-    });
-  }
+  /* Kept so nothing else has to know the push is gone. */
+  S.push = function () { /* explicit save only — see S.commit */ };
 
   S.removeRemote = function (id) {
     if (!R.active || R.status !== 'signed-in') return Promise.resolve();
     return api('DELETE', 'api/characters/' + encodeURIComponent(id)).catch(function () { /* local delete stands */ });
   };
 
-  /* The original save, without the push — used by the pull so a pull does not echo back. */
+  /* S.save writes the local draft only. Committing to the server is S.commit(). */
   S.saveLocalOnly = S.save;
-  S.save = function (ch) {
-    const at = S.saveLocalOnly(ch);
-    S.push(ch);
-    return at;
-  };
   const localRemove = S.remove;
   S.remove = function (id) { localRemove(id); S.removeRemote(id); };
 })();

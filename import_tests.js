@@ -14,13 +14,17 @@ const PF = global.window.PF, E = PF.ENGINE, I = PF.IMPORT, D = PF.DATA;
 
 const mutArg = process.argv.find(function (a) { return a.indexOf('--mutate=') === 0; });
 const MUT = mutArg ? mutArg.split('=')[1] : null;
-if (MUT === 'copystats') {
+if (MUT === 'nostats') {   /* the old behaviour: leave every score at 10 */
   const o = I.toCharacter;
   I.toCharacter = function (rec) {
-    const ch = o(rec); const st = (rec.charData || rec).stats || {};
-    ch.abilities.base = { str: st.str, dex: st.dex, con: st.con, int: st.int, wis: st.wis, cha: st.chr };
+    const ch = o(rec);
+    ch.abilities.base = { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
     return ch;
   };
+}
+if (MUT === 'nospells') {
+  const o = I.toCharacter;
+  I.toCharacter = function (rec) { const ch = o(rec); ch.spells.known = []; return ch; };
 }
 if (MUT === 'dropgear') {
   const o = I.toCharacter;
@@ -51,6 +55,12 @@ const FIXTURE = {
         hp: 10, maxHp: 10, ac: 11, bab: 0, fort: 4, ref: 1, will: 5, init: 1,
         skills: ['Survival', 'Perception', 'Knowledge (Nature)', 'Heal', 'Track', 'Ride', 'Stealth'],
         spells: ['Entangle', 'Obscuring Mist'],
+        /* Two Snakes writes its own flavour text for spells. It differs from the PF1E rules
+           and must never reach the builder — names only, details from the rulebook data. */
+        spellDescs: {
+          'Entangle': 'TWOSNAKES FLAVOUR: the grass itself hates them, and closes like a fist.',
+          'Obscuring Mist': 'TWOSNAKES FLAVOUR: a cold breath rolls off the river and blinds all.'
+        },
         classFeature: 'Wild Empathy — can calm a beast others could not approach',
         wealth: { cp: 3, sp: 6, gp: 0, pp: 0 },
         arduin: {
@@ -90,12 +100,65 @@ const FIXTURE = {
   eq('race is forced to Human', ch.race, 'Human');
   eq('class seeded at 1 level', ch.levels, [{ cls: 'Druid', n: 1 }]);
 
-  /* THE LOAD-BEARING ONE: pregame stats must NOT become the build (RIDDLE_OF_STEEL §2). */
-  eq('pregame stats NOT copied into the build', ch.abilities.base,
-    { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 });
-  ok('pregame stats kept as reference', ch.twoSnakes.pregameStats.str === 18
+  /* Ability scores ARE imported (owner, 2026-09-09). chr -> cha; luck has no PF1E home. */
+  eq('pregame ability scores become the base scores', ch.abilities.base,
+    { str: 18, dex: 12, con: 14, int: 16, wis: 17, cha: 12 });
+  ok('pregame stats also kept as reference', ch.twoSnakes.pregameStats.str === 18
     && ch.twoSnakes.pregameStats.cha === 12, 'chr should map to cha');
   eq('luck has no PF1E home but is retained for reference', ch.twoSnakes.pregameStats.luck, 8);
+  ok('luck never leaks into an ability score',
+    Object.keys(ch.abilities.base).indexOf('luck') < 0
+    && Object.values(ch.abilities.base).indexOf(8) < 0);
+
+  /* The point buy is now visibly over budget, and the rules check must SAY so rather than
+     quietly accept it — that message is what tells the player what to trim. */
+  const dImp = E.derive(ch);
+  ok('an imported sheet is reported as over the point-buy budget',
+    dImp.warnings.some(function (w) { return /over budget/.test(w.msg); }),
+    JSON.stringify(dImp.warnings.map(function (w) { return w.msg; })));
+  /* 18 imported + 2 wheel + 2 from this fixture's Arduin = 22; CON 14 + 2 wheel = 16. */
+  ok('the house +2/+2 and the Arduin both stack on top of the imported scores',
+    dImp.abilities.str === 22 && dImp.abilities.con === 16,
+    'str ' + dImp.abilities.str + ' con ' + dImp.abilities.con);
+
+  /* Current HP carries; maximum stays derived. */
+  eq('current hit points carry across', ch.hp.current, 10);
+  (function () {
+    /* A run that ended in death recorded 0 hp. The rebuilt character must not open dead. */
+    const dead = JSON.parse(JSON.stringify(FIXTURE['ts_char:fixture']));
+    dead.charData.sheet.hp = 0; dead.status = 'dead';
+    const dch = I.toCharacter(I.extractRoster({ 'ts_char:d': dead })[0]);
+    eq('a dead run does not import 0 current hp', dch.hp.current, null);
+    ok('and the derived sheet gives it full hit points', E.derive(dch).hp.current > 0);
+    const neg = JSON.parse(JSON.stringify(FIXTURE['ts_char:fixture']));
+    neg.charData.sheet.hp = -4;
+    eq('negative hp is ignored too', I.toCharacter(I.extractRoster({ 'ts_char:n': neg })[0]).hp.current, null);
+  })();
+
+  /* Known spells become real entries so each can show its own summary. */
+  ok('known spells are imported as entries', ch.spells.known.length === 2,
+    JSON.stringify(ch.spells.known));
+  ok('Entangle matched the Core data', ch.spells.known.indexOf('Entangle') >= 0);
+  ok('Obscuring Mist matched the Core data', ch.spells.known.indexOf('Obscuring Mist') >= 0);
+  /* NAMES ONLY. The pregame's own spell prose is different from the Pathfinder rules, so
+     nothing from spellDescs may survive the import — the summary must come from D.SPELLS. */
+  ok('no Two Snakes spell flavour text rides along with the import',
+    !/TWOSNAKES FLAVOUR/.test(JSON.stringify(ch)),
+    'pregame spell prose leaked into the imported character');
+  ok('imported spells are plain names, not objects',
+    ch.spells.known.every(function (x) { return typeof x === 'string'; }),
+    JSON.stringify(ch.spells.known));
+  (function () {
+    const ent = D.SPELL_BY_NAME['Entangle'];
+    ok('the displayed detail comes from the Pathfinder data', !!ent && ent.save === 'Reflex partial'
+      && ent.rng === 'Long' && ent.dur === '1 min./lvl (D)',
+      ent ? [ent.save, ent.rng, ent.dur].join(' | ') : 'Entangle missing from the spell data');
+  })();
+  ok('every imported spell that matched has a summary to show',
+    ch.spells.known.every(function (n) {
+      const def = D.SPELL_BY_NAME[n];
+      return !def || (def.save && def.rng && def.dur && def.ct && def.comp);
+    }));
   eq('house +2/+2 bump is present', { str: ch.abilities.house.str, con: ch.abilities.house.con }, { str: 2, con: 2 });
 
   /* named gear kept, weapons recognised */
@@ -116,7 +179,7 @@ const FIXTURE = {
 
   /* the arduin STR +2 must actually reach the derived sheet */
   const d = E.derive(ch);
-  eq('arduin +2 STR reaches the sheet', d.abilities.str, 10 + 2 /* house */ + 2 /* arduin */);
+  eq('arduin +2 STR reaches the sheet', d.abilities.str, 18 /* imported */ + 2 /* house */ + 2 /* arduin */);
 
   /* coin */
   eq('coin carried', ch.wealth, { pp: 0, gp: 0, sp: 6, cp: 3 });
@@ -136,7 +199,9 @@ const FIXTURE = {
   ok('background carries the three years', /THE THREE YEARS/.test(ch.notes.background));
   ok('class feature preserved as a special',
     ch.specials.some(function (s) { return /Wild Empathy/.test(s.text); }));
-  ok('pregame spells preserved as a note', /Entangle/.test(ch.spells.notes));
+  ok('an unmatched spell name is still kept', I.matchSpell('Zzzz Not A Spell') === null);
+  eq('a loosely written name still matches', I.matchSpell('cure light wounds'), 'Cure Light Wounds');
+  eq('punctuation and case are tolerated', I.matchSpell('Mage-Armor'), 'Mage Armor');
 
   /* the imported character must survive derivation with no crash and be a valid shape */
   ok('derives without throwing', !!d && typeof d.ac.total === 'number');
@@ -188,7 +253,7 @@ const FIXTURE = {
   /* an archived record must build a character just like a current one */
   const ch = I.toCharacter(arch);
   eq('archived record still maps its class', ch.levels, [{ cls: 'Rogue', n: 1 }]);
-  eq('archived record still refuses to copy stats', ch.abilities.base.str, 10);
+  eq('archived record imports its scores too', ch.abilities.base.str, 18);
 })();
 
 /* --------------------------------------------- the live feed ---------------------
@@ -269,9 +334,28 @@ const FIXTURE = {
     const ch = I.toCharacter(rec);
     ok(rec.name + ': name carried', !!ch.name);
     ok(rec.name + ': race forced Human', ch.race === 'Human');
-    ok(rec.name + ': pregame stats NOT copied',
-      ch.abilities.base.str === 10 && ch.abilities.base.int === 10,
-      'base was ' + JSON.stringify(ch.abilities.base));
+    const st = (rec.charData || {}).stats || {};
+    if (st.str) {
+      ok(rec.name + ': ability scores imported', ch.abilities.base.str === st.str,
+        'base str ' + ch.abilities.base.str + ' vs pregame ' + st.str);
+      ok(rec.name + ': chr mapped onto cha', ch.abilities.base.cha === (st.chr !== undefined ? st.chr : st.cha));
+    }
+    ok(rec.name + ': every score is a sane number',
+      ['str','dex','con','int','wis','cha'].every(function (k) {
+        const v = ch.abilities.base[k];
+        return typeof v === 'number' && isFinite(v) && v > 0 && v < 40;
+      }), JSON.stringify(ch.abilities.base));
+    ok(rec.name + ': spells are entries, not prose',
+      Array.isArray(ch.spells.known));
+    ok(rec.name + ': spells are name-only strings',
+      ch.spells.known.every(function (x) { return typeof x === 'string'; }));
+    /* whatever prose the pregame stored for this character's spells must not have come along */
+    const descs = ((rec.charData || {}).sheet || {}).spellDescs || {};
+    const leaked = Object.keys(descs).filter(function (k) {
+      const text = String(descs[k] || '').slice(0, 40);
+      return text.length > 20 && JSON.stringify(ch).indexOf(text) >= 0;
+    });
+    ok(rec.name + ': no pregame spell prose carried over', leaked.length === 0, leaked.join(', '));
     ok(rec.name + ': provenance recorded', !!ch.twoSnakes && !!ch.twoSnakes.importedAt);
     ok(rec.name + ': class mapped to a real PF1E class',
       ch.levels.length === 0 || !!D.CLASS_BY_NAME[ch.levels[0].cls],
