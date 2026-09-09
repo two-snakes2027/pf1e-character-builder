@@ -1,0 +1,429 @@
+/* Pathfinder 1E Character Builder — styles
+   Light and dark, driven by tokens. Print rules at the bottom produce a usable table sheet. */
+
+:root {
+  --ink:        #1c1a17;
+  --ink-soft:   #57514a;
+  --ink-faint:  #8b8279;
+  --paper:      #f6f3ec;
+  --card:       #fffdf8;
+  --card-2:     #f0ebe0;
+  --line:       #ddd5c6;
+  --line-soft:  #ebe4d6;
+  --accent:     #7d2b1f;
+  --accent-2:   #a4472f;
+  --accent-ink: #fff6ef;
+  --gold:       #8a6d2f;
+  --good:       #2f6b41;
+  --warn:       #9a6410;
+  --warn-bg:    #fdf4e0;
+  --bad:        #a32b1c;
+  --bad-bg:     #fbeae7;
+  --info-bg:    #eef2f7;
+  --info:       #3a5a80;
+  --shadow:     0 1px 2px rgba(40,30,20,.06), 0 6px 18px rgba(40,30,20,.06);
+  --radius:     10px;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink:        #ece6db;
+    --ink-soft:   #b3aa9c;
+    --ink-faint:  #837a6d;
+    --paper:      #171614;
+    --card:       #201e1b;
+    --card-2:     #292723;
+    --line:       #3a3630;
+    --line-soft:  #2f2c27;
+    --accent:     #c96a52;
+    --accent-2:   #e08a6f;
+    --accent-ink: #1a1512;
+    --gold:       #c6a256;
+    --good:       #6fbf8b;
+    --warn:       #e0b166;
+    --warn-bg:    #2e2617;
+    --bad:        #e8887a;
+    --bad-bg:     #2f1d1a;
+    --info-bg:    #1c2430;
+    --info:       #8fb4dd;
+    --shadow:     0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"] {
+  --ink:#ece6db; --ink-soft:#b3aa9c; --ink-faint:#837a6d; --paper:#171614;
+  --card:#201e1b; --card-2:#292723; --line:#3a3630; --line-soft:#2f2c27;
+  --accent:#c96a52; --accent-2:#e08a6f; --accent-ink:#1a1512; --gold:#c6a256;
+  --good:#6fbf8b; --warn:#e0b166; --warn-bg:#2e2617; --bad:#e8887a; --bad-bg:#2f1d1a;
+  --info-bg:#1c2430; --info:#8fb4dd;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+}
+
+* { box-sizing: border-box; }
+/* An explicit display (e.g. .wmsg{display:flex}) beats the UA's [hidden] rule, which left
+   hidden elements visible as empty bars. Make the attribute win everywhere. */
+[hidden] { display: none !important; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--paper); color: var(--ink);
+  font: 15px/1.5 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+h1,h2,h3,h4 { font-family: var(--serif); font-weight: 600; margin: 0; letter-spacing: -.01em; }
+a { color: var(--accent); }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* ------------------------------------------------------------------ banner
+   Reproduces the Two Snakes header treatment: the emblem beside a Cinzel title in the
+   house red, on the near-black ground (--ni #0D0D0D) that app uses.
+
+   Why the band is dark in BOTH themes. Measured, not assumed: riddle-banner.png is 66%
+   fully transparent, so the surround is NOT a baked-in black rectangle. The black is
+   interior linework — the emblem is red drawn over black detail (13% of pixels are
+   near-opaque dark). `mix-blend-mode: lighten` drops that interior black so only the red
+   floats, which is the Two Snakes look, but lighten resolves to white over a light
+   backdrop and erases the emblem entirely. So the band carries its own dark ground in
+   both themes: one faithful treatment rather than two divergent ones.
+
+   (Because the surround is transparent, a light-theme variant WITHOUT the blend mode
+   would also work — red-and-black artwork on the light card, no ugly rectangle. That is
+   a different look from Two Snakes, so it is not what is used here.) */
+.banner {
+  background: #0D0D0D;
+  border-bottom: 1px solid #2A2A2A;
+  box-shadow: inset 0 -18px 40px -30px rgba(204, 0, 0, .55);
+}
+.banner-inner {
+  max-width: 1180px; margin: 0 auto; padding: 14px 18px;
+  display: flex; align-items: center; gap: 16px;
+}
+.banner-emblem {
+  width: 54px; height: 54px; flex: none;
+  object-fit: contain; display: block;
+  image-rendering: crisp-edges;
+  mix-blend-mode: lighten;          /* drops the emblem's baked-in black surround */
+}
+.banner-text { min-width: 0; }
+.banner-title {
+  font-family: 'Cinzel', 'Iowan Old Style', Palatino, Georgia, serif;
+  font-size: 27px; font-weight: 600; line-height: 1.05;
+  color: #CC0000; letter-spacing: .06em; margin: 0;
+}
+.banner-sub {
+  font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+  font-size: 10.5px; color: #A89880; letter-spacing: .07em;
+  margin-top: 5px; line-height: 1.45;
+}
+@media (max-width: 620px) {
+  .banner-inner { padding: 11px 14px; gap: 12px; }
+  .banner-emblem { width: 40px; height: 40px; }
+  .banner-title { font-size: 20px; }
+  .banner-sub { font-size: 9px; letter-spacing: .05em; }
+}
+/* Motion is decorative here; respect a reduced-motion preference. */
+@media (prefers-reduced-motion: no-preference) {
+  .banner-emblem { animation: emblemPulse 3s ease-in-out infinite; }
+  @keyframes emblemPulse { 0%, 100% { opacity: .82; } 50% { opacity: 1; } }
+}
+
+/* ------------------------------------------------------------------ shell */
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 18px 80px; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 1180px; margin: 0 auto; padding: 10px 18px;
+  display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+}
+.brand { display: flex; align-items: baseline; gap: 9px; margin-right: auto; }
+.brand h1 { font-size: 17px; }
+.brand .sub { font-size: 11px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .09em; }
+
+.btn {
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 13px;
+  transition: background .12s, border-color .12s, transform .06s;
+}
+.btn:hover { background: var(--card-2); border-color: var(--ink-faint); }
+.btn:active { transform: translateY(1px); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+.btn.sm { padding: 3px 8px; font-size: 12px; }
+.btn.icon { padding: 4px 8px; line-height: 1; }
+.btn.danger { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 35%, var(--line)); }
+
+/* ------------------------------------------------------------------ identity strip */
+.identity {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); margin: 18px 0 14px; padding: 14px 16px;
+}
+.identity-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px 14px;
+}
+.field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.field > label {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint);
+  font-weight: 600;
+}
+.field input, .field select, .field textarea {
+  background: var(--paper); border: 1px solid var(--line); border-radius: 6px;
+  padding: 5px 8px; width: 100%; min-width: 0;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: -1px;
+  border-color: var(--accent);
+}
+.field.wide { grid-column: span 2; }
+/* Classes & levels sits in the grid beside Race. It needs two columns because a
+   multiclass line ("Fighter 2 / Rogue 1") does not fit a 140px track. */
+.levels-field { grid-column: span 2; }
+.levelbox {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 6px;
+  padding: 4px 8px; min-height: 31px;
+}
+.levelbox #classLine {
+  font-family: var(--serif); font-size: 15px; font-weight: 600; line-height: 1.2;
+}
+.levelbox .btn { margin-left: auto; }
+@media (max-width: 620px) { .levels-field { grid-column: span 2; } }
+.name-input { font-family: var(--serif); font-size: 19px !important; font-weight: 600; }
+
+/* ------------------------------------------------------------------ tabs */
+.tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--line); margin-bottom: 16px; flex-wrap: wrap; }
+.tab {
+  border: none; background: none; padding: 9px 15px; cursor: pointer;
+  color: var(--ink-soft); font-size: 14px; font-weight: 500;
+  border-bottom: 3px solid transparent; margin-bottom: -2px; border-radius: 6px 6px 0 0;
+}
+.tab:hover { color: var(--ink); background: var(--card-2); }
+.tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 650; }
+.tab .tnum { font-size: 11px; color: var(--ink-faint); margin-right: 5px; }
+
+.panel { display: none; }
+.panel.active { display: block; animation: fade .16s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+
+/* ------------------------------------------------------------------ cards */
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 14px;
+}
+.card > h2 {
+  font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--accent);
+  font-family: var(--sans); font-weight: 700; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card > h2 .hint { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-faint); font-size: 11px; }
+.card > h2 .spacer { margin-left: auto; }
+.cols { display: grid; gap: 14px; }
+.cols.c2 { grid-template-columns: 1fr 1fr; }
+.cols.c3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 860px) { .cols.c2, .cols.c3 { grid-template-columns: 1fr; } }
+/* A grid item defaults to min-width:auto, so a wide table inside a card pushes the card
+   past the viewport instead of scrolling within its own .tbl-wrap. On a phone that left
+   the whole page scrolling sideways. */
+.cols > * { min-width: 0; }
+.card { min-width: 0; }
+.tbl-wrap { min-width: 0; max-width: 100%; }
+
+/* ------------------------------------------------------------------ stat blocks */
+.abilities { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+@media (max-width: 700px) { .abilities { grid-template-columns: repeat(3, 1fr); } }
+.abil {
+  background: var(--card-2); border: 1px solid var(--line-soft); border-radius: 8px;
+  padding: 5px 5px; text-align: center;
+}
+.abil .ab-name { font-size: 9px; letter-spacing: .09em; color: var(--ink-faint); font-weight: 700; }
+.abil .ab-score { font-family: var(--serif); font-size: 21px; line-height: 1.08; font-weight: 600; }
+.abil .ab-mod { font-family: var(--mono); font-size: 12px; color: var(--accent); font-weight: 700; line-height: 1.2; }
+.abil input {
+  width: 100%; text-align: center; background: var(--paper); border: 1px solid var(--line);
+  border-radius: 5px; padding: 2px; font-family: var(--mono); font-size: 12px; margin-top: 3px;
+}
+.abil .ab-parts { font-size: 9px; color: var(--ink-faint); margin-top: 2px; font-family: var(--mono); line-height: 1.3; }
+
+.vitals { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 7px; }
+.vital {
+  background: var(--card-2); border: 1px solid var(--line-soft); border-radius: 8px;
+  padding: 6px 9px; position: relative;
+}
+.vital .v-label { font-size: 9px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-faint); font-weight: 700; }
+.vital .v-value { font-family: var(--serif); font-size: 21px; font-weight: 600; line-height: 1.12; }
+.vital .v-sub { font-size: 9.5px; color: var(--ink-soft); font-family: var(--mono); line-height: 1.35; }
+.vital.hero { background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 12%, var(--card-2)), var(--card-2)); }
+
+/* breakdown chips */
+.parts { font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); margin-top: 4px; line-height: 1.5; }
+.parts b { color: var(--ink-soft); font-weight: 600; }
+
+/* ------------------------------------------------------------------ tables */
+.tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table.grid { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.grid th {
+  text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--ink-faint); font-weight: 700; padding: 5px 8px;
+  border-bottom: 1.5px solid var(--line); white-space: nowrap;
+}
+table.grid td { padding: 5px 8px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+table.grid tbody tr:hover { background: var(--card-2); }
+table.grid td.num, table.grid th.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+table.grid td.tot { font-weight: 700; color: var(--accent); }
+table.grid input[type="number"], table.grid input[type="text"] {
+  background: var(--paper); border: 1px solid var(--line); border-radius: 5px;
+  padding: 2px 5px; width: 100%;
+}
+table.grid input[type="number"] { width: 58px; text-align: right; font-family: var(--mono); }
+.rowmark { color: var(--gold); font-weight: 700; }
+.dim { color: var(--ink-faint); }
+.muted-row td { opacity: .5; }
+
+/* ------------------------------------------------------------------ warnings */
+.warnbar { margin: 0 0 14px; }
+.warn-toggle {
+  border: 1px solid var(--line); background: var(--card); color: var(--ink-soft);
+  border-radius: 6px; cursor: pointer; font-size: 11px; padding: 2px 9px; line-height: 1.6;
+}
+.warn-toggle:hover { background: var(--card-2); color: var(--ink); border-color: var(--ink-faint); }
+.warn-toggle .caret { display: inline-block; transition: transform .15s; margin-right: 4px; }
+.warn-toggle[aria-expanded="false"] .caret { transform: rotate(-90deg); }
+.warnbar .card.collapsed > h2 { margin-bottom: 0; }
+.warnlist { display: flex; flex-direction: column; gap: 6px; }
+.wmsg {
+  display: flex; gap: 9px; align-items: flex-start; padding: 7px 11px;
+  border-radius: 7px; font-size: 13px; border: 1px solid transparent;
+}
+.wmsg.warn { background: var(--warn-bg); border-color: color-mix(in srgb, var(--warn) 30%, transparent); color: var(--ink); }
+.wmsg.info { background: var(--info-bg); border-color: color-mix(in srgb, var(--info) 25%, transparent); color: var(--ink); }
+.wmsg .wtag {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  padding: 1px 6px; border-radius: 4px; white-space: nowrap; margin-top: 1px;
+}
+.wmsg.warn .wtag { background: var(--warn); color: var(--warn-bg); }
+.wmsg.info .wtag { background: var(--info); color: var(--info-bg); }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; border: 1px solid var(--line);
+  background: var(--card-2); color: var(--ink-soft);
+}
+.badge.ok { color: var(--good); border-color: color-mix(in srgb, var(--good) 35%, transparent); }
+.badge.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, transparent); }
+.badge.bad { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
+
+/* ------------------------------------------------------------------ pickers */
+.picker { position: relative; }
+.picker-input { width: 100%; }
+.picker-list {
+  position: absolute; z-index: 30; top: 100%; left: 0; right: 0; max-height: 320px; overflow-y: auto;
+  background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+  box-shadow: var(--shadow); margin-top: 3px;
+}
+.picker-item { padding: 7px 10px; cursor: pointer; border-bottom: 1px solid var(--line-soft); }
+.picker-item:last-child { border-bottom: none; }
+.picker-item:hover, .picker-item.sel { background: var(--card-2); }
+.picker-item .pi-name { font-weight: 600; font-size: 13.5px; }
+.picker-item .pi-meta { font-size: 11px; color: var(--ink-faint); font-family: var(--mono); }
+.picker-item .pi-desc { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+.picker-item.blocked .pi-name::after {
+  content: 'prereq'; font-size: 9px; background: var(--warn); color: var(--warn-bg);
+  padding: 1px 5px; border-radius: 3px; margin-left: 7px; vertical-align: middle; letter-spacing: .05em;
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 6px 4px 10px;
+  background: var(--card-2); border: 1px solid var(--line); border-radius: 20px; font-size: 12.5px;
+}
+.chip button { border: none; background: none; cursor: pointer; color: var(--ink-faint); padding: 0 3px; font-size: 15px; line-height: 1; }
+.chip button:hover { color: var(--bad); }
+
+.entry {
+  border: 1px solid var(--line-soft); border-radius: 8px; padding: 9px 11px;
+  background: var(--card-2); margin-bottom: 7px;
+}
+.entry .e-head { display: flex; align-items: baseline; gap: 8px; }
+.entry .e-name { font-weight: 650; }
+.entry .e-meta { font-size: 11px; color: var(--ink-faint); font-family: var(--mono); }
+.entry .e-body { font-size: 12.5px; color: var(--ink-soft); margin-top: 3px; }
+.entry .e-x { margin-left: auto; }
+
+.arduin {
+  border: 1px solid var(--gold); border-radius: 8px; padding: 12px 14px;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--gold) 12%, var(--card)), var(--card));
+}
+.arduin .a-roll { font-family: var(--mono); font-size: 11px; color: var(--gold); font-weight: 700; letter-spacing: .05em; }
+.arduin .a-title { font-family: var(--serif); font-size: 19px; font-weight: 600; margin: 2px 0 5px; }
+.arduin .a-text { font-size: 13px; color: var(--ink-soft); white-space: pre-wrap; }
+
+textarea.notes {
+  width: 100%; min-height: 190px; resize: vertical; background: var(--paper);
+  border: 1px solid var(--line); border-radius: 8px; padding: 11px 13px;
+  font-family: var(--serif); font-size: 15px; line-height: 1.65;
+}
+
+.emptystate { color: var(--ink-faint); font-size: 13px; padding: 14px 0; text-align: center; font-style: italic; }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.row.end { justify-content: flex-end; }
+.grow { flex: 1; min-width: 0; }
+.hr { height: 1px; background: var(--line-soft); margin: 12px 0; border: none; }
+.nowrap { white-space: nowrap; }
+.tiny { font-size: 11px; color: var(--ink-faint); }
+.mono { font-family: var(--mono); }
+
+/* meter */
+.meter { height: 6px; background: var(--line-soft); border-radius: 4px; overflow: hidden; margin-top: 5px; }
+.meter > span { display: block; height: 100%; background: var(--good); border-radius: 4px; transition: width .2s; }
+.meter.over > span { background: var(--bad); }
+
+/* modal */
+.modal-back {
+  position: fixed; inset: 0; background: rgba(20,15,10,.5); z-index: 100;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.modal {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35); max-width: 620px; width: 100%;
+  max-height: 85vh; display: flex; flex-direction: column;
+}
+.modal-head { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
+.modal-head h3 { font-size: 16px; margin-right: auto; }
+.modal-body { padding: 16px 18px; overflow-y: auto; }
+.modal-foot { padding: 12px 18px; border-top: 1px solid var(--line); display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ------------------------------------------------------------------ print */
+@media print {
+  /* These must outrank the dark-theme blocks, which use :root:not([data-theme="light"])
+     and :root[data-theme="dark"]. A plain :root here loses to both, and the sheet prints
+     black-on-black. Match their specificity explicitly. */
+  :root,
+  :root[data-theme="dark"],
+  :root[data-theme="light"],
+  :root:not([data-theme="light"]) {
+    --card: #fff; --card-2: #f4f4f4; --paper: #fff;
+    --ink: #000; --ink-soft: #333; --ink-faint: #555;
+    --line: #999; --line-soft: #ccc; --shadow: none;
+    --accent: #6b2318; --accent-2: #6b2318; --gold: #6d5420;
+    --good: #235c33; --warn: #6b4708; --warn-bg: #f6f0e2;
+    --bad: #7d2115; --bad-bg: #f7e8e5; --info: #2c4763; --info-bg: #eef1f5;
+  }
+  body { background: #fff !important; color: #000 !important; }
+  .topbar, .tabs, .no-print, .btn { display: none !important; }
+  /* Keep the banner as the sheet's header, but do not lay down a full-width black band.
+     mix-blend-mode must come off too: over white, lighten would erase the emblem. */
+  .banner { background: none !important; border-bottom: 1px solid #999; box-shadow: none; }
+  .banner-inner { padding: 0 0 10px; }
+  .banner-emblem { width: 40px; height: 40px; mix-blend-mode: normal !important; animation: none !important; }
+  .banner-title { color: #000 !important; font-size: 20pt; }
+  .banner-sub { color: #333 !important; }
+  .panel { display: block !important; page-break-inside: avoid; }
+  .panel + .panel { page-break-before: always; }
+  .card { break-inside: avoid; box-shadow: none; border: 1px solid #999; }
+  body { font-size: 11pt; }
+  .wrap { max-width: none; padding: 0; }
+}

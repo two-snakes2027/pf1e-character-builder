@@ -1,0 +1,8 @@
+# Player data and credentials — never commit these.
+pf1cb_data.json
+pf1cb_data.json.tmp
+pf1cb_access.json
+_tmp_*.json
+backups/
+node_modules/
+.DS_Store

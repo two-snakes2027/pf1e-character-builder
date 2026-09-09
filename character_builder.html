@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pathfinder 1E Character Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="riddle-banner.png">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="banner">
+  <div class="banner-inner">
+    <img src="riddle-banner.png" alt="" class="banner-emblem" width="168" height="224">
+    <div class="banner-text">
+      <h1 class="banner-title">The Riddle of Steel</h1>
+      <div class="banner-sub">Pathfinder 1E Character Builder &middot; Reunion Game 2027 &middot; Albuquerque</div>
+    </div>
+  </div>
+</div>
+
+<div class="topbar no-print">
+  <div class="topbar-inner">
+    <span class="badge" id="syncBadge" hidden></span>
+    <button class="btn" id="btnAuth" hidden></button>
+    <select id="charPicker" class="btn" style="max-width:220px"></select>
+    <button class="btn" id="btnNew">New</button>
+    <button class="btn" id="btnImport">Import from Two Snakes</button>
+    <button class="btn" id="btnExport">Export</button>
+    <button class="btn" id="btnLoad">Load file</button>
+    <button class="btn" id="btnPrint">Print</button>
+    <button class="btn" id="btnTheme" title="Toggle light/dark">◐</button>
+    <button class="btn danger" id="btnDelete">Delete</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ------------------------------------------------------- identity -->
+  <div class="identity">
+    <div class="identity-grid">
+      <div class="field wide">
+        <label for="fName">Character name</label>
+        <input id="fName" class="name-input" data-bind="name" placeholder="Unnamed">
+      </div>
+      <div class="field"><label for="fPlayer">Player</label><input id="fPlayer" data-bind="player"></div>
+      <div class="field"><label for="fAlign">Alignment</label><select id="fAlign" data-bind="alignment"></select></div>
+      <div class="field"><label for="fHome">Homeland</label><select id="fHome" data-bind="homeland"></select></div>
+      <div class="field"><label for="fDeity">Deity</label><input id="fDeity" data-bind="deity"></div>
+      <div class="field"><label for="fGender">Gender</label><input id="fGender" data-bind="gender"></div>
+      <div class="field"><label for="fAge">Age</label><input id="fAge" data-bind="age"></div>
+      <div class="field"><label for="fRace">Race</label><input id="fRace" value="Human" disabled title="The Hyborian Age permits humans only."></div>
+      <div class="field levels-field">
+        <label>Classes &amp; levels</label>
+        <div class="levelbox">
+          <strong id="classLine">No class levels</strong>
+          <span class="badge" id="levelBadge">Level 0</span>
+          <span class="badge" id="xpBadge">0 XP</span>
+          <button class="btn sm no-print" id="btnEditLevels" title="Edit classes and levels">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ------------------------------------------------------- warnings -->
+  <div class="warnbar no-print" id="warnbar"></div>
+
+  <!-- ------------------------------------------------------- tabs -->
+  <div class="tabs no-print" role="tablist">
+    <button class="tab" role="tab" data-panel="p1" aria-selected="true"><span class="tnum">1</span>Combat &amp; Stats</button>
+    <button class="tab" role="tab" data-panel="p2" aria-selected="false"><span class="tnum">2</span>Skills, Feats &amp; Abilities</button>
+    <button class="tab" role="tab" data-panel="p3" aria-selected="false"><span class="tnum">3</span>Items &amp; Wealth</button>
+    <button class="tab" role="tab" data-panel="p4" aria-selected="false"><span class="tnum">4</span>Notes &amp; Background</button>
+  </div>
+
+  <!-- ================================================= TAB 1 -->
+  <section class="panel active" id="p1">
+    <div class="card">
+      <h2>Ability Scores
+        <span class="hint" id="pbHint"></span>
+        <span class="spacer"></span>
+        <span class="hint no-print">base &middot; +2/+2 wheel bump &middot; level-ups</span>
+      </h2>
+      <div class="abilities" id="abilityGrid"></div>
+      <div class="row no-print" style="margin-top:10px">
+        <label class="tiny">Point buy budget
+          <select id="pbBudget" class="btn sm"></select>
+        </label>
+        <span class="tiny" id="pbSpent"></span>
+        <div class="grow"></div>
+        <span class="tiny" id="incHint"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Vital Statistics</h2>
+      <div class="vitals" id="vitals"></div>
+    </div>
+
+    <div class="cols c2">
+      <div class="card">
+        <h2>Saving Throws</h2>
+        <div class="tbl-wrap">
+          <table class="grid" id="savesTable">
+            <thead><tr><th>Save</th><th class="num">Base</th><th class="num">Abil</th><th class="num">Feat</th>
+              <th class="num">Item</th><th class="num">Misc</th><th class="num">Total</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Armor Class</h2>
+        <div class="tbl-wrap"><table class="grid" id="acTable"><tbody></tbody></table></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Armor &amp; Shield <span class="hint">worn</span></h2>
+      <div class="cols c2">
+        <div class="row">
+          <div class="field grow"><label>Armor</label><select id="selArmor"></select></div>
+          <div class="field" style="max-width:80px"><label>Enh</label><select id="selArmorEnh"></select></div>
+          <label class="tiny nowrap"><input type="checkbox" id="ckArmorMw"> masterwork</label>
+        </div>
+        <div class="row">
+          <div class="field grow"><label>Shield</label><select id="selShield"></select></div>
+          <div class="field" style="max-width:80px"><label>Enh</label><select id="selShieldEnh"></select></div>
+          <label class="tiny nowrap"><input type="checkbox" id="ckShieldMw"> masterwork</label>
+        </div>
+      </div>
+      <div class="parts" id="armorParts"></div>
+    </div>
+
+    <div class="card">
+      <h2>Weapons <span class="hint">attack, damage, threat range, type and reach</span>
+        <span class="spacer"></span>
+        <button class="btn sm no-print" id="btnAddWeapon">+ Add weapon</button>
+      </h2>
+      <div id="weaponPicker" class="no-print" hidden></div>
+      <div class="tbl-wrap">
+        <table class="grid" id="weaponTable">
+          <thead><tr>
+            <th></th><th>Weapon</th><th class="num">Attack</th><th class="num">Full attack</th>
+            <th>Damage</th><th class="num">Threat</th><th class="num">Crit</th><th>Type</th>
+            <th class="num">Range</th><th>Special</th><th class="no-print"></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="emptystate" id="weaponEmpty">No weapons yet. Add one to see attack and damage.</div>
+    </div>
+
+    <div class="card" id="castingCard" hidden>
+      <h2>Spellcasting</h2>
+      <div id="castingBody"></div>
+    </div>
+  </section>
+
+  <!-- ================================================= TAB 2 -->
+  <section class="panel" id="p2">
+    <div class="card">
+      <h2>Skills
+        <span class="hint" id="skillHint"></span>
+        <span class="spacer"></span>
+        <label class="tiny no-print"><input type="checkbox" id="ckOnlyRanked"> only skills with ranks</label>
+      </h2>
+      <div class="meter no-print" id="skillMeter"><span></span></div>
+      <div class="tbl-wrap">
+        <table class="grid" id="skillTable">
+          <thead><tr>
+            <th></th><th>Skill</th><th>Ability</th><th class="num">Ranks</th><th class="num">Abil</th>
+            <th class="num">Class</th><th class="num">Feat</th><th class="num">Item</th>
+            <th class="num">Misc</th><th class="num">ACP</th><th class="num">Total</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="tiny" style="margin-top:8px">
+        <span class="rowmark">&#9733;</span> class skill (+3 once it has at least one rank) &middot;
+        greyed rows are trained-only skills with no ranks, which cannot be used.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Feats <span class="hint" id="featHint"></span>
+        <span class="spacer"></span>
+        <button class="btn sm no-print" id="btnAddFeat">+ Add feat</button>
+      </h2>
+      <div id="featPicker" class="no-print" hidden></div>
+      <div id="featList"></div>
+      <div class="emptystate" id="featEmpty">No feats yet.</div>
+    </div>
+
+    <div class="card">
+      <h2>Class Features <span class="hint">granted automatically by class and level</span></h2>
+      <div id="classFeatures"></div>
+    </div>
+
+    <div class="card">
+      <h2>Arduin Special Ability
+        <span class="spacer"></span>
+        <button class="btn sm no-print" id="btnArduin">Set / roll</button>
+      </h2>
+      <div id="arduinBox"></div>
+    </div>
+
+    <div class="card">
+      <h2>Other Special Abilities <span class="hint">traits, boons, anything the DM hands you</span>
+        <span class="spacer"></span>
+        <button class="btn sm no-print" id="btnAddSpecial">+ Add</button>
+      </h2>
+      <div id="specialList"></div>
+      <div class="emptystate" id="specialEmpty">Nothing yet.</div>
+    </div>
+
+    <div class="card" id="spellsCard" hidden>
+      <h2>Spells <span class="hint" id="spellHint"></span>
+        <span class="spacer"></span>
+        <button class="btn sm no-print" id="btnAddSpell">+ Add spell</button>
+      </h2>
+      <div id="spellPicker" class="no-print" hidden></div>
+      <div id="spellList"></div>
+      <div class="field no-print" style="margin-top:10px">
+        <label for="spellNotes">Prepared list / notes</label>
+        <textarea id="spellNotes" data-bind="spells.notes" style="min-height:80px"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= TAB 3 -->
+  <section class="panel" id="p3">
+    <div class="card">
+      <h2>Carried Weight &amp; Wealth</h2>
+      <div class="vitals" id="loadVitals"></div>
+      <div class="meter" id="loadMeter"><span></span></div>
+      <hr class="hr">
+      <div class="row">
+        <div class="field" style="max-width:96px"><label>Platinum</label><input type="number" id="wPp" data-bind="wealth.pp"></div>
+        <div class="field" style="max-width:96px"><label>Gold</label><input type="number" id="wGp" data-bind="wealth.gp"></div>
+        <div class="field" style="max-width:96px"><label>Silver</label><input type="number" id="wSp" data-bind="wealth.sp"></div>
+        <div class="field" style="max-width:96px"><label>Copper</label><input type="number" id="wCp" data-bind="wealth.cp"></div>
+        <div class="field" style="max-width:120px"><label>Experience</label><input type="number" id="fXp" data-bind="xp"></div>
+        <div class="grow"></div>
+        <div class="parts" id="wealthParts"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Magic Items <span class="hint">worn items feed the numbers on tab 1</span>
+        <span class="spacer"></span>
+        <button class="btn sm no-print" id="btnAddMagic">+ Add magic item</button>
+      </h2>
+      <div id="magicPicker" class="no-print" hidden></div>
+      <div class="tbl-wrap">
+        <table class="grid" id="magicTable">
+          <thead><tr><th>Item</th><th>Slot</th><th class="num">Cost</th><th class="num">Wt</th><th>Effect</th><th class="no-print"></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="emptystate" id="magicEmpty">No magic items.</div>
+    </div>
+
+    <div class="card">
+      <h2>Equipment &amp; Gear
+        <span class="spacer"></span>
+        <button class="btn sm no-print" id="btnAddGear">+ From list</button>
+        <button class="btn sm no-print" id="btnAddCustom">+ Custom item</button>
+      </h2>
+      <div id="gearPicker" class="no-print" hidden></div>
+      <div class="tbl-wrap">
+        <table class="grid" id="gearTable">
+          <thead><tr><th>Item</th><th class="num">Qty</th><th class="num">Wt ea.</th><th class="num">Cost ea.</th>
+            <th class="num">Total wt</th><th>Note</th><th class="no-print"></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="emptystate" id="gearEmpty">No gear yet.</div>
+    </div>
+  </section>
+
+  <!-- ================================================= TAB 4 -->
+  <section class="panel" id="p4">
+    <div class="cols c2">
+      <div class="card">
+        <h2>Background</h2>
+        <textarea class="notes" id="nBackground" data-bind="notes.background"
+          placeholder="Who they were before the wheel. Three years of captivity. Who taught them what they now know."></textarea>
+      </div>
+      <div class="card">
+        <h2>Appearance</h2>
+        <textarea class="notes" id="nAppearance" data-bind="notes.appearance"
+          placeholder="What the table sees when this character walks in."></textarea>
+      </div>
+    </div>
+    <div class="cols c2">
+      <div class="card">
+        <h2>Personality &amp; Goals</h2>
+        <textarea class="notes" id="nPersonality" data-bind="notes.personality"
+          placeholder="How they behave under pressure. What they want out of this."></textarea>
+      </div>
+      <div class="card">
+        <h2>Allies, Enemies &amp; Contacts</h2>
+        <textarea class="notes" id="nAllies" data-bind="notes.allies"
+          placeholder="Who owes them. Who is looking for them."></textarea>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Session Notes</h2>
+      <textarea class="notes" id="nSession" data-bind="notes.session" style="min-height:240px"
+        placeholder="Running notes across the four days."></textarea>
+    </div>
+    <div class="card" id="provenanceCard" hidden>
+      <h2>Two Snakes Provenance</h2>
+      <div id="provenanceBody"></div>
+    </div>
+  </section>
+
+</div>
+
+<div id="modalHost"></div>
+
+<script src="js/data/core.js"></script>
+<script src="js/data/classes.js"></script>
+<script src="js/data/equipment.js"></script>
+<script src="js/data/feats.js"></script>
+<script src="js/data/spells.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/import_twosnakes.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
