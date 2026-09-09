@@ -4,6 +4,9 @@ A standalone character builder for **The Riddle of Steel**, the four-day Pathfin
 Albuquerque, Spring 2027. Nothing here depends on the Two Snakes app at runtime — it only reads
 a Two Snakes export when a player chooses to import their captured character.
 
+**Picking this up in a new session? Read `NEXT_SESSION.md` first** — current state, open
+items, and the traps this project has already paid for.
+
 ```bash
 ./run.sh          # http://localhost:8732
 ./test.sh         # every suite + the mutation runs that prove they can fail
