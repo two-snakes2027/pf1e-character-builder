@@ -135,11 +135,6 @@
     hl.appendChild(new Option('—', ''));
     D.HOMELANDS.forEach(function (h) { hl.appendChild(new Option(h, h)); });
 
-    const pb = $('pbBudget');
-    D.POINT_BUY_BUDGETS.forEach(function (b) {
-      pb.appendChild(new Option(b.label + ' (' + b.points + ')', b.points));
-    });
-
     const ar = $('selArmor');
     D.ARMOR.forEach(function (a) {
       ar.appendChild(new Option(a.name + (a.type !== 'none' ? '  (' + a.type + ', +' + a.ac + ')' : ''), a.name));
@@ -504,11 +499,6 @@
       host.appendChild(box);
     });
 
-    const spent = E.pointBuySpent(CH);
-    $('pbBudget').value = CH.pointBuyBudget;
-    $('pbBudget').onchange = function () { CH.pointBuyBudget = Number($('pbBudget').value); recompute(); };
-    $('pbSpent').textContent = 'spent ' + spent + ' of ' + CH.pointBuyBudget;
-    $('pbHint').textContent = spent > CH.pointBuyBudget ? '(over budget)' : '';
     const earned = E.abilityIncreasesEarned(CH), used = E.abilityIncreasesSpent(CH);
     $('incHint').textContent = 'level-up increases: ' + used + ' of ' + earned + ' used';
   }
@@ -1290,9 +1280,9 @@
     renderPicker();
     toast((replaced ? 'Replaced your existing ' + (CH.name || 'character') + ' build'
                     : 'Imported ' + (CH.name || 'character'))
-      + ' — ability scores, hit points and known spells came across. '
-      + 'The rules check will show how far the scores sit outside a legal point buy. '
-      + 'Press Save to keep it.', 'info', 11000);
+      + ' — ability scores, hit points, the rolled Arduin and known spells came across. '
+      + 'The scores are exactly as they were rolled in the pregame; the only change to them is '
+      + 'the +1 you get at 4th level. Press Save to keep it.', 'info', 11000);
   }
 
   function confirmReimport(rec, existing, higher, incomingLevel) {

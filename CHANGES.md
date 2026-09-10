@@ -4,6 +4,138 @@ Newest first. Each entry says what changed, why, and how to undo it.
 
 ---
 
+## 2026-09-10 — (l) POINT BUY IS RETIRED. ✅ DEPLOYED `6f694c524094` 2026-09-10 22:21 UTC
+
+**Why.** The owner, looking at the Rules Check on the dashboard: *"I'm not sure why it's talking
+about point buy. None of the characters will be using point buy, because the stats from the
+selected/imported Two Snakes character should be brought over just as they are. The only change
+those stats would have is when they get to 4th lvl."*
+
+**This was not a bug — it was a premise, and the premise is now withdrawn.** The importer's own
+header stated it: the scores come across as-is *and* "the rules check reports exactly how far
+over budget it is, and the player trims from a real starting point instead of a row of tens."
+The trimming step no longer exists. Rolled is rolled.
+
+**How loud it was, measured before the change** (all 38 live characters, run on the VPS against
+`/home/deploy/two-snakes/two_snakes_data.json` so the data file never moved):
+
+| | |
+|---|---|
+| "Point buy spends N of 20 — X over budget" | fired for **32 of 38** |
+| "base score N is outside the 7-18 point buy range" | fired for **3 of 38** (e.g. Baelzar's INT 19) |
+| point-buy cost of the imported scores | min 0, **median 34**, max 53, against a budget of 20 |
+
+**What changed.**
+
+- `js/engine.js` — both Abilities warnings deleted from `E.validate()`, `E.pointBuySpent()`
+  removed, `pointBuyBudget` dropped from `blankCharacter()`. A comment in their place records
+  the doctrine and the numbers above, so the next reader does not "restore" them.
+- `js/data/core.js` — `POINT_BUY_COST` and `POINT_BUY_BUDGETS` deleted.
+- `js/ui.js` — the budget selector, the "spent N of 20" readout and the "(over budget)" hint are
+  gone from the Abilities card; the post-import toast no longer promises a point-buy report and
+  now names the Arduin and the 4th-level +1 instead.
+- `character_builder.html` — `pbHint`, `pbBudget` and `pbSpent` markup removed. The level-up
+  readout (`incHint`) stays.
+- **The only ability rule left is the one the owner named:** one +1 at 4th level,
+  `floor(level/4)`, which was already implemented and is now covered by tests of its own.
+
+**Verification.**
+
+- `./test.sh` green: engine **119** (was 113), import 379, server 73, class tables 124.
+- **`engine_tests.js --mutate=pointbuy` added** and wired into `test.sh`. It re-adds both retired
+  warnings; **it kills exactly 5 assertions** — the four new absence checks plus the pre-existing
+  "clean level-3 fighter has no hard warnings". An absence assertion that no mutation can break
+  is not evidence, which is why this exists.
+- `import_tests.js` — the assertion that an import IS reported over budget was **reversed**, with
+  the old intent and the 32/38 measurement recorded beside it.
+- Re-run against **live data with the new engine**: **0 point-buy warnings across all 38**
+  characters, Arduin still carried for all 26 that have one.
+- `node --check` on every touched file; the four render functions asserted still present (trap 2);
+  `<div>` 94/94, `<section>`, `<label>`, `<h2>` all balanced (trap 3).
+
+**Not changed, because it turned out already to work:** the Arduin import. 26 of the 38 live
+characters have one stored in Two Snakes and all 26 come across — title, text, roll, chart and
+ability mods, which stack into the derived scores. The other 12 have nothing stored on the Two
+Snakes side; that is a game-data gap, not a builder one.
+
+**Known and left alone:** non-ability Arduin mods are inert. Boomer's "Congenital Analgesia"
+carries `maxHp: -2`; `E.abilityScores` reads only the six ability keys, so it rides along in the
+data and shows on the Arduin card but never reaches HP.
+
+**Activation.** Static files — a browser reload. **Anyone with the builder open must reload**;
+`js/staleguard.js` will tell them, since the stamp moved.
+
+**Deployed 2026-09-10 22:21 UTC, together with (k)** — the two were in one working tree and
+shipped in one rsync. Build stamp **`158b39de074c` → `6f694c524094`**. Verified from outside the
+box: all 12 served files byte-identical to local; **0** point-buy code or markup in what is
+actually served; `class_table_tests.js` run against the **downloaded production bytes** passes
+124/124, so the 29 corrected cells are live; service active, the one stored character intact.
+VPS undo: `/opt/pf1cb/backups/served_pre-pointbuy_20260910_222108.tgz` (character_builder.html +
+js + css as they were) and `pf1cb_data_pre-pointbuy_20260910_222108.json`.
+
+**Undo.** `backups/*_pre-pointbuy-retire_20260910_144653` — one per touched file
+(`engine.js`, `ui.js`, `core.js`, `character_builder.html`, `engine_tests.js`, `import_tests.js`).
+`test.sh` needs `pointbuy` removed from its mutation list by hand.
+
+---
+
+## 2026-09-09 — (k) THE CLASS TABLES, VERIFIED — AND SEVEN CLASSES WERE WRONG. ✅ DEPLOYED 2026-09-10 (with (l))
+
+Open item 1 of the handoff was "four APG class tables are unverified: Inquisitor, Oracle,
+Summoner, Witch". They are now checked. **Three of the four were wrong — and so were four
+classes nobody had flagged.** 29 table cells corrected in `js/data/classes.js`, plus three
+proficiency/skill errors.
+
+**Method.** Every cell was scraped from **d20pfsrd.com** and **aonprd.com** (Archives of Nethys)
+and compared cell-for-cell; only values where the two sources agreed were used, and they agreed
+everywhere they overlapped. The parsers, the diff and the generated expectations are all
+deterministic — no value here was typed from memory.
+
+**What was wrong:**
+
+| Class | | What was wrong |
+|---|---|---|
+| Summoner | flagged | spells/day at 4-7 (**3rd-level spells arrived two levels early, at 6th**); spells known at 3, 6, 7 |
+| Oracle | flagged | spells known at levels 2-7 — every row but the first |
+| Inquisitor | flagged | spells/day at 1 and 7; spells known at 5, 6, 7; missing hand crossbow, longbow, repeating crossbow, shortbow |
+| Witch | flagged | **tables were correct.** But proficiency listed the *wizard's* four weapons instead of all simple weapons |
+| Cleric | not flagged | orisons climbed 4→5→6 with level; they stay at 4 from 2nd on |
+| Druid | not flagged | same orison error |
+| Bard | not flagged | spells known at 6th (1st-level column read 5, book says 4) |
+| Paladin, Ranger | not flagged | 7th level opens a 2nd-level row at base 0, which was missing |
+| Summoner | flagged | class skills listed 5 Knowledges; the book grants **Knowledge (all)** |
+
+**The four `verify: true` flags are gone** — that is what they were for. The notice mechanism
+stays; `engine_tests.js` now drives it from a synthetic flagged class rather than from whichever
+class happens to be unverified, so removing the last flag no longer breaks the test.
+
+**Two things worth keeping:**
+
+1. **The flags pointed at the wrong half of the problem.** Four classes were flagged; seven were
+   wrong. Being entered from recall made a table *suspect*, but not being flagged never made one
+   *safe* — Cleric and Druid were carrying an invented orison progression the whole time.
+2. **Verify the instrument.** The first pass fetched these pages through a summarising
+   model, which returned the Oracle table shifted three rows down — the file's own numbers,
+   relabelled onto the wrong levels. Had it been trusted, it would have "confirmed" the bug.
+   Raw HTML + a written parser replaced it, and that parser then had three bugs of its own
+   (it dropped literal `0` cells, mis-sliced AoN's two-section tables, and right-aligned rows
+   whose trailing blank cell had collapsed) — each one produced a *plausible* wrong answer.
+   **Every one was caught by a value that made no sense, not by the tool reporting an error.**
+
+**`class_table_tests.js` is new** (124 assertions, wired into `test.sh` with four mutations).
+It pins the data, not the engine — the existing 564 assertions all passed with 29 wrong cells in
+place, because they only ever checked that a formula turned a table into slots correctly.
+Expected values carry their provenance and date in the file header. **Proven against the
+pre-change file: 33 failures**, exactly the errors found.
+
+Suite totals: **564 -> 689 assertions, 15 -> 19 mutations.**
+
+**Undo:** `backups/classes.js.20260909-095537.pre-apg-verify` and
+`backups/engine_tests.js.20260909-095537.pre-apg-verify`; delete `class_table_tests.js` and
+revert the two blocks added to `test.sh`. Note that undoing restores the wrong tables.
+
+---
+
 ## 2026-09-09 — (j) SPELLS LIVE ON TAB 1
 
 The full spell list — per-spell school, effect, casting time, range, duration, save, SR,

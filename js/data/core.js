@@ -18,13 +18,8 @@
   ];
 
   /* Point buy cost table (CRB p.16). Purchase score -> points spent. */
-  D.POINT_BUY_COST = { 7: -4, 8: -2, 9: -1, 10: 0, 11: 1, 12: 2, 13: 3, 14: 5, 15: 7, 16: 10, 17: 13, 18: 17 };
-  D.POINT_BUY_BUDGETS = [
-    { label: 'Low Fantasy', points: 10 },
-    { label: 'Standard Fantasy', points: 15 },
-    { label: 'High Fantasy', points: 20 },
-    { label: 'Epic Fantasy', points: 25 }
-  ];
+  /* Point buy was retired 2026-09-10 — see the note in engine.js validate(). Imported scores
+     are the scores; nothing costs points. POINT_BUY_COST / POINT_BUY_BUDGETS are gone. */
 
   /* ---------------------------------------------------------------- SKILLS (CRB ch.4) */
   /* ab: key ability · tr: trained only · acp: armor check penalty applies */

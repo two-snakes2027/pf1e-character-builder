@@ -26,7 +26,6 @@
         levelUp: { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 },
         misc:   { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 }
       },
-      pointBuyBudget: 20,
       hp: { rolls: [], maxFirst: true, favoredHp: 0, current: null, temp: 0, nonlethal: 0, misc: 0 },
       skills: {},                       /* {'Perception': {ranks:5, misc:0}} */
       favoredSkillRanks: 0,
@@ -143,14 +142,6 @@
       });
     });
     return best;
-  };
-
-  E.pointBuySpent = function (ch) {
-    return ABIL.reduce(function (sum, k) {
-      const v = ch.abilities.base[k];
-      const cost = D.POINT_BUY_COST[v];
-      return sum + (cost === undefined ? 0 : cost);
-    }, 0);
   };
 
   /* Number of +1 ability increases earned: one at every 4th character level. */
@@ -618,15 +609,16 @@
     if (lvl === 0) { warn('warn', 'Class', 'No class levels taken — every derived number below is for a 0-level character.'); }
     if (lvl > 7) warn('warn', 'Class', 'Character level ' + lvl + ' is past the Riddle of Steel ceiling of 7. The tables here stop at 7.');
 
-    /* point buy */
-    const spent = E.pointBuySpent(ch);
-    if (spent > ch.pointBuyBudget) {
-      warn('warn', 'Abilities', 'Point buy spends ' + spent + ' of ' + ch.pointBuyBudget + ' points — ' + (spent - ch.pointBuyBudget) + ' over budget.');
-    }
-    ABIL.forEach(function (k) {
-      const base = ch.abilities.base[k];
-      if (base < 7 || base > 18) warn('warn', 'Abilities', k.toUpperCase() + ' base score ' + base + ' is outside the 7-18 point buy range.');
-    });
+    /* NO POINT BUY — AND NO ABILITY-SCORE VALIDATION AT ALL. Retired 2026-09-10 (owner).
+       Every character here arrives by import. The Two Snakes pregame scores come across exactly
+       as rolled and the ONLY legal change to them is the one +1 at 4th level, checked below.
+       There is no budget to be over, so the two warnings that used to sit here — "spends N of 20
+       points, X over budget" and "outside the 7-18 point buy range" — were pure noise: measured
+       against all 38 live characters on 2026-09-10 they fired for 32 and 3 of them, and the
+       imported scores cost a median of 34 points against a budget of 20. The yardstick did not
+       apply. Do not reintroduce a score check here without the owner: a high rolled stat is the
+       point of the pregame, not a defect. `engine_tests.js --mutate=pointbuy` re-adds one so
+       that this absence is pinned by a test rather than merely true today. */
 
     /* ability increases */
     const earned = E.abilityIncreasesEarned(ch), used = E.abilityIncreasesSpent(ch);

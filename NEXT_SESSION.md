@@ -12,10 +12,10 @@
 | | |
 |---|---|
 | **Live** | https://reunion2027-twosnakes.com/builder/ |
-| **Build stamp** | `158b39de074c` (`GET /api/build`) |
-| **Git** | `d7fd2ca`, 6 commits, **0 unpushed**, working tree clean |
+| **Build stamp** | `6f694c524094` (`GET /api/build`) — moved 2026-09-10 by (k)+(l) |
+| **Git** | `12acd4e`, 7 commits, **0 unpushed** — but the working tree is **DIRTY**: 5 modified + untracked `class_table_tests.js` (the class-table fixes, uncommitted and undeployed; see Open items 1) |
 | **Remote** | `git@github.com:two-snakes2027/pf1e-character-builder.git` (private) |
-| **Tests** | **564** assertions, **15** mutations all proven to fail |
+| **Tests** | **695** assertions, **20** mutations all proven to fail |
 | **Stored characters** | 1 (Rango, `__dm__`) |
 | **Services** | `two-snakes`, `pf1cb`, `caddy` — all active |
 
@@ -63,10 +63,21 @@ the test suites possible — keep it.
 
 ## Open items
 
-1. **Four APG class tables are unverified: Inquisitor, Oracle, Summoner, Witch.** Flagged
-   `verify: true` in `js/data/classes.js`; the app shows a spot-check notice on any character
-   with levels in them. Entered from recall. **Check spells/day and spells known against the APG
-   before those see play.** The flag is in the data so it cannot be forgotten.
+1. ~~Four APG class tables are unverified.~~ **CLOSED 2026-09-09 — and it was worse than the
+   flag said.** All 12 casting classes were checked cell-for-cell against d20pfsrd *and*
+   Archives of Nethys (agreeing everywhere). **29 cells were wrong across seven classes** — three
+   of the four flagged ones, plus Cleric, Druid, Bard, Paladin and Ranger, none of which was
+   flagged. Witch's tables were correct. See CHANGES (k). `class_table_tests.js` now pins every
+   value, so this cannot silently drift again. **DEPLOYED 2026-09-10 22:21 UTC** — the suite
+   passes 124/124 when run against the bytes downloaded from production, so the corrected cells
+   are live, not merely committed.
+
+   **Verified:** spells/day, spells known, per-level BAB and saves, hit die, skill ranks,
+   proficiencies and class skills, for all 12 casting classes, levels 1-7.
+   **Not verified:** the `features[]` prose (names and level placement were read, wording was
+   not line-checked against the book), and the five non-casting classes — Barbarian, Fighter,
+   Monk, Rogue, Cavalier — whose pages were never scraped. Their BAB/save/skill entries have
+   never been checked against a source.
 2. **Level-1 overwrite gap.** A re-import overwrites the build on file unless that build is a
    *higher level*. A level-1 build carrying feats, skill ranks or armour is overwritten without a
    prompt, because the rule is level-based as specified. Extend to "any real work" if it bites.
@@ -75,6 +86,13 @@ the test suites possible — keep it.
 4. **Weapon matching under-matches on purpose.** A pregame "broad sword" lands in gear with its
    description rather than being assigned a stat block it may not deserve.
 5. `pf1cb_access.json` is still in `.gitignore` though the access-code system is gone. Harmless.
+6. **Non-ability Arduin mods are inert.** `E.abilityScores` reads only the six ability keys, so
+   Boomer's `maxHp: -2` ("Congenital Analgesia") is imported, listed on the Arduin card, and
+   never reaches HP. One live case today. Not fixed — the owner has not asked.
+7. **12 of the 38 live Two Snakes characters have no Arduin stored at all** (Hakim, Ziggerdoo,
+   Huck Finis, Rango, Brona, Dude, Miscy, Houndog, Mel the Swell, Gorgar, Bitumen, Will Wist).
+   The importer carries one whenever it exists — verified on all 26 that have one — so this is a
+   gap on the Two Snakes side, not here.
 
 ---
 
@@ -142,7 +160,20 @@ origin for the cookie, and `/me` + `/data/get` belonging to the game. Point it a
    and `printf '%s'` with no newline makes `read` return non-zero, which `set -e` turns into a
    silent exit. All four broke a one-liner handed to the owner. **Test the literal command.**
 
-7. **Never print a secret.** The DM PIN was leaked into a transcript by `cat`-ing a temp file
+7. **A flag marks suspicion, not safety — and its absence proves nothing.** Four class tables
+   carried `verify: true`; seven were wrong. Cleric and Druid had an invented orison progression
+   sitting in plain sight, unflagged, through 564 passing assertions. When you check the flagged
+   thing, check its unflagged neighbours by the same method — it costs one more loop iteration.
+
+8. **Verify the instrument, especially when it agrees with you.** Fetching these tables through
+   a summarising model returned the Oracle table *shifted three rows down* — i.e. the file's own
+   wrong numbers, relabelled onto other levels. Trusting it would have "confirmed" the bug. The
+   hand-written replacement parser then had three bugs of its own (dropped literal `0` cells,
+   mis-sliced AoN's two-section tables, right-aligned rows with a collapsed trailing cell), each
+   producing a plausible wrong answer. **Every one surfaced as a value that made no sense — none
+   as an error.** A parser that reports numbers is not a parser that reports *correct* numbers.
+
+9. **Never print a secret.** The DM PIN was leaked into a transcript by `cat`-ing a temp file
    after being careful everywhere else. It has been rotated. Compare secrets by **hash**.
 
 ---
@@ -164,7 +195,7 @@ js/import_twosnakes.js   Two Snakes -> PF1E mapping
 js/ui.js                 the four tabs
 server.js                identity delegation, per-player storage, one-build-per-character
 devproxy.js              LOCAL ONLY — stand-in for Caddy + the game
-engine_tests.js / import_tests.js / server_tests.js / test.sh
+engine_tests.js / import_tests.js / server_tests.js / class_table_tests.js / test.sh
 ```
 
 **Tab layout:** 1 Combat & Stats (+ Spellcasting **and Spells**) · 2 Skills, Feats & Abilities ·

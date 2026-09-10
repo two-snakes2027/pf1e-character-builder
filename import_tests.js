@@ -123,11 +123,14 @@ const FIXTURE = {
     Object.keys(ch.abilities.base).indexOf('luck') < 0
     && Object.values(ch.abilities.base).indexOf(8) < 0);
 
-  /* The point buy is now visibly over budget, and the rules check must SAY so rather than
-     quietly accept it — that message is what tells the player what to trim. */
+  /* REVERSED 2026-09-10. This used to assert the opposite — that the rules check reported how
+     far over a 20-point budget the imported line sat, so the player knew what to trim. The owner
+     retired point buy: the pregame scores come across as rolled and stay that way, so an import
+     must now produce NO point-buy comment at all. Measured before the change: 32 of the 38 live
+     characters drew the over-budget warning. */
   const dImp = E.derive(ch);
-  ok('an imported sheet is reported as over the point-buy budget',
-    dImp.warnings.some(function (w) { return /over budget/.test(w.msg); }),
+  ok('an imported sheet draws no point-buy comment',
+    !dImp.warnings.some(function (w) { return /over budget|point buy|7-18/i.test(w.msg); }),
     JSON.stringify(dImp.warnings.map(function (w) { return w.msg; })));
   /* 18 imported + 2 wheel + 2 from this fixture's Arduin = 22; CON 14 + 2 wheel = 16. */
   ok('the house +2/+2 and the Arduin both stack on top of the imported scores',

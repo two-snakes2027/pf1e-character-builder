@@ -7,7 +7,15 @@
           computed at runtime and are NOT baked in here.
    known: spells known, spontaneous casters only.
    verify:true  -> table entered from recall with lower confidence; the UI marks it for a
-          book spot-check rather than silently presenting it as certain. */
+          book spot-check rather than silently presenting it as certain. No class carries it
+          now; keep the mechanism for the next table added from memory.
+
+   Provenance: on 2026-09-09 every casting class here was checked cell-for-cell against BOTH
+   d20pfsrd.com and aonprd.com, which agreed throughout — spells/day, spells known, per-level
+   BAB and saves, hit die, skill ranks, proficiencies and class skills. 29 cells were wrong and
+   were corrected. `class_table_tests.js` pins the result; if you change a number here, that
+   suite must be changed too, and only with a source in hand. The five non-casting classes
+   (Barbarian, Fighter, Monk, Rogue, Cavalier) have NOT been checked against a source. */
 (function () {
   const PF = (window.PF = window.PF || {});
   const D = (PF.DATA = PF.DATA || {});
@@ -54,7 +62,7 @@
       casting: {
         type: 'spontaneous', ability: 'cha', list: 'bard', cantripsAtWill: true, maxSpellLvl: 3,
         spd: { 1: { 1: 1 }, 2: { 1: 2 }, 3: { 1: 3 }, 4: { 1: 3, 2: 1 }, 5: { 1: 4, 2: 2 }, 6: { 1: 4, 2: 3 }, 7: { 1: 4, 2: 3, 3: 1 } },
-        known: { 1: { 0: 4, 1: 2 }, 2: { 0: 5, 1: 3 }, 3: { 0: 6, 1: 4 }, 4: { 0: 6, 1: 4, 2: 2 }, 5: { 0: 6, 1: 4, 2: 3 }, 6: { 0: 6, 1: 5, 2: 4 }, 7: { 0: 6, 1: 5, 2: 4, 3: 2 } }
+        known: { 1: { 0: 4, 1: 2 }, 2: { 0: 5, 1: 3 }, 3: { 0: 6, 1: 4 }, 4: { 0: 6, 1: 4, 2: 2 }, 5: { 0: 6, 1: 4, 2: 3 }, 6: { 0: 6, 1: 4, 2: 4 }, 7: { 0: 6, 1: 5, 2: 4, 3: 2 } }
       },
       features: [
         { lvl: 1, name: 'Bardic Knowledge', text: 'Add 1/2 bard level (min 1) to all Knowledge checks, and may make them untrained.' },
@@ -81,8 +89,8 @@
       casting: {
         type: 'prepared', ability: 'wis', list: 'cleric', domainSlot: true, maxSpellLvl: 4,
         spd: {
-          1: { 0: 3, 1: 1 }, 2: { 0: 4, 1: 2 }, 3: { 0: 4, 1: 2, 2: 1 }, 4: { 0: 5, 1: 3, 2: 2 },
-          5: { 0: 5, 1: 3, 2: 2, 3: 1 }, 6: { 0: 5, 1: 3, 2: 3, 3: 2 }, 7: { 0: 6, 1: 4, 2: 3, 3: 2, 4: 1 }
+          1: { 0: 3, 1: 1 }, 2: { 0: 4, 1: 2 }, 3: { 0: 4, 1: 2, 2: 1 }, 4: { 0: 4, 1: 3, 2: 2 },
+          5: { 0: 4, 1: 3, 2: 2, 3: 1 }, 6: { 0: 4, 1: 3, 2: 3, 3: 2 }, 7: { 0: 4, 1: 4, 2: 3, 3: 2, 4: 1 }
         }
       },
       features: [
@@ -105,8 +113,8 @@
       casting: {
         type: 'prepared', ability: 'wis', list: 'druid', maxSpellLvl: 4,
         spd: {
-          1: { 0: 3, 1: 1 }, 2: { 0: 4, 1: 2 }, 3: { 0: 4, 1: 2, 2: 1 }, 4: { 0: 5, 1: 3, 2: 2 },
-          5: { 0: 5, 1: 3, 2: 2, 3: 1 }, 6: { 0: 5, 1: 3, 2: 3, 3: 2 }, 7: { 0: 6, 1: 4, 2: 3, 3: 2, 4: 1 }
+          1: { 0: 3, 1: 1 }, 2: { 0: 4, 1: 2 }, 3: { 0: 4, 1: 2, 2: 1 }, 4: { 0: 4, 1: 3, 2: 2 },
+          5: { 0: 4, 1: 3, 2: 2, 3: 1 }, 6: { 0: 4, 1: 3, 2: 3, 3: 2 }, 7: { 0: 4, 1: 4, 2: 3, 3: 2, 4: 1 }
         }
       },
       features: [
@@ -185,8 +193,8 @@
         'Knowledge (religion)', 'Profession', 'Ride', 'Sense Motive', 'Spellcraft'],
       prof: { armor: ['all', 'shields (excl. tower)'], weapons: ['simple', 'martial'] },
       casting: {
-        type: 'prepared', ability: 'cha', list: 'paladin', startLevel: 4, maxSpellLvl: 1,
-        spd: { 4: { 1: 0 }, 5: { 1: 1 }, 6: { 1: 1 }, 7: { 1: 1 } }
+        type: 'prepared', ability: 'cha', list: 'paladin', startLevel: 4, maxSpellLvl: 2,
+        spd: { 4: { 1: 0 }, 5: { 1: 1 }, 6: { 1: 1 }, 7: { 1: 1, 2: 0 } }
       },
       features: [
         { lvl: 1, name: 'Aura of Good', text: 'Aura power equal to paladin level.' },
@@ -215,8 +223,8 @@
         'Spellcraft', 'Stealth', 'Survival', 'Swim'],
       prof: { armor: ['light', 'medium', 'shields (excl. tower)'], weapons: ['simple', 'martial'] },
       casting: {
-        type: 'prepared', ability: 'wis', list: 'ranger', startLevel: 4, maxSpellLvl: 1,
-        spd: { 4: { 1: 0 }, 5: { 1: 1 }, 6: { 1: 1 }, 7: { 1: 1 } }
+        type: 'prepared', ability: 'wis', list: 'ranger', startLevel: 4, maxSpellLvl: 2,
+        spd: { 4: { 1: 0 }, 5: { 1: 1 }, 6: { 1: 1 }, 7: { 1: 1, 2: 0 } }
       },
       features: [
         { lvl: 1, name: 'Favored Enemy', text: '+2 bonus on Bluff, Knowledge, Perception, Sense Motive, Survival and damage against one creature type. A second at 5th; the bonus for one rises by 2.' },
@@ -373,12 +381,11 @@
         'Knowledge (arcana)', 'Knowledge (dungeoneering)', 'Knowledge (nature)', 'Knowledge (planes)',
         'Knowledge (religion)', 'Perception', 'Profession', 'Ride', 'Sense Motive', 'Spellcraft',
         'Stealth', 'Survival', 'Swim'],
-      prof: { armor: ['light', 'medium', 'shields (excl. tower)'], weapons: ['simple', "deity's favored weapon"] },
-      verify: true,
+      prof: { armor: ['light', 'medium', 'shields (excl. tower)'], weapons: ['simple', 'hand crossbow', 'longbow', 'repeating crossbow', 'shortbow', "deity's favored weapon"] },
       casting: {
         type: 'spontaneous', ability: 'wis', list: 'inquisitor', cantripsAtWill: true, maxSpellLvl: 3,
-        spd: { 1: { 1: 2 }, 2: { 1: 2 }, 3: { 1: 3 }, 4: { 1: 3, 2: 1 }, 5: { 1: 4, 2: 2 }, 6: { 1: 4, 2: 3 }, 7: { 1: 5, 2: 3, 3: 1 } },
-        known: { 1: { 0: 4, 1: 2 }, 2: { 0: 5, 1: 3 }, 3: { 0: 6, 1: 4 }, 4: { 0: 6, 1: 4, 2: 2 }, 5: { 0: 6, 1: 5, 2: 3 }, 6: { 0: 6, 1: 5, 2: 4 }, 7: { 0: 6, 1: 6, 2: 4, 3: 2 } }
+        spd: { 1: { 1: 1 }, 2: { 1: 2 }, 3: { 1: 3 }, 4: { 1: 3, 2: 1 }, 5: { 1: 4, 2: 2 }, 6: { 1: 4, 2: 3 }, 7: { 1: 4, 2: 3, 3: 1 } },
+        known: { 1: { 0: 4, 1: 2 }, 2: { 0: 5, 1: 3 }, 3: { 0: 6, 1: 4 }, 4: { 0: 6, 1: 4, 2: 2 }, 5: { 0: 6, 1: 4, 2: 3 }, 6: { 0: 6, 1: 4, 2: 4 }, 7: { 0: 6, 1: 5, 2: 4, 3: 2 } }
       },
       features: [
         { lvl: 1, name: 'Domain', text: 'One cleric domain (or an inquisition), granting its powers but not its bonus spells.' },
@@ -407,11 +414,10 @@
       classSkills: ['Craft', 'Diplomacy', 'Heal', 'Knowledge (history)', 'Knowledge (planes)',
         'Knowledge (religion)', 'Profession', 'Sense Motive', 'Spellcraft'],
       prof: { armor: ['light', 'medium', 'shields (excl. tower)'], weapons: ['simple'] },
-      verify: true,
       casting: {
         type: 'spontaneous', ability: 'cha', list: 'cleric', cantripsAtWill: true, maxSpellLvl: 3,
         spd: { 1: { 1: 3 }, 2: { 1: 4 }, 3: { 1: 5 }, 4: { 1: 6, 2: 3 }, 5: { 1: 6, 2: 4 }, 6: { 1: 6, 2: 5, 3: 3 }, 7: { 1: 6, 2: 6, 3: 4 } },
-        known: { 1: { 0: 4, 1: 2 }, 2: { 0: 5, 1: 3 }, 3: { 0: 5, 1: 4 }, 4: { 0: 6, 1: 4, 2: 2 }, 5: { 0: 6, 1: 4, 2: 3 }, 6: { 0: 7, 1: 5, 2: 4, 3: 2 }, 7: { 0: 7, 1: 5, 2: 4, 3: 3 } }
+        known: { 1: { 0: 4, 1: 2 }, 2: { 0: 5, 1: 2 }, 3: { 0: 5, 1: 3 }, 4: { 0: 6, 1: 3, 2: 1 }, 5: { 0: 6, 1: 4, 2: 2 }, 6: { 0: 7, 1: 4, 2: 2, 3: 1 }, 7: { 0: 7, 1: 5, 2: 3, 3: 2 } }
       },
       features: [
         { lvl: 1, name: 'Mystery', text: 'Choose a mystery; it grants class skills, bonus spells and a revelation list.' },
@@ -428,16 +434,14 @@
       name: 'Summoner', src: 'APG', hd: 8, bab: 'threeq',
       saves: { fort: 'poor', ref: 'poor', will: 'good' }, skillRanks: 2,
       align: 'Any.',
-      classSkills: ['Craft', 'Fly', 'Handle Animal', 'Knowledge (arcana)', 'Knowledge (dungeoneering)',
-        'Knowledge (local)', 'Knowledge (nature)', 'Knowledge (planes)', 'Linguistics', 'Profession',
-        'Ride', 'Spellcraft', 'Use Magic Device'],
+      classSkills: ['Craft', 'Fly', 'Handle Animal'].concat(KN.all).concat(['Linguistics', 'Profession',
+        'Ride', 'Spellcraft', 'Use Magic Device']),
       prof: { armor: ['light'], weapons: ['simple'] },
-      verify: true,
       casting: {
         type: 'spontaneous', ability: 'cha', list: 'summoner', cantripsAtWill: true, maxSpellLvl: 3,
         arcaneFailure: true,
-        spd: { 1: { 1: 1 }, 2: { 1: 2 }, 3: { 1: 3 }, 4: { 1: 4, 2: 2 }, 5: { 1: 4, 2: 3 }, 6: { 1: 5, 2: 4, 3: 2 }, 7: { 1: 5, 2: 4, 3: 3 } },
-        known: { 1: { 0: 4, 1: 2 }, 2: { 0: 5, 1: 3 }, 3: { 0: 5, 1: 4 }, 4: { 0: 6, 1: 4, 2: 2 }, 5: { 0: 6, 1: 4, 2: 3 }, 6: { 0: 6, 1: 5, 2: 4, 3: 2 }, 7: { 0: 6, 1: 5, 2: 4, 3: 3 } }
+        spd: { 1: { 1: 1 }, 2: { 1: 2 }, 3: { 1: 3 }, 4: { 1: 3, 2: 1 }, 5: { 1: 4, 2: 2 }, 6: { 1: 4, 2: 3 }, 7: { 1: 4, 2: 3, 3: 1 } },
+        known: { 1: { 0: 4, 1: 2 }, 2: { 0: 5, 1: 3 }, 3: { 0: 6, 1: 4 }, 4: { 0: 6, 1: 4, 2: 2 }, 5: { 0: 6, 1: 4, 2: 3 }, 6: { 0: 6, 1: 4, 2: 4 }, 7: { 0: 6, 1: 5, 2: 4, 3: 2 } }
       },
       features: [
         { lvl: 1, name: 'Eidolon', text: 'An outsider bound to you, sharing your alignment. Its evolution pool and abilities scale with your level.' },
@@ -457,8 +461,7 @@
       align: 'Any.',
       classSkills: ['Craft', 'Fly', 'Heal', 'Intimidate', 'Knowledge (arcana)', 'Knowledge (history)',
         'Knowledge (nature)', 'Knowledge (planes)', 'Profession', 'Spellcraft', 'Use Magic Device'],
-      prof: { armor: [], weapons: ['club', 'dagger', 'quarterstaff', 'light crossbow'] },
-      verify: true,
+      prof: { armor: [], weapons: ['simple'] },
       casting: {
         type: 'prepared', ability: 'int', list: 'witch', familiarBook: true, maxSpellLvl: 4,
         arcaneFailure: true,

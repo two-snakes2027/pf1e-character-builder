@@ -22,6 +22,19 @@ if (MUT === 'crit') {
 }
 if (MUT === 'skillrank') { const o = E.skillRankBudget; E.skillRankBudget = function (ch) { const r = o(ch); r.total += 5; return r; }; }
 if (MUT === 'hp') { const o = E.hitPoints; E.hitPoints = function (ch, c) { const r = o(ch, c); r.max += 5; return r; }; }
+if (MUT === 'pointbuy') {
+  /* Re-add a point-buy warning of the exact shape retired on 2026-09-10. If the tests below
+     still pass with this in place, they are not actually checking that it is gone. */
+  const o = E.validate;
+  E.validate = function (ch, d) {
+    const out = o(ch, d);
+    out.push({ sev: 'warn', where: 'Abilities',
+               msg: 'Point buy spends 42 of 20 points — 22 over budget.' });
+    out.push({ sev: 'warn', where: 'Abilities',
+               msg: 'INT base score 19 is outside the 7-18 point buy range.' });
+    return out;
+  };
+}
 if (MUT === 'ac') { const o = E.derive; E.derive = function (ch) { const d = o(ch); d.ac.total += 2; return d; }; }
 if (MUT === 'bonusspells') {
   const o = E.castingSummary;
@@ -194,12 +207,13 @@ function mk(over) {
   eq('Wizard 7 concentration', c.concentration, 11);
   eq('Wizard BAB at 7 is half', d.babBase, 3);
 
-  /* Cleric 5, WIS 16 (+3): base 5/3/2/1, +1 bonus at levels 1-3, +1 domain at 1-3. */
+  /* Cleric 5, WIS 16 (+3): base 4/3/2/1, +1 bonus at levels 1-3, +1 domain at 1-3.
+     Orisons stay at 4 from 2nd level on — they do not climb with level. */
   const cl = mk({ name: 'Cle5', levels: [{ cls: 'Cleric', n: 5 }] });
   cl.abilities.base = { str: 10, dex: 10, con: 10, int: 10, wis: 16, cha: 10 };
   cl.abilities.house = { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 };
   const dc = E.derive(cl).casting[0];
-  eq('Cleric 5 slots incl. domain', dc.slots, { 0: 5, 1: 5, 2: 4, 3: 3 });
+  eq('Cleric 5 slots incl. domain', dc.slots, { 0: 4, 1: 5, 2: 4, 3: 3 });
 
   /* A low casting ability does not grant bonus spells. */
   const lw = mk({ levels: [{ cls: 'Wizard', n: 7 }] });
@@ -349,10 +363,28 @@ function mk(over) {
 
 /* ============================================================ 14. VALIDATION WARNINGS */
 (function () {
-  /* Point buy over budget. 18/16/16/14/14/14 is far past 20 points. */
-  const ch = mk({ levels: [{ cls: 'Fighter', n: 3 }], pointBuyBudget: 20 });
+  /* POINT BUY IS RETIRED (2026-09-10). Imported pregame scores are the scores, so a line that
+     would once have been 22 points over budget must now draw no comment at all — and neither
+     must a 19, which is outside the old 7-18 range but is simply what somebody rolled.
+     Proven able to fail by --mutate=pointbuy, which puts both warnings back. */
+  const ch = mk({ levels: [{ cls: 'Fighter', n: 3 }] });
   ch.abilities.base = { str: 18, dex: 16, con: 16, int: 14, wis: 14, cha: 14 };
-  has('point buy over budget', E.derive(ch).warnings, 'over budget');
+  const wRich = E.derive(ch).warnings;
+  hasNot('no over-budget warning on a rich stat line', wRich, 'over budget');
+  hasNot('no point-buy language anywhere', wRich, 'point buy');
+  hasNot('no point-buy language anywhere (capitalised)', wRich, 'Point buy');
+
+  const hiRoll = mk({ levels: [{ cls: 'Fighter', n: 3 }] });
+  hiRoll.abilities.base = { str: 19, dex: 16, con: 16, int: 19, wis: 14, cha: 14 };
+  hasNot('a rolled 19 is not flagged', E.derive(hiRoll).warnings, 'outside the 7-18');
+
+  /* The one ability rule that DOES survive: a single +1 at 4th level. */
+  const lv4 = mk({ levels: [{ cls: 'Fighter', n: 4 }] });
+  has('the 4th-level increase is offered', E.derive(lv4).warnings, 'ability increase(s) still unspent');
+  lv4.abilities.levelUp.str = 2;
+  has('spending more than one is caught', E.derive(lv4).warnings, 'but only 1 earned');
+  const lv3 = mk({ levels: [{ cls: 'Fighter', n: 3 }] });
+  hasNot('nothing is offered before 4th', E.derive(lv3).warnings, 'still unspent');
 
   /* Skill ranks over the character-level cap. */
   const sk = mk({ levels: [{ cls: 'Rogue', n: 2 }] });
@@ -371,12 +403,22 @@ function mk(over) {
   const hi = mk({ levels: [{ cls: 'Fighter', n: 9 }] });
   has('level over 7 warned', E.derive(hi).warnings, 'past the Riddle of Steel ceiling');
 
-  /* APG classes carry the unverified-table notice. */
-  const orc = mk({ levels: [{ cls: 'Oracle', n: 3 }] });
-  has('APG table flagged for spot-check', E.derive(orc).warnings, 'flagged for a book spot-check');
+  /* The unverified-table notice fires for ANY class carrying verify:true. No shipped class
+     carries it now (all four APG tables were verified against the SRD on 2026-09-09), so this
+     tests the mechanism on a synthetic class rather than on today's data. */
+  (function () {
+    const real = D.CLASS_BY_NAME['Oracle'];
+    const fake = JSON.parse(JSON.stringify(real)); fake.verify = true;
+    D.CLASS_BY_NAME['Oracle'] = fake;
+    const orc = mk({ levels: [{ cls: 'Oracle', n: 3 }] });
+    has('verify:true raises the spot-check notice', E.derive(orc).warnings, 'flagged for a book spot-check');
+    D.CLASS_BY_NAME['Oracle'] = real;
+    const clean = mk({ levels: [{ cls: 'Oracle', n: 3 }] });
+    hasNot('no spot-check notice once verified', E.derive(clean).warnings, 'flagged for a book spot-check');
+  })();
 
   /* A clean Core character produces no 'warn' severity findings. */
-  const clean = mk({ name: 'Clean', alignment: 'Neutral Good', levels: [{ cls: 'Fighter', n: 3 }], pointBuyBudget: 20 });
+  const clean = mk({ name: 'Clean', alignment: 'Neutral Good', levels: [{ cls: 'Fighter', n: 3 }] });
   clean.abilities.base = { str: 15, dex: 14, con: 13, int: 10, wis: 12, cha: 10 };
   clean.feats = [{ name: 'Power Attack', choice: '' }, { name: 'Dodge', choice: '' },
                  { name: 'Weapon Focus', choice: 'Longsword' }, { name: 'Toughness', choice: '' }];
