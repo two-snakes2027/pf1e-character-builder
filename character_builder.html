@@ -54,6 +54,10 @@
       <div class="field"><label for="fGender">Gender</label><input id="fGender" data-bind="gender"></div>
       <div class="field"><label for="fAge">Age</label><input id="fAge" data-bind="age"></div>
       <div class="field"><label for="fRace">Race</label><input id="fRace" value="Human" disabled title="The Hyborian Age permits humans only."></div>
+      <div class="field"><label for="fHeight">Height</label><input id="fHeight" data-bind="height"></div>
+      <div class="field"><label for="fWeight">Weight</label><input id="fWeight" data-bind="weight"></div>
+      <div class="field"><label for="fEyes">Eyes</label><input id="fEyes" data-bind="eyes"></div>
+      <div class="field"><label for="fHair">Hair</label><input id="fHair" data-bind="hair"></div>
       <div class="field levels-field">
         <label>Classes &amp; levels</label>
         <div class="levelbox">
@@ -91,7 +95,9 @@
     </div>
 
     <div class="card">
-      <h2>Vital Statistics</h2>
+      <h2>Vital Statistics <span class="hint">click any number to set it by hand</span>
+        <span class="spacer"></span>
+        <button class="btn sm no-print" id="btnAdjust">Adjustments</button></h2>
       <div class="vitals" id="vitals"></div>
     </div>
 
@@ -212,6 +218,17 @@
         <button class="btn sm no-print" id="btnArduin">Set / roll</button>
       </h2>
       <div id="arduinBox"></div>
+    </div>
+
+    <div class="card">
+      <h2>Traits &amp; Languages
+        <span class="spacer"></span>
+        <button class="btn sm no-print" id="btnAddTrait">+ Trait</button>
+        <button class="btn sm no-print" id="btnAddLanguage">+ Language</button>
+      </h2>
+      <div id="traitList"></div>
+      <div id="languageList"></div>
+      <div class="emptystate" id="traitEmpty">No traits or extra languages.</div>
     </div>
 
     <div class="card">

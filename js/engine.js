@@ -45,6 +45,8 @@
       acMisc: { natural: 0, deflection: 0, dodge: 0, misc: 0 },
       saveMisc: { fort: 0, ref: 0, will: 0 },
       initMisc: 0, speedMisc: 0, babMisc: 0, cmbMisc: 0, cmdMisc: 0,
+      overrides: {},                    /* {ac,touch,flatFooted,fort,ref,will,bab,init,speed,cmb,cmd,hpMax}
+                                           a typed value wins over the computed one — see applyOverrides */
       notes: { background: '', appearance: '', personality: '', allies: '', goals: '', session: '' },
       twoSnakes: null                   /* provenance of an imported pregame character */
     };
@@ -309,7 +311,57 @@
     d.wealthGp = E.wealthInGp(ch);
     d.gearValueGp = E.gearValue(ch);
 
+    /* --- manual overrides -------------------------------------------------------------
+       Added 2026-09-10 (owner: "I would like the ability to edit every field"). Everything
+       above is DERIVED; this is the one place a person's typed number beats the derivation.
+
+       It runs LAST, on purpose. Anything earlier would feed an overridden value back into
+       further math — an overridden BAB would silently change CMB, CMD and the whole attack
+       sequence, so a single typed number would rewrite half the sheet. Overriding a total
+       means "print this number here", nothing more.
+
+       `d.overridden` names which totals are a person's word rather than the sheet's, so the UI
+       can mark them and validate() can say so out loud. The computed value is kept in
+       `d.computed` so the reset button has something to go back to and the player can see what
+       the sheet thinks it should be. */
+    d.overridden = {}; d.computed = {};
+    E.applyOverrides(ch, d);
+
     d.warnings = E.validate(ch, d);
+    return d;
+  };
+
+  /* The override map: where each key writes, and what it is called on screen. Adding a stat to
+     this table is all that is needed to make it overridable. */
+  E.OVERRIDABLE = [
+    { key: 'ac',         label: 'AC',              get: function (d) { return d.ac.total; },      set: function (d, v) { d.ac.total = v; } },
+    { key: 'touch',      label: 'Touch AC',        get: function (d) { return d.ac.touch; },      set: function (d, v) { d.ac.touch = v; } },
+    { key: 'flatFooted', label: 'Flat-footed AC',  get: function (d) { return d.ac.flatFooted; }, set: function (d, v) { d.ac.flatFooted = v; } },
+    { key: 'fort',       label: 'Fortitude',       get: function (d) { return d.saves.fort.total; }, set: function (d, v) { d.saves.fort.total = v; } },
+    { key: 'ref',        label: 'Reflex',          get: function (d) { return d.saves.ref.total; },  set: function (d, v) { d.saves.ref.total = v; } },
+    { key: 'will',       label: 'Will',            get: function (d) { return d.saves.will.total; }, set: function (d, v) { d.saves.will.total = v; } },
+    { key: 'bab',        label: 'Base attack',     get: function (d) { return d.babBase; },       set: function (d, v) { d.babBase = v; } },
+    { key: 'init',       label: 'Initiative',      get: function (d) { return d.init; },          set: function (d, v) { d.init = v; } },
+    { key: 'speed',      label: 'Speed',           get: function (d) { return d.speed; },         set: function (d, v) { d.speed = v; d.speedRun = v * 4; } },
+    { key: 'cmb',        label: 'CMB',             get: function (d) { return d.cmb; },           set: function (d, v) { d.cmb = v; } },
+    { key: 'cmd',        label: 'CMD',             get: function (d) { return d.cmd; },           set: function (d, v) { d.cmd = v; } },
+    { key: 'hpMax',      label: 'Max HP',          get: function (d) { return d.hp.max; },        set: function (d, v) { d.hp.max = v; } }
+  ];
+
+  E.applyOverrides = function (ch, d) {
+    const ov = (ch && ch.overrides) || {};
+    E.OVERRIDABLE.forEach(function (o) {
+      const raw = ov[o.key];
+      /* An override is a number someone typed. null, '' and undefined all mean "not set" —
+         distinguishing them matters, because 0 is a legitimate override (a BAB of 0, a speed of
+         0 for someone who cannot move) and `if (!raw)` would throw it away. */
+      if (raw === undefined || raw === null || raw === '') return;
+      const n = Number(raw);
+      if (!isFinite(n)) return;
+      d.computed[o.key] = o.get(d);
+      o.set(d, n);
+      d.overridden[o.key] = true;
+    });
     return d;
   };
 
@@ -624,6 +676,15 @@
     const earned = E.abilityIncreasesEarned(ch), used = E.abilityIncreasesSpent(ch);
     if (used > earned) warn('warn', 'Abilities', 'Spent ' + used + ' level-up ability increases but only ' + earned + ' earned (one per 4th level).');
     if (used < earned) warn('info', 'Abilities', earned - used + ' level-up ability increase(s) still unspent.');
+
+    /* Overrides are legal and deliberate, but they must never be invisible: a sheet whose AC is
+       a typed number rather than a computed one looks identical on paper. Info severity — this
+       is a note, not a fault. */
+    E.OVERRIDABLE.forEach(function (o) {
+      if (!d.overridden || !d.overridden[o.key]) return;
+      warn('info', 'Manual edit', o.label + ' is set by hand to ' + o.get(d) +
+        '; the sheet computes ' + d.computed[o.key] + '.');
+    });
 
     /* skills */
     const budget = d.skillRanks;

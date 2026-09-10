@@ -437,3 +437,33 @@ textarea.notes {
   body { font-size: 11pt; }
   .wrap { max-width: none; padding: 0; }
 }
+
+/* ---------------------------------------------------------------- manual edits (2026-09-10)
+   Every derived total can be typed over. Two things this styling has to do: make it discoverable
+   that a number is clickable, and make it unmistakable afterwards that the number on the sheet
+   is somebody's word rather than the sheet's arithmetic. The second matters more — an overridden
+   AC and a computed AC look identical on a printout otherwise. */
+.ov-target { cursor: text; border-bottom: 1px dashed transparent; }
+.ov-target:hover { border-bottom-color: var(--line); }
+.ov-on { color: var(--accent, #b5651d); border-bottom: 1px dashed currentColor; }
+.ov-on::after { content: '✎'; font-size: 0.6em; vertical-align: super; margin-left: 2px; opacity: .8; }
+.ov-note { display: flex; align-items: center; gap: 4px; justify-content: center; opacity: .85; }
+.ov-reset { padding: 0 4px; line-height: 1.2; }
+.ov-inline { display: inline-block; min-width: 1.4em; text-align: center; }
+.ov-input { width: 100%; min-width: 3em; font: inherit; color: inherit; text-align: inherit;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 0 3px; }
+.cell-input { width: 100%; font: inherit; color: inherit; background: transparent;
+  border: 1px solid transparent; border-radius: 4px; padding: 1px 3px; resize: vertical; }
+.cell-input:hover { border-color: var(--line); }
+.cell-input:focus { border-color: var(--accent, #b5651d); background: var(--paper); outline: none; }
+.adjust-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px; margin: 6px 0 14px; }
+.adjust-grid .field { display: flex; flex-direction: column; gap: 2px; }
+.adjust-grid input { width: 100%; }
+
+/* A printed sheet should still say which numbers were set by hand. */
+@media print {
+  .ov-on { color: #000; }
+  .ov-on::after { content: ' *'; }
+  .cell-input { border-color: transparent; }
+}

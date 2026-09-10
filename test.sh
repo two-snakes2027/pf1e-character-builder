@@ -7,7 +7,7 @@ echo "=== server ==="; node server_tests.js
 echo "=== class tables ==="; node class_table_tests.js
 echo
 echo "=== mutation checks (each MUST fail) ==="
-for m in bab save mod crit skillrank hp ac bonusspells pointbuy; do
+for m in bab save mod crit skillrank hp ac bonusspells pointbuy nooverride; do
   if node engine_tests.js --mutate="$m" >/dev/null 2>&1; then
     echo "  !! engine --mutate=$m PASSED — that formula is not covered"; exit 1
   else echo "  ok engine --mutate=$m fails as it should"; fi

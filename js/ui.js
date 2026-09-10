@@ -363,6 +363,7 @@
     renderFeats();
     renderClassFeatures();
     renderArduin();
+    renderTraitsAndLanguages();
     renderSpecials();
     renderSpells();
     renderLoad();
@@ -503,27 +504,93 @@
     $('incHint').textContent = 'level-up increases: ' + used + ' of ' + earned + ' used';
   }
 
+  /* Click a derived number to type your own. Added 2026-09-10 — the owner wanted every field
+     editable, and a computed total is the one kind of field that has no box by nature.
+
+     The typed value is stored on the character (CH.overrides), never on the derived object, so
+     it survives a recompute and a reload. Clearing the box REMOVES the override rather than
+     storing 0 — otherwise "I changed my mind" would silently become "my AC is zero". The engine
+     applies these last, so an overridden BAB does not drag CMB and the attack routine with it. */
+  function makeOverridable(node, ovKey, label) {
+    const isOn = !!(DER.overridden && DER.overridden[ovKey]);
+    node.classList.add('ov-target');
+    if (isOn) node.classList.add('ov-on');
+    node.title = isOn
+      ? label + ' set by hand. The sheet computes ' + DER.computed[ovKey] + '. Click to change, ↺ to go back.'
+      : 'Click to set ' + label + ' by hand';
+    node.onclick = function (ev) {
+      if (ev.target.tagName === 'BUTTON' || node.querySelector('input')) return;
+      const cur = CH.overrides && CH.overrides[ovKey];
+      const shown = node.textContent;
+      const inp = document.createElement('input');
+      inp.type = 'number';
+      inp.value = cur === undefined || cur === null ? '' : cur;
+      inp.className = 'ov-input';
+      let done = false;
+      const commit = function () {
+        if (done) return; done = true;
+        CH.overrides = CH.overrides || {};
+        if (inp.value === '') delete CH.overrides[ovKey];
+        else CH.overrides[ovKey] = Number(inp.value);
+        recompute();
+      };
+      inp.onblur = commit;
+      /* Enter commits DIRECTLY rather than by calling blur() and hoping the blur handler runs.
+         blur() is a no-op on an element that never took focus, which strands the typed value in
+         a box nobody will look at again — `done` keeps the subsequent real blur from
+         double-committing. `change` is belt and braces for the same reason. */
+      inp.onchange = commit;
+      inp.onkeydown = function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); commit(); }
+        if (e.key === 'Escape') { e.preventDefault(); done = true; node.textContent = shown; recompute(); }
+      };
+      node.textContent = '';
+      node.appendChild(inp);
+      inp.focus(); inp.select();
+    };
+    return node;
+  }
+
+  function resetButton(ovKey) {
+    const b = el('button', 'btn sm no-print ov-reset', '↺');
+    b.title = 'Back to the computed value';
+    b.onclick = function (e) {
+      e.stopPropagation();
+      if (CH.overrides) delete CH.overrides[ovKey];
+      recompute();
+    };
+    return b;
+  }
+
   function renderVitals() {
     const host = $('vitals');
     host.innerHTML = '';
     const hp = DER.hp;
-    const add = function (label, value, sub, hero) {
+    const add = function (label, value, sub, hero, ovKey) {
       const v = el('div', 'vital' + (hero ? ' hero' : ''));
       v.appendChild(el('div', 'v-label', label));
-      v.appendChild(el('div', 'v-value', value));
+      const valNode = el('div', 'v-value', value);
+      if (ovKey) makeOverridable(valNode, ovKey, label);
+      v.appendChild(valNode);
       if (sub) v.appendChild(el('div', 'v-sub', sub));
+      if (ovKey && DER.overridden && DER.overridden[ovKey]) {
+        const foot = el('div', 'v-sub ov-note');
+        foot.appendChild(document.createTextNode('by hand · computes ' + DER.computed[ovKey] + ' '));
+        foot.appendChild(resetButton(ovKey));
+        v.appendChild(foot);
+      }
       host.appendChild(v);
       return v;
     };
     add('Hit Points', hp.max, 'rolls ' + hp.fromLevels
       + (hp.toughness ? ' · tough +' + hp.toughness : '')
-      + (hp.favored ? ' · fav +' + hp.favored : ''), true);
-    add('Armor Class', DER.ac.total, 'touch ' + DER.ac.touch + ' · flat ' + DER.ac.flatFooted, true);
-    add('Initiative', sign(DER.init), 'DEX ' + sign(DER.mods.dex));
-    add('Speed', DER.speed + ' ft.', 'run ' + DER.speedRun + ' ft.');
-    add('Base Attack', sign(DER.babBase), DER.attackSeq.map(sign).join(' / '));
-    add('CMB', sign(DER.cmb), E.hasFeat(CH, 'Agile Maneuvers') ? 'DEX (agile)' : 'STR');
-    add('CMD', DER.cmd, 'flat ' + (DER.cmd - Math.max(0, DER.mods.dex)));
+      + (hp.favored ? ' · fav +' + hp.favored : ''), true, 'hpMax');
+    add('Armor Class', DER.ac.total, 'touch ' + DER.ac.touch + ' · flat ' + DER.ac.flatFooted, true, 'ac');
+    add('Initiative', sign(DER.init), 'DEX ' + sign(DER.mods.dex), false, 'init');
+    add('Speed', DER.speed + ' ft.', 'run ' + DER.speedRun + ' ft.', false, 'speed');
+    add('Base Attack', sign(DER.babBase), DER.attackSeq.map(sign).join(' / '), false, 'bab');
+    add('CMB', sign(DER.cmb), E.hasFeat(CH, 'Agile Maneuvers') ? 'DEX (agile)' : 'STR', false, 'cmb');
+    add('CMD', DER.cmd, 'flat ' + (DER.cmd - Math.max(0, DER.mods.dex)), false, 'cmd');
     add('Melee', sign(DER.melee), 'BAB + STR');
     add('Ranged', sign(DER.ranged), 'BAB + DEX');
 
@@ -555,7 +622,10 @@
       mi.type = 'number'; mi.value = s.misc; mi.dataset.fk = 'save:' + row[1];
       mi.oninput = function () { CH.saveMisc[row[1]] = Number(mi.value) || 0; recompute(); };
       miscTd.appendChild(mi); tr.appendChild(miscTd);
-      tr.appendChild(el('td', 'num tot', sign(s.total)));
+      const totTd = el('td', 'num tot', sign(s.total));
+      makeOverridable(totTd, row[1], row[0]);
+      if (DER.overridden && DER.overridden[row[1]]) totTd.appendChild(resetButton(row[1]));
+      tr.appendChild(totTd);
       tb.appendChild(tr);
     });
   }
@@ -590,12 +660,25 @@
     });
     const tot = el('tr');
     tot.appendChild(el('td', '', 'Total'));
-    tot.appendChild(el('td', 'num tot', ac.total));
-    tot.appendChild(el('td', 'tiny dim', 'touch ' + ac.touch + ' · flat-footed ' + ac.flatFooted));
+    const acTd = el('td', 'num tot', ac.total);
+    makeOverridable(acTd, 'ac', 'AC');
+    if (DER.overridden && DER.overridden.ac) acTd.appendChild(resetButton('ac'));
+    tot.appendChild(acTd);
+    /* touch and flat-footed are overridable too — they are separate numbers on the sheet and a
+       DM ruling can move one without the other. */
+    const sub = el('td', 'tiny dim');
+    sub.appendChild(document.createTextNode('touch '));
+    const tch = el('span', 'ov-inline', String(ac.touch));
+    makeOverridable(tch, 'touch', 'Touch AC'); sub.appendChild(tch);
+    sub.appendChild(document.createTextNode(' · flat-footed '));
+    const ff = el('span', 'ov-inline', String(ac.flatFooted));
+    makeOverridable(ff, 'flatFooted', 'Flat-footed AC'); sub.appendChild(ff);
+    tot.appendChild(sub);
     tb.appendChild(tot);
   }
 
   function wireTab1() {
+    $('btnAdjust').onclick = openAdjustments;
     $('selArmor').onchange = function () { CH.armor = $('selArmor').value; recompute(); };
     $('selShield').onchange = function () { CH.shield = $('selShield').value; recompute(); };
     $('selArmorEnh').onchange = function () { CH.armorEnh = Number($('selArmorEnh').value); recompute(); };
@@ -708,6 +791,12 @@
       CH.specials.push({ name: 'New ability', text: '' }); recompute();
     };
     $('btnArduin').onclick = openArduin;
+    $('btnAddTrait').onclick = function () {
+      CH.traits = CH.traits || []; CH.traits.push(''); recompute();
+    };
+    $('btnAddLanguage').onclick = function () {
+      CH.languages = CH.languages || []; CH.languages.push(''); recompute();
+    };
     $('btnAddSpell').onclick = function () { toggleSpellPicker(); };
   }
 
@@ -1021,6 +1110,100 @@
       + (wbl ? ' &nbsp;of a ' + wbl + ' gp guideline' : '');
   }
 
+  /* Traits and languages have been in the character model since the first commit with nowhere
+     on the page to type them. Both are free text on purpose: a campaign trait from a book and
+     one a DM invented at the table are the same kind of thing to this sheet. */
+  function renderTraitsAndLanguages() {
+    const th = $('traitList'), lh = $('languageList');
+    if (!th || !lh) return;
+    th.innerHTML = ''; lh.innerHTML = '';
+    const rowFor = function (arr, i, host, placeholder) {
+      const row = el('div', 'row');
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.value = arr[i]; inp.placeholder = placeholder;
+      inp.style.flex = '1';
+      inp.oninput = function () { arr[i] = inp.value; persist(); };
+      const x = el('button', 'btn sm no-print', '×');
+      x.onclick = function () { arr.splice(i, 1); recompute(); };
+      row.appendChild(inp); row.appendChild(x);
+      host.appendChild(row);
+    };
+    CH.traits = CH.traits || [];
+    CH.languages = CH.languages || [];
+    CH.traits.forEach(function (t, i) { rowFor(CH.traits, i, th, 'Trait'); });
+    CH.languages.forEach(function (l, i) { rowFor(CH.languages, i, lh, 'Language'); });
+    const empty = $('traitEmpty');
+    if (empty) empty.hidden = (CH.traits.length + CH.languages.length) > 0;
+  }
+
+  /* Every remaining stored number that had no box. Five of these — init, speed, BAB, CMB, CMD —
+     were already read by the engine and simply unreachable from the page: the sheet would honour
+     `babMisc` if something set it, and nothing ever could. */
+  function openAdjustments() {
+    modal('Manual adjustments', function (body) {
+      const section = function (title, hint) {
+        body.appendChild(el('h4', '', title));
+        if (hint) body.appendChild(el('div', 'tiny dim', hint));
+        const g = el('div', 'adjust-grid');
+        body.appendChild(g);
+        return g;
+      };
+      const numField = function (host, label, get, set, hint) {
+        const f = el('div', 'field');
+        f.appendChild(el('label', '', label));
+        const i = document.createElement('input');
+        i.type = 'number'; i.value = get();
+        i.oninput = function () { set(i.value === '' ? 0 : Number(i.value)); recompute(); };
+        f.appendChild(i);
+        if (hint) f.appendChild(el('div', 'tiny dim', hint));
+        host.appendChild(f);
+      };
+
+      const g1 = section('Modifiers the sheet adds in',
+        'These are added to the computed total, so the number keeps tracking the rest of the sheet. To replace a total outright, click it on the card instead.');
+      numField(g1, 'Initiative', function () { return CH.initMisc || 0; }, function (v) { CH.initMisc = v; });
+      numField(g1, 'Speed (ft.)', function () { return CH.speedMisc || 0; }, function (v) { CH.speedMisc = v; });
+      numField(g1, 'Base attack', function () { return CH.babMisc || 0; }, function (v) { CH.babMisc = v; });
+      numField(g1, 'CMB', function () { return CH.cmbMisc || 0; }, function (v) { CH.cmbMisc = v; });
+      numField(g1, 'CMD', function () { return CH.cmdMisc || 0; }, function (v) { CH.cmdMisc = v; });
+      numField(g1, 'Max HP', function () { return CH.hp.misc || 0; }, function (v) { CH.hp.misc = v; });
+
+      const g2 = section('Hit point state', 'Temporary hit points are lost first; nonlethal is tracked separately.');
+      numField(g2, 'Temporary HP', function () { return CH.hp.temp || 0; }, function (v) { CH.hp.temp = v; });
+      numField(g2, 'Nonlethal damage', function () { return CH.hp.nonlethal || 0; }, function (v) { CH.hp.nonlethal = v; });
+      numField(g2, 'Favoured-class HP', function () { return CH.hp.favoredHp || 0; }, function (v) { CH.hp.favoredHp = v; });
+      numField(g2, 'Favoured-class ranks', function () { return CH.favoredSkillRanks || 0; }, function (v) { CH.favoredSkillRanks = v; });
+
+      const g3 = section('Ability score adjustments',
+        'Base scores are on tab 1. The wheel bump is the campaign\'s +2 STR / +2 CON — editable, but it is a rule, not a preference.');
+      [['str', 'STR'], ['dex', 'DEX'], ['con', 'CON'], ['int', 'INT'], ['wis', 'WIS'], ['cha', 'CHA']].forEach(function (a) {
+        numField(g3, a[1] + ' wheel bump', function () { return CH.abilities.house[a[0]] || 0; },
+          function (v) { CH.abilities.house[a[0]] = v; });
+      });
+      [['str', 'STR'], ['dex', 'DEX'], ['con', 'CON'], ['int', 'INT'], ['wis', 'WIS'], ['cha', 'CHA']].forEach(function (a) {
+        numField(g3, a[1] + ' misc', function () { return CH.abilities.misc[a[0]] || 0; },
+          function (v) { CH.abilities.misc[a[0]] = v; });
+      });
+
+      const on = Object.keys(CH.overrides || {});
+      if (on.length) {
+        body.appendChild(el('h4', '', 'Totals you have set by hand'));
+        const list = el('div', '');
+        on.forEach(function (k) {
+          const def = E.OVERRIDABLE.find(function (o) { return o.key === k; }) || { label: k };
+          const row = el('div', 'row');
+          row.appendChild(el('span', '', def.label + ': ' + CH.overrides[k]
+            + (DER.computed && DER.computed[k] !== undefined ? '  (computes ' + DER.computed[k] + ')' : '')));
+          const x = el('button', 'btn sm', 'reset');
+          x.onclick = function () { delete CH.overrides[k]; recompute(); openAdjustments(); };
+          row.appendChild(x);
+          list.appendChild(row);
+        });
+        body.appendChild(list);
+      }
+    });
+  }
+
   function renderMagic() {
     const tb = $('magicTable').querySelector('tbody');
     tb.innerHTML = '';
@@ -1029,8 +1212,24 @@
     CH.magic.forEach(function (m, i) {
       const def = D.MAGIC_ITEMS.find(function (x) { return x.name === m.name; });
       const tr = el('tr');
-      tr.appendChild(el('td', '', m.name));
-      tr.appendChild(el('td', 'tiny dim', m.slot || (def && def.slot) || '—'));
+      /* Name, slot and effect are all typeable. An imported magic item arrives with a name and a
+         note written from the story; both are somebody's reading of it, and the DM's word beats
+         both. A catalogue item keeps its definition for cost/weight but the name is still yours
+         to rename. */
+      const nameTd = el('td', '');
+      const nameIn = document.createElement('input');
+      nameIn.type = 'text'; nameIn.value = m.name; nameIn.className = 'cell-input';
+      nameIn.oninput = function () { CH.magic[i].name = nameIn.value; persist(); };
+      nameIn.onchange = function () { recompute(); };
+      nameTd.appendChild(nameIn); tr.appendChild(nameTd);
+
+      const slotTd = el('td', 'tiny dim');
+      const slotIn = document.createElement('input');
+      slotIn.type = 'text'; slotIn.className = 'cell-input';
+      slotIn.value = m.slot || (def && def.slot) || '';
+      slotIn.placeholder = '—';
+      slotIn.oninput = function () { CH.magic[i].slot = slotIn.value; persist(); };
+      slotTd.appendChild(slotIn); tr.appendChild(slotTd);
       tr.appendChild(el('td', 'num', def ? def.c : '—'));
       tr.appendChild(el('td', 'num', def ? def.w : '—'));
       /* An item picked from the catalogue has a def with a game effect. One carried in from a
@@ -1038,7 +1237,13 @@
          the Effect column shows what the story established, held on the row as `note`. Before
          2026-09-10 this cell rendered '' for those rows, which made an imported magic item look
          like it did nothing at all. */
-      tr.appendChild(el('td', 'tiny dim', def ? def.desc : (m.note || '')));
+      const effTd = el('td', 'tiny dim');
+      const effIn = document.createElement('textarea');
+      effIn.className = 'cell-input'; effIn.rows = 2;
+      effIn.value = m.note || (def ? def.desc : '');
+      effIn.placeholder = def ? def.desc : 'What does it do?';
+      effIn.oninput = function () { CH.magic[i].note = effIn.value; persist(); };
+      effTd.appendChild(effIn); tr.appendChild(effTd);
       const act = el('td', 'no-print');
       const x = el('button', 'btn sm', '×');
       x.onclick = function () { CH.magic.splice(i, 1); recompute(); };

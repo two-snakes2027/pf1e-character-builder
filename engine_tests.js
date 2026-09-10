@@ -22,6 +22,11 @@ if (MUT === 'crit') {
 }
 if (MUT === 'skillrank') { const o = E.skillRankBudget; E.skillRankBudget = function (ch) { const r = o(ch); r.total += 5; return r; }; }
 if (MUT === 'hp') { const o = E.hitPoints; E.hitPoints = function (ch, c) { const r = o(ch, c); r.max += 5; return r; }; }
+if (MUT === 'nooverride') {
+  /* Make the override layer a no-op. Every assertion in section 15 must fail — otherwise they
+     are describing the computed sheet and would not notice the feature disappearing. */
+  E.applyOverrides = function (ch, d) { d.overridden = {}; d.computed = {}; return d; };
+}
 if (MUT === 'pointbuy') {
   /* Re-add a point-buy warning of the exact shape retired on 2026-09-10. If the tests below
      still pass with this in place, they are not actually checking that it is gone. */
@@ -360,6 +365,69 @@ function mk(over) {
   eq('armored monk loses the WIS AC bonus', d2.ac.monk, 0);
   eq('armored monk loses fast movement', d2.speed, 30);
 })();
+
+/* ============================================================ 15. MANUAL OVERRIDES
+   Added 2026-09-10: "I would like the ability to edit every field." A computed total is the one
+   kind of field with no box by nature, so a typed value has to beat the arithmetic somewhere.
+   Prove these can fail:  node engine_tests.js --mutate=nooverride  */
+(function () {
+  const base = function () {
+    const c = mk({ levels: [{ cls: 'Fighter', n: 3 }] });
+    c.abilities.base = { str: 14, dex: 14, con: 12, int: 10, wis: 10, cha: 10 };
+    return c;
+  };
+  const plain = E.derive(base());
+
+  /* 1. A typed number wins. */
+  const c1 = base(); c1.overrides = { ac: 19 };
+  eq('an overridden AC replaces the computed one', E.derive(c1).ac.total, 19);
+
+  /* 2. AND IT MUST NOT LEAK. Overrides are applied last on purpose: an overridden BAB that fed
+     back into the math would silently rewrite CMB, CMD and the whole attack routine, so one
+     typed number would change half the sheet. Overriding a total means "print this here". */
+  const c2 = base(); c2.overrides = { bab: 7 };
+  const d2 = E.derive(c2);
+  eq('the overridden BAB itself is used', d2.babBase, 7);
+  eq('CMB does not follow it', d2.cmb, plain.cmb);
+  eq('CMD does not follow it', d2.cmd, plain.cmd);
+  eq('the attack sequence does not follow it', d2.attackSeq, plain.attackSeq);
+
+  /* 3. Zero is a real answer — a speed of 0, a BAB of 0. A truthiness check would eat it. */
+  const c3 = base(); c3.overrides = { speed: 0 };
+  const d3 = E.derive(c3);
+  eq('an override of 0 is honoured', d3.speed, 0);
+  eq('and carries through to derived run speed', d3.speedRun, 0);
+
+  /* 4. Empty means "not overridden", not "zero" — this is what clearing the box sends. */
+  ['', null, undefined].forEach(function (blank, i) {
+    const c = base(); c.overrides = { ac: blank };
+    eq('a blank override (' + i + ') leaves the computed value', E.derive(c).ac.total, plain.ac.total);
+  });
+
+  /* 5. Garbage is ignored rather than turning a total into NaN. */
+  const c5 = base(); c5.overrides = { ac: 'twelve' };
+  eq('a non-numeric override is ignored', E.derive(c5).ac.total, plain.ac.total);
+
+  /* 6. The sheet says which numbers are somebody's word, and what it would have said. */
+  const c6 = base(); c6.overrides = { ac: 19, will: 4 };
+  const d6 = E.derive(c6);
+  eq('overridden totals are flagged', [d6.overridden.ac, d6.overridden.will], [true, true]);
+  eq('the computed value is kept for the reset', d6.computed.ac, plain.ac.total);
+  has('the rules check names the manual edit', d6.warnings, 'AC is set by hand to 19');
+  has('and states what the sheet computes', d6.warnings, 'the sheet computes ' + plain.ac.total);
+
+  /* 7. Editing by hand is legal — it must not read as a fault. */
+  eq('a manual edit is info, not a warning',
+    d6.warnings.filter(function (w) { return w.where === 'Manual edit'; })
+      .map(function (w) { return w.sev; }), ['info', 'info']);
+
+  /* 8. Every stat the table claims is overridable actually is. */
+  const missed = E.OVERRIDABLE.filter(function (o) {
+    const c = base(); c.overrides = {}; c.overrides[o.key] = 42;
+    return E.derive(c).overridden[o.key] !== true;
+  }).map(function (o) { return o.key; });
+  eq('every stat in E.OVERRIDABLE can actually be overridden', missed, []);
+}());
 
 /* ============================================================ 14. VALIDATION WARNINGS */
 (function () {

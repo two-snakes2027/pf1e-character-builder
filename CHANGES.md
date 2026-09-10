@@ -4,6 +4,96 @@ Newest first. Each entry says what changed, why, and how to undo it.
 
 ---
 
+## 2026-09-10 — (o) EVERY FIELD IS EDITABLE. ✅ DEPLOYED `f48a2fb38b48`
+
+**Why.** The owner: *"now I would like the ability to edit every field — whether manually
+entering info into boxes or editing imported files. Edit functionality should be available to
+both DM and to players. Do not remove other constraints on the various fields: I just want
+players and dm to be able to edit their character sheets manually."*
+
+Nothing here is gated on role. The builder has never had a player/DM split on editing — a player
+already edits their own sheet and the DM edits every sheet — so "available to both" needed no
+work, and no constraint was loosened: every warning, cap and rules check still fires exactly as
+before. Two of them were deliberately left in place after asking: **race stays locked to Human**
+(the other six Core races have no ability modifiers, size or traits in the data, so unlocking
+would produce a silently wrong sheet, not a different one), and skill/feat/rank limits still warn.
+
+**A survey first, because "every field" needed a definition.** Enumerating `blankCharacter()`
+against every input on the page: weapons, HP rolls, gear, skills, feats, spells, specials, wealth
+and notes already had editors, some in modals. The genuine gaps were **magic items (no editing at
+all — only a delete button)**, `height` / `weight` / `eyes` / `hair`, `traits`, `languages`,
+`hp.temp` / `hp.nonlethal` / `hp.misc`, `favoredSkillRanks`, the ability `house` and `misc` rows,
+and the five misc adjusters — `initMisc`, `speedMisc`, `babMisc`, `cmbMisc`, `cmdMisc` — which
+**the engine reads but the page could never set**.
+
+**The interesting case is a computed total**, which has no box by nature. Chosen approach
+(owner's call): both a modifier and a typed override.
+
+- `E.OVERRIDABLE` + `E.applyOverrides` — 12 stats: AC, touch, flat-footed, three saves, BAB,
+  initiative, speed, CMB, CMD, max HP. Adding a stat to that table is all it takes to make it
+  overridable.
+- **Overrides are applied LAST, after everything else is derived, and this is the whole design.**
+  Anything earlier feeds back into the math: an overridden BAB would silently rewrite CMB, CMD
+  and the entire attack routine, so one typed number would change half the sheet. Overriding a
+  total means "print this number here" and nothing more. There is a test for each of those three
+  non-leaks.
+- `d.overridden` marks which totals are a person's word; `d.computed` keeps what the sheet
+  thinks, so the reset button has somewhere to go and the player can see the difference.
+- **The rules check says so out loud** — *"AC is set by hand to 21; the sheet computes 9"* — at
+  `info` severity, because editing is legal, not a fault. An overridden and a computed AC are
+  otherwise indistinguishable on a printout; the print stylesheet marks them with an asterisk.
+- Clearing the box **removes** the override rather than storing 0 — otherwise "I changed my mind"
+  silently becomes "my AC is zero". `0` itself is a legitimate override (a speed of 0) and is
+  preserved, which is why the check is `=== undefined || === null || === ''` and not truthiness.
+
+**Also added.** Click-to-edit on every vital, save total and the three AC numbers, each with a ↺
+reset · an **Adjustments** modal holding all five misc adjusters, HP temp/nonlethal/misc,
+favoured-class HP and ranks, the ability wheel-bump and misc rows, and a list of every total
+currently set by hand · **magic item rows are now fully editable** (name, slot and effect —
+an imported item's name and note are somebody's reading of a story, and the DM's word beats
+both) · `height`, `weight`, `eyes`, `hair` on the identity strip · a **Traits & Languages** card.
+
+**Verification.**
+
+- `./test.sh` green: engine **136** (was 119), import 393, server 73, class tables 124.
+- **`engine_tests.js --mutate=nooverride` added** and wired into `test.sh`; it makes the override
+  layer a no-op and **kills exactly the 10 assertions that depend on it**, correctly leaving the
+  no-leak and blank/garbage assertions standing — those describe the computed sheet.
+- **Driven in a browser, not just unit-tested**: clicking AC opened an input, Enter committed,
+  the card showed 21 with "by hand · computes 9 ↺", the rules check named it, ↺ restored 9 and
+  removed the notice. The Adjustments modal renders 22 fields in 4 sections; a magic item's name
+  and effect were edited in place; a trait row added.
+- Legacy characters saved before today (no `overrides` key at all) derive unchanged, and an
+  override survives an export/load round trip.
+
+**Two corrections worth recording, because both were mine.** Driving the initiative adjuster I
+read `+2` after typing `+3` and called it a bug; **Hakim's DEX is −1**, so −1 + 3 = +2 was correct
+arithmetic — confirmed by driving three values (0 → −1, 3 → +2, 5 → +4). In the course of that I
+also claimed the engine did not read `initMisc`/`speedMisc`; it does, on both counts
+(`init = mods.dex + (ch.initMisc || 0)` and `speed += … + (ch.speedMisc || 0)`).
+
+**One real fix came out of it.** The override input committed only via `blur()`, which is a no-op
+on an element that never took focus — the typed value was stranded in a box nobody would look at
+again. Enter now commits directly, with `change` as a second path and a `done` flag against
+double-commit.
+
+**Activation.** Static files — browser reload. **Anyone with the builder open must reload**;
+`staleguard.js` will say so, since the stamp moved. This matters more than it did last time:
+**three characters are now stored on the live server**, up from one, so people are using it.
+
+**Deployed 2026-09-10.** Build stamp **`199098f5da62` → `f48a2fb38b48`**. Verified from outside
+the box: five served files byte-identical to local, `applyOverrides` present in the served
+`engine.js`, `ov-target` in the served stylesheet, the Adjustments button in the served page, and
+**`engine_tests.js` run against the downloaded production bytes passes 136/136** — with a live
+check confirming AC 12→21 and BAB 3→9 while CMB stays at 6. Service active, all three stored
+characters intact, and `node_modules` correctly absent from the box. VPS undo:
+`/opt/pf1cb/backups/served_pre-fulledit_20260910_*.tgz` and `pf1cb_data_pre-fulledit_*.json`.
+
+**Undo.** `backups/*_pre-fulledit_20260910_163814` (engine, ui, html, engine_tests) and
+`backups/styles.css_pre-fulledit_*`; drop `nooverride` from `test.sh`.
+
+---
+
 ## 2026-09-10 — (n) THE SCAN BECOMES A TOOL, AND ONLY LOOKS AT WHAT CHANGED
 
 **Why.** The owner: *"Since the items from captured or killed PCs should never change, can you
