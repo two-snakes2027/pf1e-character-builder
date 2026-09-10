@@ -6,7 +6,7 @@
    which patches one formula before testing. A mutation that produces no failure means the
    suite does not actually cover that formula. */
 global.window = {};
-['core', 'classes', 'equipment', 'feats', 'spells'].forEach(function (f) { require('./js/data/' + f + '.js'); });
+['core', 'classes', 'equipment', 'feats', 'spells', 'magic_import'].forEach(function (f) { require('./js/data/' + f + '.js'); });
 require('./js/engine.js');
 const PF = global.window.PF, E = PF.ENGINE, D = PF.DATA;
 

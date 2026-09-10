@@ -7,12 +7,18 @@
    node import_tests.js --mutate=<name>    to prove a check can fail */
 const fs = require('fs'), path = require('path');
 global.window = {};
-['core', 'classes', 'equipment', 'feats', 'spells'].forEach(function (f) { require('./js/data/' + f + '.js'); });
+['core', 'classes', 'equipment', 'feats', 'spells', 'magic_import'].forEach(function (f) { require('./js/data/' + f + '.js'); });
 require('./js/engine.js');
 require('./js/import_twosnakes.js');
 const PF = global.window.PF, E = PF.ENGINE, I = PF.IMPORT, D = PF.DATA;
 
 const mutArg = process.argv.find(function (a) { return a.indexOf('--mutate=') === 0; });
+const _magicMut = process.argv.indexOf('--mutate=nomagic') >= 0;
+if (_magicMut) {
+  /* Empty the curated table. Every routing assertion below must fail — if they still pass, they
+     are testing nothing and a magical item would be silently filed as gear again. */
+  global.window.PF.DATA.IMPORT_MAGIC = {};
+}
 const MUT = mutArg ? mutArg.split('=')[1] : null;
 if (MUT === 'nostats') {   /* the old behaviour: leave every score at 10 */
   const o = I.toCharacter;
@@ -365,6 +371,69 @@ const FIXTURE = {
   eq('waterskin is not a weapon', I.matchWeapon('waterskin'), null);
 })();
 
+/* ------------------------------------------------------------------ MAGIC ITEM ROUTING
+
+   Added 2026-09-10. Items the narrative identified as magical belong under Magic Items, not
+   buried in Equipment & Gear. The verdicts come from a curated table (js/data/magic_import.js),
+   not a pattern match — the pattern-match attempt is the reason test 4 below exists.
+
+   Prove these can fail:  node import_tests.js --mutate=nomagic  */
+(function () {
+  const mkRec = function (charName, items) {
+    return { status: 'active', encounterCount: 3, charData: {
+      name: charName, cls: 'Fighter', land: 'Cimmeria', god: 'Crom', gender: 'male',
+      stats: { str: 14, con: 12, dex: 12, int: 10, wis: 10, chr: 10 },
+      sheet: { hp: 8, maxHp: 8, skills: [], spells: [] },
+      inv: items
+    } };
+  };
+
+  /* 1. A demonstrated magical object leaves the gear list entirely. */
+  const hakim = I.toCharacter(mkRec('Hakim', [
+    { name: 'tarnished iron diadem', desc: 'A seamless band of tarnished iron, cold to the touch.' },
+    { name: 'waterskin', desc: 'Cured hide flask.' }
+  ]));
+  ok('a narrative-identified magic item goes to Magic Items',
+    hakim.magic.some(function (m) { return /tarnished iron diadem/.test(m.name); }),
+    JSON.stringify(hakim.magic.map(function (m) { return m.name; })));
+  ok('and does NOT also sit in gear',
+    !hakim.items.some(function (i) { return /tarnished iron diadem/.test(i.name); }),
+    JSON.stringify(hakim.items.map(function (i) { return i.name; })));
+  ok('an ordinary item beside it is untouched',
+    hakim.items.some(function (i) { return /waterskin/.test(i.name); }));
+
+  /* 2. The Effect column has something to say: what it did, and what it costs. */
+  const diadem = hakim.magic.find(function (m) { return /diadem/.test(m.name); }) || { note: '' };
+  ok('the note describes what the story showed it doing',
+    /animate|cold|corpse|crown/i.test(diadem.note), diadem.note.slice(0, 90));
+  ok('the note carries the drawback', /Drawback:/.test(diadem.note), diadem.note.slice(0, 90));
+  ok('the seized provenance survives the move', /Taken when captured/.test(diadem.note));
+
+  /* 3. Uncertain is labelled as uncertain rather than asserted. */
+  const mel = I.toCharacter(mkRec('Mel the Swell', [{ name: 'jade cylinder', desc: '' }]));
+  const jade = mel.magic.find(function (m) { return /jade cylinder/.test(m.name); }) || { note: '' };
+  ok('an uncertain item still surfaces under Magic Items', !!mel.magic.length);
+  ok('and is flagged UNCONFIRMED for the DM', /UNCONFIRMED/.test(jade.note), jade.note.slice(0, 80));
+
+  /* 4. THE REGRESSION TEST. A pattern match over ledger prose convicted this standard-issue
+        thief's cloak because its description says it "swallows light" — it is carried by eleven
+        different characters. Atmosphere is not enchantment. */
+  const sheb = I.toCharacter(mkRec('Sheboygan', [
+    { name: 'dark hooded cloak', desc: 'Dyed black wool, deep hood. Swallows light and features alike.' },
+    { name: 'silver amulet of their deity', desc: 'Cast silver pendant on a chain. Warm to the touch.' }
+  ]));
+  ok('evocative prose alone does not make a cloak magical',
+    sheb.items.some(function (i) { return /dark hooded cloak/.test(i.name); }) && !sheb.magic.length,
+    JSON.stringify(sheb.magic.map(function (m) { return m.name; })));
+
+  /* 5. An item nobody judged stays gear. Silence is not a verdict of magical. */
+  const unknown = I.toCharacter(mkRec('Nobody At All',
+    [{ name: 'a thing never seen before', desc: 'glowing runes of eldritch enchanted magic' }]));
+  ok('an unjudged item stays in gear however it reads',
+    unknown.items.length === 1 && unknown.magic.length === 0,
+    JSON.stringify(unknown.magic.map(function (m) { return m.name; })));
+}());
+
 /* ------------------------------------------------------------------ REAL production data */
 (function () {
   const real = path.join(process.env.HOME, 'Documents', 'Two_Snakes', 'two_snakes_data.json');
@@ -417,10 +486,13 @@ const FIXTURE = {
     ok(rec.name + ': class mapped to a real PF1E class',
       ch.levels.length === 0 || !!D.CLASS_BY_NAME[ch.levels[0].cls],
       'got ' + JSON.stringify(ch.levels));
+    /* Nothing may be LOST. There are now three destinations, not two — a magical object leaves
+       the gear list for Magic Items (2026-09-10) — so the invariant counts all three. It caught
+       the routing change the moment it shipped, which is what it is for. */
     const invCount = ((rec.charData || {}).inv || []).length;
+    const landed = ch.weapons.length + ch.items.length + ch.magic.length;
     ok(rec.name + ': every inventory line survives',
-      ch.weapons.length + ch.items.length === invCount,
-      invCount + ' in, ' + (ch.weapons.length + ch.items.length) + ' out');
+      landed === invCount, invCount + ' in, ' + landed + ' out');
     let d;
     try { d = E.derive(ch); derived++; }
     catch (e) { ok(rec.name + ': derives without throwing', false, e.message); return; }

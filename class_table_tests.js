@@ -14,7 +14,7 @@
    Prove it can fail:  node class_table_tests.js --mutate=<spd|known|prof|skills>
 */
 global.window = {};
-['core', 'classes', 'equipment', 'feats', 'spells'].forEach(function (f) { require('./js/data/' + f + '.js'); });
+['core', 'classes', 'equipment', 'feats', 'spells', 'magic_import'].forEach(function (f) { require('./js/data/' + f + '.js'); });
 const D = global.window.PF.DATA;
 
 const mutArg = process.argv.find(function (a) { return a.indexOf('--mutate=') === 0; });

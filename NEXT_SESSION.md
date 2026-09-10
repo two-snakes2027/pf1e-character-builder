@@ -12,10 +12,10 @@
 | | |
 |---|---|
 | **Live** | https://reunion2027-twosnakes.com/builder/ |
-| **Build stamp** | `6f694c524094` (`GET /api/build`) — moved 2026-09-10 by (k)+(l) |
+| **Build stamp** | `199098f5da62` (`GET /api/build`) — moved 2026-09-10 by (k)+(l), then (m) |
 | **Git** | clean and **fully pushed** as of 2026-09-10 (`12acd4e..3fd2c0a`). Read `git rev-parse --short HEAD origin/main` rather than trusting this row. |
 | **Remote** | `git@github.com:two-snakes2027/pf1e-character-builder.git` (private) |
-| **Tests** | **695** assertions, **20** mutations all proven to fail |
+| **Tests** | **705** assertions, **21** mutations all proven to fail |
 | **Stored characters** | 1 (Rango, `__dm__`) |
 | **Services** | `two-snakes`, `pf1cb`, `caddy` — all active |
 
@@ -86,6 +86,17 @@ the test suites possible — keep it.
 4. **Weapon matching under-matches on purpose.** A pregame "broad sword" lands in gear with its
    description rather than being assigned a stat block it may not deserve.
 5. `pf1cb_access.json` is still in `.gitignore` though the access-code system is gone. Harmless.
+8. **The magic-item table is a snapshot, not a live judgment.** `js/data/magic_import.js` was
+   decided on 2026-09-10 by reading the story logs as they stood. An object acquired after that
+   date is absent from it and imports as ordinary gear — correctly, since nothing has judged it.
+   Re-running the scan means re-extracting the packet and re-running the classification (~$4);
+   the script and the raw verdicts were session-scratch and are NOT in the repo. If this becomes
+   routine, that scan belongs in the repo as a checked-in tool.
+9. **Writing the verdicts back into Two Snakes is NOT done.** A new field on an inventory item
+   would not survive: the `##IDESC##` applier rebuilds the row as
+   `inv[idx]={name,desc,qty,mods}` and drops any fifth key the next time the narrator describes
+   that object. Options are the item's `desc` prose, a new global key in `GLOBAL_KEYS`, or
+   repairing that applier.
 6. **Non-ability Arduin mods are inert.** `E.abilityScores` reads only the six ability keys, so
    Boomer's `maxHp: -2` ("Congenital Analgesia") is imported, listed on the Arduin card, and
    never reaches HP. One live case today. Not fixed — the owner has not asked.

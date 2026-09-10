@@ -25,6 +25,43 @@
   const I = (PF.IMPORT = {});
   const D = PF.DATA;
 
+  /* ------------------------------------------------------------------ MAGIC ITEMS
+
+     The owner, looking at an imported sheet: "there were items within the narratives that were
+     clearly of a magical nature. But all of these items have been lumped in with the equipment."
+
+     THIS IS A LOOKUP, NOT A GUESS. The first attempt was a predicate over names and ledger text;
+     measured against the 922 real inventory rows it matched `ward` inside "rewards", convicted a
+     standard-issue thief's cloak for prose about swallowing light, and was blind to a "jade
+     cylinder" that carried no description at all. The owner: "pattern matching against things
+     like 'charm' or 'magic' isn't going to cut it." He was right, and the measurement agreed.
+
+     So the judgment was made once, offline, by a model reading the narrative each object
+     actually appeared in, and frozen into `js/data/magic_import.js`. Here we only look it up.
+     An item absent from that table is ordinary gear — nothing is inferred from its name. */
+  function magicKey(charName, itemName) {
+    return String(charName || '').toLowerCase().replace(/\s+/g, ' ').trim() + '||' +
+           String(itemName || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  }
+
+  I.magicVerdict = function (charName, itemName) {
+    const table = (D && D.IMPORT_MAGIC) || {};
+    return table[magicKey(charName, itemName)] || null;
+  };
+
+  /* The Effect column. No game bonus is invented — nobody has cast detect magic on these — so it
+     states what the story established and hands the ruling to the DM. */
+  I.magicNote = function (verdict) {
+    const parts = [];
+    if (verdict.v === 'uncertain') {
+      parts.push('UNCONFIRMED — of unnatural make or provenance, but never shown working. DM to rule.');
+    }
+    if (verdict.effect) parts.push(verdict.effect);
+    if (verdict.drawback && !/^none\b/i.test(verdict.drawback)) parts.push('Drawback: ' + verdict.drawback);
+    parts.push('Taken when captured — recover, replace or have the DM restore it.');
+    return parts.join(' ');
+  };
+
   /* Two Snakes offers twelve paths; all twelve exist in this builder. */
   const CLASS_MAP = {
     Barbarian: 'Barbarian', Rogue: 'Rogue', Fighter: 'Fighter', Ranger: 'Ranger',
@@ -201,6 +238,16 @@
       if (!nm) return;
       const seizedNote = [it.desc || '', 'Taken when captured — recover, replace or have the DM restore it.']
         .filter(Boolean).join(' ');
+      /* A magical object leaves the gear list entirely and appears under Magic Items, which is
+         what the owner asked for. It is checked BEFORE the weapon match on purpose: Akiro's grey
+         metal staff would otherwise be filed as a quarterstaff and its contract clauses lost in
+         a note nobody reads. A magical weapon keeps its seized name so it is still findable. */
+      const verdict = I.magicVerdict(cd.name, nm);
+      if (verdict) {
+        ch.magic.push({ name: nm + ' (seized)', slot: '', seized: true, note: I.magicNote(verdict) });
+        return;
+      }
+
       const weapon = matchWeapon(nm);
       if (weapon) {
         ch.weapons.push({

@@ -1033,7 +1033,12 @@
       tr.appendChild(el('td', 'tiny dim', m.slot || (def && def.slot) || '—'));
       tr.appendChild(el('td', 'num', def ? def.c : '—'));
       tr.appendChild(el('td', 'num', def ? def.w : '—'));
-      tr.appendChild(el('td', 'tiny dim', def ? def.desc : ''));
+      /* An item picked from the catalogue has a def with a game effect. One carried in from a
+         Two Snakes import has no def and never will — nobody has cast detect magic on it — so
+         the Effect column shows what the story established, held on the row as `note`. Before
+         2026-09-10 this cell rendered '' for those rows, which made an imported magic item look
+         like it did nothing at all. */
+      tr.appendChild(el('td', 'tiny dim', def ? def.desc : (m.note || '')));
       const act = el('td', 'no-print');
       const x = el('button', 'btn sm', '×');
       x.onclick = function () { CH.magic.splice(i, 1); recompute(); };

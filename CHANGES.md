@@ -4,6 +4,94 @@ Newest first. Each entry says what changed, why, and how to undo it.
 
 ---
 
+## 2026-09-10 — (m) MAGIC ITEMS COME OUT OF THE GEAR PILE. ✅ DEPLOYED `199098f5da62`
+
+**Why.** The owner: *"in the equipment tab, for each character, there were items within the
+narratives that were clearly of a magical nature. But all of these items have been lumped in with
+the equipment ... most of these items were identified in the character ledgers."*
+
+**The first attempt was wrong, and the measurement said so before the owner did.** A predicate
+over item names and ledger prose, run across all 455 distinct real items, produced 12 hits of
+which at least 3 were plainly wrong: it convicted the standard-issue `dark hooded cloak` (carried
+by **eleven** characters) because its description says it "swallows light", took the issued cleric
+`silver amulet of their deity` for its "warm to the touch", and matched `ward` **inside
+"rewards"** and `charm` **inside "charming"**. It was also blind to `jade cylinder`, which carries
+no description at all. The owner: *"pattern matching against things like 'charm' or 'magic' isn't
+going to cut it."* This is the fifth time a word list has failed in this project.
+
+**What replaced it: a lookup, decided once by reading the actual narrative.** With the owner's
+authorisation to scan the stories, every item that appears on only one or two characters — the
+acquired ones, as opposed to the issued kit — was extracted from the live story logs together
+with each turn that mentions it and one turn of context either side. 350 items, ~250k tokens of
+context, judged by `claude-opus-5` against a low-magic Hyborian standard: say magical only where
+the narrative shows a property ordinary matter cannot have; a holy symbol, a grimoire, a component
+pouch and a bloodline heirloom are ordinary equipment however numinous the prose; answer
+`uncertain` rather than guess. **Measured cost: $3.64.**
+
+**Verdicts: 16 magical, 26 uncertain, 308 ordinary** — frozen into `js/data/magic_import.js`,
+keyed on character + item. The builder now performs a LOOKUP and never a guess; an item absent
+from the table is ordinary gear, and nothing is inferred from its name.
+
+The judgments are specific in a way no regex could be: Hakim's `tarnished iron diadem` "held the
+creature animate and radiated a pressing cold ... the moment the crown was struck free, the cold
+broke"; Brona's `iron finding rod` "leans and pulls of its own accord — a steady patient lean,
+like a compass needle finding north"; Akiro's `dull grey metal staff` weighs almost nothing and
+"the crowd parts around it — nobody touching it, nobody quite looking at it either". And the same
+pass declined `bronze serpent amulet` as worked bronze off a corpse.
+
+**What changed.**
+
+- `js/data/magic_import.js` — **new**, generated. 42 entries. Loaded by `character_builder.html`
+  and by the three test suites.
+- `js/import_twosnakes.js` — `I.magicVerdict()` (lookup) and `I.magicNote()` (the Effect text).
+  A judged item routes to `ch.magic` and **leaves the gear list**; checked BEFORE the weapon
+  match, so Akiro's staff is not filed as a quarterstaff with its contract clauses in a footnote.
+- `js/ui.js` — `renderMagic` showed `def.desc` and nothing else, so an imported magic item
+  rendered an **empty Effect column**; it now falls back to the row's own note.
+- The note states what the story established and the drawback, never an invented bonus (no
+  "+1 to hit") — nobody has cast detect magic on these. `uncertain` items are prefixed
+  **UNCONFIRMED ... DM to rule** and still surface, because that bucket is exactly what the owner
+  was losing in the gear list.
+
+**Verification.**
+
+- `./test.sh` green: engine 119, import **389** (was 379), server 73, class tables 124.
+- **`import_tests.js --mutate=nomagic` added** and wired into `test.sh`. It empties the table and
+  **kills exactly the 7 table-dependent assertions**, leaving the two negative tests standing —
+  which is correct, since an empty table cannot make a cloak magical.
+- **The regression test is the cloak.** `dark hooded cloak` with its real ledger prose must stay
+  in gear; so must an unjudged item whose description reads "glowing runes of eldritch enchanted
+  magic". Silence is not a verdict of magical.
+- The existing `every inventory line survives` invariant **caught the routing change on the first
+  run** — there are now three destinations, not two. It counts all three.
+- Live check across all 38 characters: **42 items move out of Equipment & Gear**, on 20 of them.
+- Rendered in the browser: Hakim's sheet shows 6 Magic Items with their effects and the
+  UNCONFIRMED flags, and 26 inventory rows land as 20 gear + 6 magic, nothing duplicated.
+
+**Still open — the Two Snakes side.** The owner offered to have the findings written back into
+the game's ledgers. **A new field on an inventory item would not survive there:** the `##IDESC##`
+applier in `two_snakes.html` rebuilds the row as
+`inv[idx]={name:...,desc:...,qty:...,mods:...}`, so any fifth key is dropped the first time the
+narrator re-describes that object. Writing back therefore means the item's `desc` prose, or a
+separate global key registered in `GLOBAL_KEYS`, or repairing that applier. Not started.
+
+**Activation.** Static files — browser reload. **Anyone with the builder open must reload**;
+`staleguard.js` will say so, since the stamp moved.
+
+**Deployed 2026-09-10.** Build stamp **`6f694c524094` → `199098f5da62`**. Verified from outside
+the box: `js/data/magic_import.js` serves 200 with all **42** entries, the script tag is in the
+served page, six served files byte-identical to local, and `import_tests.js` run against the
+**downloaded production bytes** passes **389/389** — with a live spot-check confirming Hakim's
+diadem routes to Magic Items carrying its effect while the waterskin stays in gear. Service
+active, the one stored character intact. VPS undo:
+`/opt/pf1cb/backups/served_pre-magic_20260910_*.tgz` and `pf1cb_data_pre-magic_20260910_*.json`.
+
+**Undo.** `backups/*_pre-magictable_*`, `backups/ui.js_pre-magicnote_*`; delete
+`js/data/magic_import.js` and its script tag, and drop `nomagic` from `test.sh`. The raw verdicts
+and the scan script are in the session scratchpad, not the repo.
+
+---
+
 ## 2026-09-10 — (l) POINT BUY IS RETIRED. ✅ DEPLOYED `6f694c524094` 2026-09-10 22:21 UTC
 
 **Why.** The owner, looking at the Rules Check on the dashboard: *"I'm not sure why it's talking
