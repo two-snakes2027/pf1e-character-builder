@@ -4,6 +4,63 @@ Newest first. Each entry says what changed, why, and how to undo it.
 
 ---
 
+## 2026-09-10 — (n) THE SCAN BECOMES A TOOL, AND ONLY LOOKS AT WHAT CHANGED
+
+**Why.** The owner: *"Since the items from captured or killed PCs should never change, can you
+ensure that the next snapshot only updates the table with newly captured or killed players?
+There is no sense in scanning the records again, unless I look at the results and am not happy
+about what made it into the table."*
+
+Exactly right, and it is now the design. **A captured or dead character is finished** — their
+loadout cannot change again, so a verdict about their possessions is permanent. An active
+character is still picking things up, and only captured characters enter the Main Game
+(RIDDLE_OF_STEEL §2) — judging them now buys a verdict that may be stale next week.
+
+**`scan_magic.mjs`** (new, checked in) with **`magic_scan.json`** (new, checked in — the
+provenance record of every verdict ever reached, *including the ordinary ones*, which is what
+makes "have we judged this already?" answerable at all; the shipped table holds only the
+non-mundane and cannot serve as that record).
+
+| command | does |
+|---|---|
+| `node scan_magic.mjs` | says what it would scan and what that would cost. **Spends nothing.** |
+| `--run` | scans the new captured/dead items and updates the table |
+| `--table-only` | rebuilds `js/data/magic_import.js` from the ledger |
+| `--rescan "hakim"` | re-judges matching entries — the "I'm not happy with the table" path |
+| `--rescan-all --run` | discards the ledger and judges everything again |
+| `--include-active` / `--include-kit` | widen the net |
+
+**A dry run is the default and spending needs `--run`.** That is enforced in code, not in a note
+at the top of the file — the first full scan cost $3.64 and the owner tracks his credits.
+
+**It found a bug in the original scan.** The first pass required a search word longer than three
+characters, so items named `ale`, `bag`, `box`, `map` and two `iron key`s were **silently dropped
+and never judged at all**. The tool has no such filter and surfaced all six. Judged for **$0.02**;
+all six ordinary, so the shipped table is unchanged at 42 entries and the ledger is now complete
+at **356**.
+
+**Verification.**
+
+- A second dry run reports **TO SCAN: 0** — the incremental logic actually excludes what it has
+  already seen, rather than merely claiming to.
+- `--table-only` twice running produces a **byte-identical** file (md5 `7650129…`).
+- `--rescan "jade cylinder"` drops exactly 1 verdict, reports it, and — being a dry run — leaves
+  the ledger at 356 untouched.
+- **New tests pin the table to the ledger**: every non-mundane verdict reaches the table, the
+  table invents nothing the ledger lacks, verdicts agree, and mundane judgments are recorded but
+  never shipped. Import suite **389 → 393**; `--mutate=nomagic` fails them.
+- The extractor is **piped** to the VPS over stdin, not interpolated into the remote command
+  line — the first version did the latter and died on shell-eaten backslashes. The data file
+  never leaves the box; only item names, descriptions and story passages come back.
+
+**Not deployed, and does not need to be:** the 42 verdict rows are byte-identical to what is
+live. Only the generated file's header comment changed. Live build remains `199098f5da62`.
+
+**Undo.** Delete `scan_magic.mjs`, `scan_magic_prompt.txt` and `magic_scan.json`; the shipped
+table stands on its own.
+
+---
+
 ## 2026-09-10 — (m) MAGIC ITEMS COME OUT OF THE GEAR PILE. ✅ DEPLOYED `199098f5da62`
 
 **Why.** The owner: *"in the equipment tab, for each character, there were items within the

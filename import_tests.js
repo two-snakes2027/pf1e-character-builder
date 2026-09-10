@@ -434,6 +434,46 @@ const FIXTURE = {
     JSON.stringify(unknown.magic.map(function (m) { return m.name; })));
 }());
 
+/* ------------------------------------------------------------------ TABLE <-> LEDGER
+
+   js/data/magic_import.js is GENERATED from magic_scan.json by scan_magic.mjs. If someone edits
+   the generated file by hand, the next `--table-only` silently reverts them; if someone edits the
+   ledger and forgets to regenerate, the builder ships a stale verdict. These pin the two
+   together so either mistake fails loudly here instead. */
+(function () {
+  let ledger;
+  try { ledger = require('./magic_scan.json'); }
+  catch (e) { ok('magic_scan.json is present', false, e.message); return; }
+
+  const norm = function (x) { return String(x || '').toLowerCase().replace(/\s+/g, ' ').trim(); };
+  const table = D.IMPORT_MAGIC || {};
+  const fromLedger = {};
+  ledger.scans.forEach(function (x) {
+    if (x.verdict === 'mundane') return;
+    fromLedger[norm(x.character) + '||' + norm(x.item)] = x.verdict;
+  });
+
+  const missing = Object.keys(fromLedger).filter(function (k) { return !table[k]; });
+  ok('every non-mundane ledger verdict reached the shipped table', missing.length === 0,
+    missing.slice(0, 4).join(' | '));
+
+  const extra = Object.keys(table).filter(function (k) { return !fromLedger[k]; });
+  ok('the shipped table invents nothing the ledger does not hold', extra.length === 0,
+    extra.slice(0, 4).join(' | '));
+
+  const wrong = Object.keys(table).filter(function (k) {
+    return fromLedger[k] && table[k].v !== fromLedger[k];
+  });
+  ok('verdicts agree between ledger and table', wrong.length === 0, wrong.slice(0, 4).join(' | '));
+
+  /* A mundane judgment must NOT ship — it is recorded so the item is never re-scanned, not so it
+     lands on a sheet. This is what makes the ledger bigger than the table. */
+  const mundane = ledger.scans.filter(function (x) { return x.verdict === 'mundane'; });
+  ok('ordinary items are recorded but not shipped',
+    mundane.length > 0 && !mundane.some(function (x) { return table[norm(x.character) + '||' + norm(x.item)]; }),
+    mundane.length + ' recorded ordinary');
+}());
+
 /* ------------------------------------------------------------------ REAL production data */
 (function () {
   const real = path.join(process.env.HOME, 'Documents', 'Two_Snakes', 'two_snakes_data.json');

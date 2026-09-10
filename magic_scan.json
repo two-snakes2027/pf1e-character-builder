@@ -1,0 +1,3566 @@
+{
+ "note": "see scan_magic.mjs — this file is the provenance record; js/data/magic_import.js is generated from it",
+ "scannedAt": "2026-09-10",
+ "scans": [
+  {
+   "character": "Mel the Swell",
+   "item": "bronze serpent amulet",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Around his neck, a cord. On it: a bronze amulet shaped like a coiled serpent, scales worked fine as hair.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Mel the Swell",
+   "item": "iron helm",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You claim a dented iron helm, three brass buckles from harnesses, a bronze dagger with crumbling hide grip.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Mel the Swell",
+   "item": "brass buckles (3)",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "three brass buckles from harnesses",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Mel the Swell",
+   "item": "bronze dagger",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a bronze dagger with crumbling hide grip",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Mel the Swell",
+   "item": "jade cylinder",
+   "status": "dead",
+   "verdict": "uncertain",
+   "effect": "A seamless sealed jade cylinder covered in symbols said to predate Zamora; it is described as warm to the touch, and the narration hints something precious is sealed inside.",
+   "drawback": "It cannot be opened without smashing it, which risks reducing it to worthless shards; its pre-Zamoran markings suggest an origin the bearer does not understand.",
+   "evidence": "The cylinder is sealed—no seam, no way in. Carved marks run its length: symbols older than Zamora. It's warm to the touch.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Houndog",
+   "item": "broad sword",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Houndog",
+   "item": "kite shield",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Houndog",
+   "item": "chainmail shirt",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Your chainmail clinks traitorously in the silence as you spin toward the rear exit",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Houndog",
+   "item": "merchant's ledger",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "the leather bindings worn smooth by countless transactions",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Huck Finis",
+   "item": "iron-bound grimoire (spells & lore notes)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You sleep wrapped in your robe, the grimoire pillowed under your head.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Huck Finis",
+   "item": "tattered brown cloak",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You pull your hood up and ride past—steady, not panicked. Their eyes track you.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Huck Finis",
+   "item": "horse",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You swing up. The horse is taut, nervous, smells of blood and ash.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Huck Finis",
+   "item": "saddle",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Huck Finis",
+   "item": "bridle",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Huck Finis",
+   "item": "saddlebags",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Huck Finis",
+   "item": "1 weeks worth of rations",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "broad sword",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "iron-rimmed shield",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "helm (iron skullcap)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "bread (wrapped loaf)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "A dry shrug. \"Bread is what I have.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "stew",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "lantern",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The wagoneer hands you one without a word, already lit from the supper fire.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "tallow candle stub",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The candle burns low.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "three items",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "waterskin (empty)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "farrier's hammer",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "A farrier's hammer hangs on a peg beside the stall. Heavy iron head, worn handle.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "sealed parchment (two-headed serpent wax seal)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Pockets yield: a folded square of parchment sealed with wax—the two-headed serpent pressed into it.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "vial",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "A stoppered clay vial with black wax carrying a sweet tomb-smell; when the black serpent stone was pressed to the seal, both horses lurched sideways in their traces as if struck, the wax rippled 'like fat on hot water' with nothing touching it, the stone turned bitterly cold, and the sweet smell was replaced by an impression of deep stone passages and darkness. Afterward the vial appeared entirely ordinary again.",
+   "drawback": "Handling provoked winter-cold that climbed the wrist and took half a minute to fade; Perrac would only lift it with two fingers, avoiding the wax. Carrying cult property marks the bearer.",
+   "evidence": "The vial doesn't move. But the black wax *ripples* like fat on hot water, then stills.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "ledger",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "He moves back to his desk. Sits. Pulls a ledger open.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "brewer's mark",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The guard takes the chit. Reads it. Hands it back. \"Vasso's mark.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "scrap of parchment",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The seal is dark red wax — pressed with a two-headed serpent. Inside, clean Aquilonian script: \"The bearer carries what must not reach Tarantia...\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Strashaa",
+   "item": "bullseye lantern",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The lantern is lit. The bullseye beam falls on the older stone.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Strashaa",
+   "item": "3 torches",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Three staves wrapped in green linen — crude, but they'll burn. He lights the first from struck flint, waits for the cloth to catch properly.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Strashaa",
+   "item": "heavy hammer",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You set the first piton and swing — three solid strikes, the hammer's ring swallowed by the chamber walls.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Strashaa",
+   "item": "10 iron pitons",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The iron bites, holds fast. The second piton goes in a hand's-breadth to the left of the first.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Strashaa",
+   "item": "dark stone tablet",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Both faces carved with script — tight, precise columns of Stygian hieratic, the temple hand, the kind only priests learn. You can read it.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Strashaa",
+   "item": "ancient clay vessel",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The barkeep sets a clay bowl of water on the nearest table without comment.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Strashaa",
+   "item": "oilskin packet",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The oilskin unfolds to reveal a single sheet of cured hide, scraped thin and written on both sides in a tight, precise hand.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "merchant's cloak - dyed rust-brown wool",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You buy rust-brown wool for a silver piece and wrap it tight.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "waterskin (full)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The saddlebags hold: waterskin (full), hard tack, dried meat, a bedroll, flint and steel. Serviceable.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "dried meat (Turanian provisions)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Hard bread and dried meat—Turanian rations.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "saddle, saddle bags, and tack",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The guard's gaze slides over the Turanian mounts—quality stock, military saddles, no merchant marks.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "pendent worth 20sp",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The pendant sits wrapped on the table beside you.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "healer's salve",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "An amber salve sold by the healer Kaela as a 'wound salve' that 'speeds healing'; applied to Ziggerdoo's injured shoulder it eased the pain noticeably, though the relief faded with hard riding.",
+   "drawback": "The narrative shows the effect wearing thin over the course of a day of travel; costs three silver a vial.",
+   "evidence": "\"Wound salve. Speeds healing. Three silver.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "pendant (20sp value)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"The pendant came from Vendhya. Very rare. Eighteen silver.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "silver combs",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"Combs: three silver.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "pearl necklace",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"Necklace: eight silver.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "letter (unsigned, names you)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Names appear: merchants, priests, garrison officers. Some have checkmarks. Some have crosses.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "straight iron sword, dark unmarked steel",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "warm furs",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You buy what he names. The furs cost one silver",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "bedroll",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You roll into your bedroll near the fire's warmth.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "extra rope",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "hard bread",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "merchant's pass",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "sealed parchment (temple courier pass)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ziggerdoo",
+   "item": "sealed letter from Lysandra",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Rango",
+   "item": "unmarked tome",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "copying every spell and margin note from the brine-warped grimoire into a plain unmarked tome that could belong to any merchant's clerk",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Rango",
+   "item": "scroll of passage",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The priest provides a scroll of passage — official Messantian seal, names Rango as a grain-factor's assistant bound for Tarantia.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Rango",
+   "item": "shortsword",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Thela hands you worn leather and a dull shortsword—serviceable enough.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Will Wist",
+   "item": "salve",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "produces a jar of salve—thick, amber, smelling of honey and something acrid beneath. \"Rub this on the ankle. Two copper.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Will Wist",
+   "item": "caltrops (cloth pouch)",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Will Wist",
+   "item": "ledger (merchant's cipher)",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "A name you should not have seen: Thulsa Doom, written three times in weak cipher.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Will Wist",
+   "item": "cipher pages",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"...took the ledger. The cipher pages.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Will Wist",
+   "item": "map of Karpash fortress",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You tear the circled map from the wall—the fortress in the Karpash foothills",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "iron-bound grimoire (spells & lore notes)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Your grimoire sits on the bed, its iron binding catching the pale light.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "travel papers (Garrison-sealed)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"Papers are good. You can ride.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "iron-bound grimoire",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Your grimoire, dark robes, and other belongings are returned—all intact.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "grey breeches",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "you dress in grey tunic, breeches, cloak, and felt hat. You look like any common Nemedian traveler now.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "grey tunic",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "She shows grey cloth—shirt and trousers together, simple weave.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "felt hat",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"Hat's extra. Felt, linen, or wool?\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "signal whistle (bone, two-toned)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "He's reaching. Not for a weapon. For something at his throat. A whistle. A signal device.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "belt knife (plain, worn handle)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "grey hooded cloak",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "dead man's knife",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "His pockets yield four silver and a knife, plain but balanced.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "dead man's satchel",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The satchel is sealed with wax bearing a pressed mark: the same two-headed serpent from the counting house door.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "plain balanced knife",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a knife, plain but balanced",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "serpent brooch (silver, two-headed seal)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "At his throat—a silver brooch, a coiled serpent. Inner circle. Not an outer follower.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "sealed satchel (two-headed serpent wax seal)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Inside: a sealed satchel, dark leather pressed with the two-headed serpent seal.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "letter (Ophirean script)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Beside it, a folded letter in Ophirean script.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "plain cord bracelet",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "clay jars (four, wax-stoppered)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "straw packing around four clay jars, stoppered with wax. No markings. They slosh—liquid, heavy.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "short blade",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Inside the cloak: the brooch, pinned to the lining. A short blade.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "folded paper (charcoal sketch)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "A folded paper—no writing, just a charcoal sketch. It is your face.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "brooch",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Inside the cloak: the brooch, pinned to the lining.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "blade",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a shallow gash across your forearm before your blade finds his throat",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "small purse",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "A small purse—light, two silver—and dried meat. Nothing else.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "sealed letter",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"Lord Theron's mark,\" he says. Nods. \"Through.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "three days' rations",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Everything else ordinary. Rope, steel, cloth, food.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "small bronze mirror",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "When items are viewed in its reflection it reveals hidden auras invisible to the eye — a grimoire glowing blue at the spine, a brooch pulsing dark, liquid writhing in a waterskin, an iron rod burning white; it also showed a stranger's reflection replaced by 'something else' for half a breath, and shows nothing when aimed at itself.",
+   "drawback": "Its surface can display something other than the viewer's own reflection, unsettling those who look; it cannot reveal its own nature.",
+   "evidence": "The waterskin of dark liquid writhes in the reflection, slow coils beneath the skin as though something lives in it.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "coiled rope",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The rope, the purses, the sword—nothing. Flat and ordinary.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "charcoal sketch",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "A folded paper—no writing, just a charcoal sketch. It is your face.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "bay roan saddle",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Trail-worn saddle, Nemedian stitching on the bags.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "bay roan bridle",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "worn leather satchel",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "bronze serpent brooch (single-headed)",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "Serpent tokens of this cult function as marks of membership and rank; in the mirror the two-headed brooch 'pulses sluggish and dark' while the three-headed one was inert, and a companion warned such insignia can be traced to their owner.",
+   "drawback": "Wearing cult insignia marks the bearer to the cult and may allow them to be found; the higher-rank brooch is explicitly 'traceable.'",
+   "evidence": "The two-headed brooch pulses sluggish and dark. The three-headed one—the dead man's—shows nothing. Inert.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "folded parchment (plain wax seal)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You unfold the garrison-sealed parchment. Lord Theron's mark is crisp, official.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "rope",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The rope, the purses, the sword—nothing. Flat and ordinary.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "cloth-purse-with-coin",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "stabbing-sword",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "cord-bracelet",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "A woven cord bracelet bearing a two-headed serpent disc; when inspected in an aura-revealing mirror such bracelets showed a faint uniform shimmer described as a mark or claim rather than power, and they were worn by cult captives whose wills were emptied.",
+   "drawback": "It is a cult marker — wearing or carrying it may identify the bearer as belonging to (or claimed by) the serpent cult.",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "journal",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "A leather-bound cult journal that registers a strong aura in the aura-revealing mirror — a deep, slow pulse like a dying ember — its writing described as touched by something beyond ordinary ink and parchment.",
+   "drawback": "The taint is described as a fouling touch of something inhuman; reading it invites contact with whatever marked it, and possessing cult records makes the bearer a target.",
+   "evidence": "The journal glows. Not brightly. A deep, slow pulse, like an ember refusing to die. Whatever is written inside has been touched by something that does not belong to ordinary ink and parchment.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "cord bracelets",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "Plain cord bracelets with a two-headed serpent disc, made in quantity; a dozen of them showed a faint uniform shimmer under an aura-revealing mirror ('Not power... like a mark pressed into them. A claim'), and every emptied, will-less captive in the cult cellar wore one.",
+   "drawback": "They brand the wearer as claimed property of the serpent cult; the log links them with drugged, hollowed victims, though the bracelets are never shown causing that state.",
+   "evidence": "The cord bracelets: a faint shimmer, uniform across all twelve. Not power. Something else—like a mark pressed into them. A claim.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "stabbing sword",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "A short stabbing sword, plain but well-kept.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "stamped leather strip",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The leather is fresh-cut, the stamp precise. Someone made many of these.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "clay vial (dark, viscous contents)",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "A wax-stopped clay vial of dark viscous fluid taken from a man who bled black; the same sweet-rotting black liquid elsewhere in the story pooled in a ritual pot and in a wash basin where it reflected nothing at all, catching no light.",
+   "drawback": "The substance stinks of sweet rot and is bound up with the cult's ritual and with men who move and bleed wrongly; drinking or handling it is implied to be foul or corrupting.",
+   "evidence": "On the basin's rim where water has settled, the surface does not reflect the candle flame. It reflects nothing. Just black, perfectly still, with a faint shimmer at the edges",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "leather with serpent stamp",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a strip of stamped leather—narrow, like a marker or a pass. The leather bears a pressed mark: two lines crossing, and beneath them a crude serpent.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "small purse",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Three silver coins and a strip of stamped leather",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "folded dark cloth",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The grappler yields a small purse—light, but real. A folded strip of dark cloth. Nothing else.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "bone-handled dirk",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Broken-jaw carries a bone-handled dirk and loose copper in his pocket.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "carved stone token (serpent cord)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Beneath his shirt: a cord. On it, a small carved token of dark stone—a serpent coiled tight.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "carved token",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "On it, a small carved token of dark stone—a serpent coiled tight.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "stone",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "The dark disc on a cord catches no light at all, is instantly and bone-deep cold to the touch and pulses on its own; the man wearing it collapses like a puppet cut loose the moment it is torn from his neck, and the fleeing companion recognizes and fears it on sight. Sorcerers and hired blades track its bearer by it.",
+   "drawback": "Carrying it marks you: Drevic sends armed men after 'the girl carrying a dark disc,' and the scarred man warns that having it is a declaration whether you mean it or not. It sits unnaturally cold against the skin and is bound up with the black seeping liquid and the men-who-are-not-men.",
+   "evidence": "Her fist closes on the disc. Cold. Bone-deep, instant cold, like plunging her hand into a winter stream. The cord snaps. The moment it leaves his neck the man drops, folding onto the boards without sound.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "hand axe (Karatas smith)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The axe leaves your hand true and hard. The speaking man doesn't duck — he tilts his head two inches and the axe skips off the low beam above him, clattering into the dark.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "roan gelding (loaned from Osric)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "short sword (worn scabbard)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Between them: a short sword in a worn scabbard, a coil of rope, and a folded parchment tucked inside the lead rider's coat.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "folded parchment (Drevic's men)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The hand is quick, mercantile — someone used to writing orders.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "thin coil of rope",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "torch (improvised, x2)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You work quietly, binding hempen rope around split firewood, soaking the heads in rendered fat from your rations. Two good torches.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "iron finding rod",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "Held loosely in the hand, the rod leans and pulls of its own accord — 'a steady patient lean, like a compass needle finding north' — consistently drawing northeast toward the Karpash range and choosing forks in the road for its bearer.",
+   "drawback": "Possession of it makes her hunted: Turanian dispatch riders were paid fifty silver to bring in 'a Cimmerian girl, young, carrying a rod,' alive, with a waypost of six more men half a day south.",
+   "evidence": "The rod sits quiet in your hand—a steady patient lean, like a compass needle finding north. ... The rod pulls left.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "Turanian recurve bow",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "quiver of arrows (14)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "hard rations bundle (Turanian)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "leather cord coil",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "clay pot (horse liniment, wax-sealed)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "sealed document (brass seal, two-headed serpent)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The script inside is not Nemedian—flowing, older, unfamiliar. You cannot read a word of it.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "iron key ring",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brona",
+   "item": "ring of iron keys (Wheel guard)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "short knife (thief's blade)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a short knife and cudgel, both cheap and worn",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "hardwood cudgel",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The cudgel is dense hardwood on a hickory handle, good for breaking a nose or a collarbone.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "worn copper coin (minting worn smooth)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a copper coin worn smooth of all markings",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "folded parchment scrap",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a folded scrap of parchment bearing *the bowl calls when the moon hides*",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "dark glass vial (sealed with wax)",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "Holds a thick substance that moves with apparent intent — it leaned toward Hakim's thumb through the glass when he blessed the seal, then withdrew. The vial itself resisted the blessing: neither glass nor wax was affected. Its sweet-rot reek is tied to the 'Rapture' deaths in the town.",
+   "drawback": "The contents are alive and aware enough to respond to a living hand; carrying it marks Hakim to those who hunt the cult, and the substance is associated with the corruption that killed the man he took it from. Erlik's power neither rejected nor sanctified it — no divine protection is offered against whatever is inside.",
+   "evidence": "Something in there moves with more intent than liquid should, pressing briefly against the glass toward Hakim's thumb before pulling back. Not a tremor. Not settling. A lean.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "worn copper coin (blank-faced)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The totem is warm. The coin is ordinary.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "folded parchment scrap (dead man's)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a folded scrap of parchment bearing *the bowl calls when the moon hides*",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "short knife (thief's, second blade)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The thieves left little behind — a short knife and cudgel, both cheap and worn.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "hardwood cudgel (thief's)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The cudgel is dense hardwood on a hickory handle, good for breaking a nose or a collarbone.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "small leather purse (corpse, 3cp)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "tarnished iron diadem",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "While worn by the grey-robed thing, it held the creature animate and radiated a pressing cold that filled the chamber and turned Hakim's totem ice-cold; the moment the crown was struck free, the cold broke, the figure collapsed as though vacated, the sweet-rot stench gushed out and vanished, and three entranced victims exhaled and began to wake. The band remains faintly cold to the touch even through wrapping cloth, and is a seamless, jointless ring of iron.",
+   "drawback": "It was the seat of whatever occupied the corpse-thing and the source of the corruption enthralling the townsfolk; it rang wrong under a blow — 'not bone, not metal' — and it keeps its unnatural chill in Hakim's pack.",
+   "evidence": "The diadem flies free, striking the packed earth with a dull ring. The cold breaks like a snapped cord. The figure slumps sideways—robes settling flat as though whatever occupied them simply departed.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "dark glass vial (sealed with wax, pristine, found at undergr",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "The sealed contents move with apparent intent — leaning toward Hakim's thumb through the glass, then withdrawing. Carried within three paces of the black bowl beneath the temple, the still-sealed vial grew warm in his palm and the black liquid in the bowl stopped circling and oriented toward it.",
+   "drawback": "Erlik's warmth in the totem neither rejected nor accepted it — the god 'noted the thing inside and chosen to wait.' It stinks of the same sweet rot and resin as the corruption that killed its owner, and it draws the attention of the bowl and of those hunting the cult.",
+   "evidence": "Something in there moves with more intent than liquid should, pressing briefly against the glass toward Hakim's thumb before pulling back. Not a tremor. Not settling. A lean.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "black stone sphere",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "A perfectly round, seamless stone heavier than its size warrants, bearing no tool-mark — formed rather than carved — that radiates a patient cold with no relation to the temperature of the water it lay in; Erlik will not or cannot speak to it.",
+   "drawback": "Hakim's god is silent about it, leaving him without the divine sense he relies on to judge corrupt things — he carries it blind.",
+   "evidence": "radiates a patient cold unrelated to water temperature; Erlik will not or cannot speak to it",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "dark glass vial (sealed with wax, pristine, pool-found)",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "Recovered half-submerged and pristine from a black pool beneath the old temple, sealed with the same thumb-pressed dark wax and identical to the vial taken from the dead laborer — a vial whose contents moved with intent and warmed near the temple bowl.",
+   "drawback": "Unknown; the matching vial belonged to a man who died with a face of rapture, so the contents are presumed connected to the corruption.",
+   "evidence": "At the pool's edge, half-submerged, sits a clay jar sealed with dark wax—identical to the one in your pack.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "sealed letter (iron lockbox, dark wax)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "bone needle (lockbox)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hakim",
+   "item": "desiccated finger (oiled cloth)",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "A dried human finger deliberately preserved and kept wrapped in oiled cloth inside a locked iron box — kept as something worth guarding rather than discarded.",
+   "drawback": "None shown.",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gorgar",
+   "item": "clay disc",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "His eyes find the clay disc before your face. He says nothing. Shifts his weight. Makes room in the skiff.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gorgar",
+   "item": "papyrus scrap (broken black wax seal)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gorgar",
+   "item": "short spear",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "One carries a short spear, the other two have clubs at their belts.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gorgar",
+   "item": "skinning knife",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "driving the bone-handled blade up under his ribs",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gorgar",
+   "item": "ancient candle",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "It burns steady and ordinary, a cheap tallow stub half-drowned in its own wax.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gorgar",
+   "item": "hard bread and dried provisions",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The bread is stale and the meat is salt-hard, the kind of food that keeps a man alive without pretending to do more.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gorgar",
+   "item": "dried dates",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gorgar",
+   "item": "cloth bundle of provisions",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "He reaches beside him — a cloth bundle you hadn't noticed in the dimness — and produces a heel of dark bread and a strip of dried meat",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gorgar",
+   "item": "hide rope",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gorgar",
+   "item": "clay vessel",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "The priest identifies a bowl in the sealed chamber as a 'seeing vessel' worked by blood and will; Gorgar cuts his palm to bleed into it and afterward speaks of visions of a turning wheel and a real chamber, which the priest confirms as truth rather than distance or roads.",
+   "drawback": "The priest warns that the vessel destroys users who lack the bloodline mark — every other bloodline it has touched is recorded on the walls as a single entry, one name and then nothing.",
+   "evidence": "The texts called it a *seeing vessel*. Blood and will together.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "lute",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a boy with a sword and a lute and smoke still in his hair",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "fine travelers cloak",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Hendrix stands beside the red door with his short sword at his hip and his cloak straight",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "small purse of coin (a few copper pieces)",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "blank journal",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "Pelvarno Inn deed",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "leather purse",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "bone-handled belt knife",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "folded note",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "roan horse",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "saddle",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "saddle blanket",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "bridle",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "sack of oats",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "sack of barley",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "sack of dried corn",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "dirk",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The taller has a longer blade, a proper dirk, tucked into his boot",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "hunting knife (bone grip)",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a short hunting knife with a bone grip worn smooth from use",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "folded oilskin",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a folded piece of oilskin containing a wedge of hard cheese and some dried meat",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Hendrix",
+   "item": "wedge of hard cheese",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Thorn",
+   "item": "quiver of arrows (20)",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Thorn",
+   "item": "dried meat rations (3 days)",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Thorn",
+   "item": "watchman's grey cloth",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "It was not cloth — closer now, Thorn could see it was a strip of pale leather, something burned or branded into its surface.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Thorn",
+   "item": "copper coin (Karatas magistrate's mark)",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Laurent Valentine",
+   "item": "bloodstained folded paper",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "the standing man reaches into his coat and produces a folded square of paper, slightly bloodstained at one corner.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Laurent Valentine",
+   "item": "dark stone disc on cord",
+   "status": "active",
+   "verdict": "uncertain",
+   "effect": "A thumbnail-sized disc of dark stone that absorbs light rather than reflecting it and stays cold to the touch no matter the surrounding air temperature; it was taken from a boy being robbed for it, and its previous owner died on the road still clutching it.",
+   "drawback": "People connected to it end badly — the prior owner was found dead clutching it, and armed men and a secretive contact are both hunting for it.",
+   "evidence": "cold to the touch regardless of air temperature",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Inritus",
+   "item": "scholar's star-charts",
+   "status": "active",
+   "verdict": "uncertain",
+   "effect": "Parchment of astronomical notation whose marginal constellation diagrams are charted from a vantage no living man has occupied; sealed with a symbol Inritus knows from his grimoire's margins, and valuable enough that a caravan was methodically slaughtered for it.",
+   "drawback": "Possession marks the bearer: the killers came for it specifically and a contact recognized it on sight in Inritus's pack.",
+   "evidence": "diagrams of constellations arranged in patterns that feel wrong, as though charted from a latitude no living man has stood upon",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Inritus",
+   "item": "wool blanket",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a wool blanket singed along one edge but mostly whole",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Inritus",
+   "item": "dried figs",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a small cloth sack of dried figs, maybe two days' worth if split three ways",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Inritus",
+   "item": "sealed letter",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a sealed letter with unremarkable wax and no device",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Inritus",
+   "item": "brass ring",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a plain brass ring worn smooth on the inner face as though it has not left that finger in years",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Inritus",
+   "item": "hard biscuit",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a heavyset woman with a sun-burned neck selling dried meat, hard biscuit, and waterskins at road prices",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "iron-rimmed shield",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "iron-rimmed shield rising, leather armor eating the blow before it reaches flesh",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "spear",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a broad-shouldered Aquilonian youth in leather and iron, spear still slung, making no threat",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "helm (iron skullcap)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "sealed oilskin packet",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The oilskin is sealed with dark wax pressed with a faint impression: a disc, bisected by a single line.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "strip of parchment — three names, two sets of numbers, under",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Inside: a single strip of parchment, densely written in cramped Nemedian script.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "folded parchment — street address, south quarter",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "A street name, scratched in a tight hand. No building description, no additional detail. Just the address and one word beneath it: daylight.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "loose shirt and cloak",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a cloth-seller parts with a broad shirt and a drab travelling cloak for a few coppers",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "short heavy blade",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The smith has a blade that suits—a short, heavy thing, single-edged, more chopper than duelist's weapon but solid in the hand.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "plain scabbard",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Scabbard included.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "broad loose shirt",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Across the lane a cloth-seller parts with a broad shirt and a drab travelling cloak for a few coppers.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "carved wooden token",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "A thumb-sized pale wood carving of a curled sleeping figure, found beside iron rings and a freshly cut rope in a hidden underground chamber; an old scholar who recognized the bisected-circle sigil studied it by candlelight without touching it and his jaw tightened, asking where it was found. No power was ever demonstrated.",
+   "drawback": "Handled by the player only with a knife blade and kept in a pouch untouched; the learned man refused to touch it, implying it may be dangerous or a cult marker that draws attention.",
+   "evidence": "The sleeping figure token he studies by candlelight without touching it. His jaw tightens.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "carved wooden token (sleeping figure)",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "Same small carved sleeping figure recovered from the chained chamber; connected in conversation to 'a sleeping woman' and the Hollow Man, and handled only with steel and cloth.",
+   "drawback": "Those who know the old symbols will not touch it bare-handed; possessing it may tie the bearer to the cult that made it.",
+   "evidence": "The sleeping figure token he studies by candlelight without touching it. His jaw tightens.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "length of cut rope",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The rope is perhaps eight feet long once cut free — coarse hemp, stiff with age on one end, clean-cut on the other.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "hard bread",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Four silver buys dried meat, hard bread, and a skin of water.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "folded document",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The Lean Man produces a folded document without breaking stride and holds it at arm's length. The guard squints, nods, steps back.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "folded parchment — binding words",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Inside: a single strip of parchment, densely written in cramped Nemedian script. Three names. Two sets of numbers... *The wheel turns before the new moon. Do not be late.*",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "folded parchment — binding words copy",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Inside: a single strip of parchment, densely written in cramped Nemedian script.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "hunting bow",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Lira comes back first, carrying a short hunting bow and a quiver — a dozen arrows, plain-fletched.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Testikles",
+   "item": "arrows",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a quiver — a dozen arrows, plain-fletched",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Andhra",
+   "item": "fighting staff",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Six feet of dense hardwood, iron-shod at both ends.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Andhra",
+   "item": "roughspun robes with rope belt",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Andhra has no jacket—roughspun robes and a rope belt are what he carries.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Andhra",
+   "item": "small clay meditation bowl",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Andhra",
+   "item": "prayer beads of their deity",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You eat cold, drink sparingly, and let the prayer beads run through your fingers once before you sleep.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Andhra",
+   "item": "codex",
+   "status": "active",
+   "verdict": "magical",
+   "effect": "An ancient book whose written script visibly shifts and cannot be fully read; it grew warm inside Andhra's pack of its own accord, accompanied by pressure behind the eyes and a fleeting apparition, and it is said to index the hiding place of the vessel sought by the entity Vashari. A distant watcher's tracking-grid lit with cold self-contained light in the codex's presence.",
+   "drawback": "Sorcerers, cultists and armed men hunt it; carrying it has already brought a bloody attack on the monastery and marks the bearer for pursuit. Its warmth and pressure disorient the bearer without warning.",
+   "evidence": "The codex in Andhra's pack grows warm. Not the warmth of a body carried close. A pressure behind the eyes, like the moment before a storm breaks over open grassland.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Andhra",
+   "item": "folded parchment from Vaskar",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Andhra",
+   "item": "cold weather boots",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "And winter gear. The passes get cold even this time of year. Cold enough to matter.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Andhra",
+   "item": "cold weather jacket",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Andhra has no jacket—roughspun robes and a rope belt are what he carries.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Andhra",
+   "item": "grey mare",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "A steady, sure-footed working horse sold by Jevren; calm disposition, accepts care without drama.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Andhra",
+   "item": "cold iron rod",
+   "status": "active",
+   "verdict": "uncertain",
+   "effect": "Used at the temple arch, the cold iron reportedly held back a shadow-thing that had been roused — 'the shadow and how the iron held it' — though the story never shows the rod itself producing light, heat or motion of its own.",
+   "drawback": "Its protection was bounded: the shadow was 'held at the arch but not beyond it,' so relying on it away from that threshold may leave the bearer exposed.",
+   "evidence": "The symbols on the foundation course. The shadow and how the iron held it.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Andhra",
+   "item": "river stone",
+   "status": "active",
+   "verdict": "magical",
+   "effect": "A symbol-carved stone taken from the temple through which the entombed librarian Vashari speaks to Andhra when he is near enough to the original carving — the voice felt in the back teeth rather than heard aloud.",
+   "drawback": "It is a channel to a four-thousand-year-old entity bound in the temple stone; the same contact left Vaskar unconscious, memoryless and chilled after being spoken through, suggesting the link is dangerous to whoever carries it.",
+   "evidence": "Vashari speaks through it when Andhra is near enough to the original — heard in the back teeth, not aloud.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "sealed letter — Adjudicator's summons",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The scales-and-key belongs to the Adjudicator's office in Numalia — genuine civic authority, the kind that does not forge letters.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "polished stone disc",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "A thumb-sized stone disc that gives off a green-white luminescence with no flame or source; the light trails along its edge, snuffs out the instant a hand closes over it, and the same green-white glow was seen being cupped in a robed man's palms and pressed into a motionless man's chest during a ritual. The ledger notes the glow strengthens in Zhoo's grip, and it feels heavier than its size warrants.",
+   "drawback": "A cult of robed sorcerers hunts it — a written order reads \"The disc must not reach Numalia. Delay by any means\" — so carrying it draws murderous attention; the same light was used in a ritual on a helpless man.",
+   "evidence": "The small dark object the second man clutched has rolled free — a disc of polished stone, no larger than a thumb, trailing a faint wisp of that green-white luminescence along its edge.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "scrap of parchment",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The parchment holds a single line in cramped Nemedian script: *Polopponi. The light must not leave the passes.*",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "copper coins (from dead men)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "belt knife (first dead man)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The two dead men carry little — a few copper coins, belt knives, and one has a folded scrap of parchment tucked inside his robe.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "belt knife (second dead man)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The two dead men carry little — a few copper coins, belt knives, and one has a folded scrap of parchment tucked inside his robe.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "hemp sack",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "In the grain store itself: sacks, rope, a broken barrel hoop.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "rope (50 feet)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "In the grain store itself: sacks, rope, a broken barrel hoop.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "grain (travel supply)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "I may as well take some grain in case my rations don't hold out.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "sealed document (blade-through-circle)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Corath carries a belt pouch with a few coins, a small folded document sealed with an unfamiliar mark—two lines crossing at an angle, like a blade through a circle—and a short-bladed knife worn at the small of his back.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "document",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "*The heir travels. The disc must not reach Numalia. Delay by any means. If delay fails — the passes will answer.*",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "letter from Aldren",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "He crosses the room and sets the sealed letter on the table beside Zhoo's stew.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "iron ring",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "letter from Feltroc",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "horse",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The animal has been led around the corner and tethered to a fence post, still saddled, reins looped loose.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Zhoo",
+   "item": "birth record vellum",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Periphanes Auxilius",
+   "item": "lute",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "the lute bumping at his back",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Periphanes Auxilius",
+   "item": "fine travelers cloak",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Periphanes Auxilius",
+   "item": "small purse of coin (a few copper pieces)",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "For three copper she gives you the second tub, hot water, a cake of grey soap...",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Periphanes Auxilius",
+   "item": "blank journal",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Periphanes Auxilius",
+   "item": "dried dates",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "she says, already scooping dates into a twist of cloth",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Baelzar the Baelzarite",
+   "item": "folding knife",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a small folding knife still tagged with a price",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Baelzar the Baelzarite",
+   "item": "tin lantern",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The flint from the tin box strikes twice before catching. The lantern wick takes with a low amber glow.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Baelzar the Baelzarite",
+   "item": "folded paper invitation",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Baelzar the Baelzarite",
+   "item": "healer's salve",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"Salve. Packed wound or deep bruising, it draws infection and speeds the close. One application.\" She sets it on the bench beside him. \"Three silver.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gus",
+   "item": "green-wax sealed parchment",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"The parchment isn't a bounty — it's a *summons*.\" He taps the green wax seal without breaking it.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gus",
+   "item": "torch",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"Chandler two streets east,\" Karad says... \"Borin keeps good stock.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gus",
+   "item": "bone-pale carved token",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "Narrative never shows the token doing anything; it is cult-marked work associated with the doorless towers, and one such token was found seated in the hub depression of the tower's stone wheel, with seven more lining a lane. Karad the rope-maker reacted to it with recognition and went still when asked about them.",
+   "drawback": "Association with the tower cult and the sweet-wrong sorcery that leaves people 'dreaming-still'; carrying it may mark Gus to whoever placed them.",
+   "evidence": "The old rope-maker's hands go still on the cord he is braiding.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gus",
+   "item": "canvas sack",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "You can buy a sack from any stall here—canvas, burlap, rope-maker's stock.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gus",
+   "item": "clay vessel",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "Holds a dark, water-thin liquid with a faint green-grey shimmer and a sweet-rot smell; those exposed to it are left breathing but insensible, eyes open and seeing nothing, wearing an expression of gentle contentment — a 'dreaming-still' state. The same shimmer and smell recur at the sorcerous towers, and Gus's carried vessel is described as a diluted echo of what the creature produces naturally.",
+   "drawback": "Opening or contacting the liquid is the danger — it felled a boy at the well and a merchant in the alley; Gus carries it wrapped and refuses to touch the stopper. Salt is needed to break the trail the creatures follow between vessels, meaning carrying it may draw them.",
+   "evidence": "a dark liquid spreads from a shattered clay vessel, thin as water, catching the light with a faint green-grey shimmer",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gus",
+   "item": "tower map",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Large oilskin-wrapped parchment showing seven tower positions across the region, with routes, terrain notes",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gus",
+   "item": "braided cord",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "Named by the underground survivor as one of three counters to the creatures — 'The cord slows them' — alongside iron that cuts and salt that disrupts their trail. A hurriedly braided length was found wedged at the base of the tower wheel's hub, apparently placed to impede it.",
+   "drawback": "None shown; it only slows the creatures rather than stopping them.",
+   "evidence": "\"Iron cuts them if you are fast. The cord slows them — salt disrupts the trail they follow between vessels.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Gus",
+   "item": "salt pouch",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "He crouches, digs a small cloth pouch from inside his boot, and holds it out. Salt — coarse, road-gritty.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Haavi",
+   "item": "Brennan's ledger",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"Brennan will have records,\" he says, just breath, barely sound. \"Shipment ledgers.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Haavi",
+   "item": "folded map",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a folded map with a route marked in red ink running northeast toward the Karpash foothills",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Haavi",
+   "item": "ivory token",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "\"It's a membership token. Inner circle — not the street preachers, not the meeting-house fellowship.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Jintaral",
+   "item": "mace",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The mace clips the edge of the too-long arm and skids off — no purchase, no damage.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Jintaral",
+   "item": "rough-spun priestly robes",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "robes marking him as a priest and his face marking him as Turanian",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Jintaral",
+   "item": "serpentine ring",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "Sat in the closing mechanism of the hidden passage — functioned as the physical key/catch of a pre-Hyborian door; ledger notes it resonates when its twin is worn alongside it.",
+   "drawback": "None shown; removing it from the mechanism may affect whether the passage can be closed again.",
+   "evidence": "Iron ring worked into a tight serpentine coil, one inch across, pre-Hyborian — now seated in and removed from the closing mechanism of the hidden passage",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Jintaral",
+   "item": "chamber diagram",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a second piece bearing what looks like a rough diagram of this chamber with measurements",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Jintaral",
+   "item": "bone tube",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "Unknown — never opened. Carried close against the body by a sorcerer alongside pre-Hyborian script and a plan of the chamber.",
+   "drawback": "Unknown; sealed with black wax, and its owner treated it as something worth keeping on his person at all times.",
+   "evidence": "a small bone tube sealed with black wax",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Jintaral",
+   "item": "curved knife",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "His belt carries a curved knife, good Turanian steel, and a purse.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Jintaral",
+   "item": "pre-Hyborian ring",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "Inscribed in serpentine script with what Orvyn's index renders as 'the thing that makes all roads lead to its wearer'; carved from a pale material Jintaral cannot identify as stone, ivory or ceramic, and the ledger records it as warm to the touch and resonating when worn with its counterpart.",
+   "drawback": "None demonstrated; it lay cradled in a severed, desiccated hand on a plinth, and a sorcerer had come armed and prepared to take it.",
+   "evidence": "\"The index on the outer wall. Third bracket of entries. *The thing that makes all roads lead to its wearer.*\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Tulsa Snekface",
+   "item": "mace",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "he walked away with bloody sandals and a stolen mace",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Tulsa Snekface",
+   "item": "rough-spun priestly robes",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The thing in the ditch was a man once — robes similar to Tulsa's own, rough-spun, now black with old blood.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Tulsa Snekface",
+   "item": "oilskin map",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a folded square of oilskin containing a hand-drawn map showing a mountain pass marked with a wheel symbol",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Tulsa Snekface",
+   "item": "Stygian copper coin",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a single Stygian copper coin from a mint at least forty years dead",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Tulsa Snekface",
+   "item": "bone portrait",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "inscribed on the back in Nemedian: \"Varro of Numalia. Find him. Deliver the key.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Tulsa Snekface",
+   "item": "second bone portrait",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Tulsa Snekface",
+   "item": "grey horse",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The horse is steady, mountain-sure, and responds well to the pressure of a heel.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Tulsa Snekface",
+   "item": "roan horse",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Two horses are tied there — a grey and a dusty roan — both saddled, saddlebags intact.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Tulsa Snekface",
+   "item": "spare cloak",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The cloak is heavy wool, road-grey, unremarkable — exactly what a traveler through the Karpash foothills ought to wear.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Tulsa Snekface",
+   "item": "iron-bound chest",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Beneath it, a flat iron-bound chest, no larger than a saddlebag, smelling of old cedar and something drier beneath that.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Tulsa Snekface",
+   "item": "dark glass vial",
+   "status": "active",
+   "verdict": "uncertain",
+   "effect": "Nothing was demonstrated — the vial remained stoppered. Its dead owner's letter treats it as an inheritance of consequence and both Nehushta and the sorcerer Du Hast react to it with recognition and unease.",
+   "drawback": "Wystan's letter forbids opening it in the house or near fire, implying some violent or uncontrolled reaction if exposed to flame; its contents also mark the bearer as heir to a dangerous legacy others kill for.",
+   "evidence": "The vial is yours by right. Do not open it here. Do not open it near fire.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Akiro",
+   "item": "brass button",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "Appeared on the cobblestones out of nothing while Ysolde shifted her staff — neither party dropped it — and it holds heat from within, like a coal, independent of the surrounding stone.",
+   "drawback": "It arrived unasked from a sorceress who claimed no interest in it; whatever placed it evidently keeps a thread to it, and the ledger notes the Djinn uses it as a focus for mischief.",
+   "evidence": "It is warm. Not body-warm from lying on sun-heated stone. Warm the way a coal is warm — from within.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Akiro",
+   "item": "belt pouch",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The three silvers go back into his pouch without incident.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Akiro",
+   "item": "physician's book",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Corinthian. A physician's notes, mostly — dosages, plant preparations, two pages on fever treatment that are actually sound.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Akiro",
+   "item": "Corinthian book",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The leather-bound book bears old Corinthian script on the cover — a language, not a title.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Akiro",
+   "item": "bone scroll case",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Akiro",
+   "item": "dull grey metal staff",
+   "status": "captured",
+   "verdict": "magical",
+   "effect": "The grey metal absorbs light rather than reflecting it, and the staff weighs almost nothing despite being solid; the matching staff made crowds part and eyes slide away from it without anyone touching it, and Akiro's own staff shifts its balance in the hand as if attentive. It was left behind by a destroyed creature of displaced air and hot iron.",
+   "drawback": "It carries inscribed conditional clauses — a contract of some kind, still only partly translated — and the scholar who worked on them grew visibly anxious; four clauses remain unread, so the terms binding its bearer are unknown.",
+   "evidence": "She tilts the grey staff idly, and for just a moment the crowd parts around it — nobody touching it, nobody quite looking at it either, as though the eye slides off.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Akiro",
+   "item": "staff contract translation",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Harvan's handwritten translation of the conditional clauses inscribed on the dull grey staff — partial, four clauses still unparsed",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "fighting staff",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The staff comes around in a short savage arc and catches him at the temple with a crack like green wood splitting.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "roughspun robes with rope belt",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The spill soaks into the roughspun and the smell hits immediately — sharp, medicinal, unmistakable.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "small clay meditation bowl",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "prayer beads of their deity",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "bronze medallion of Bel",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "Bore a warning scratched by knife point — 'Arenjun. The Codex. Run.' — and felt warm to the touch though its wearer had been dead in cold river water long enough to be waterlogged.",
+   "drawback": "None shown; the warmth is only noted as 'its own kind of wrong,' with no demonstrated consequence.",
+   "evidence": "The bronze is warm from being pressed against flesh—or seems so, which is its own kind of wrong given how long this man has been in the water.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "codex",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The codex opens to cramped Zamorian script on thin cured leather. No illustrations. Names, dates, quantities — it reads like a ledger, but the columns track *people*.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "brass-buckled sandals",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The sandals fit well enough — a half-size generous, but road-worthy.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "folding knife",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a small folding knife of unremarkable make",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "satchel",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The satchel takes everything — codex wrapped back in its oilskin, folding knife, the sad figs, the leather strap. The buckle closes firm.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "mule",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "It is road-trained, this animal — it leans into the pull like it has been led a thousand miles and expects a thousand more.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "saddle blanket",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "No saddle — just the halter. The animal was either stripped before it was turned loose, or it never carried one.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "sealed letter to Vethran",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The wax flexes rather than cracks — good seal, but not lacquered.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "iron disc",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "At the bottom, a small iron disc on a cord—blank on one side, on the other a single word scratched in crude Zamorian: *DELIVER*.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "Kothian silver coin",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Beneath it, wrapped in oilcloth, three silver coins of Kothian mint.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "clay vial",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The two men Ghost dropped are ordinary enough — rough clothes, road-worn boots, belt knives. One carries a small clay vial stopped with wax.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "marked parchment",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The other has a folded scrap of parchment marked with symbols Ghost does not recognize — angular, deliberate, not Kothian script.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "curved knife",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a small folding knife of unremarkable make.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "grey powder pouch",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "Nothing shown. It is a pouch of coarse grey powder smelling of ash and something sharper, taken from the body of a robed man who had been chanting over a bound girl beside a clay bowl burning 'without fuel, without smoke.'",
+   "drawback": "None demonstrated; its association with the sorcerer's rite means Ghost has no idea what happens if it is opened, spilled, or brought near flame.",
+   "evidence": "The blue-white light rises from a clay bowl set between them, burning without fuel, without smoke.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Ghost",
+   "item": "stamped skin roll",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The coiled-mark wax on the sealed letter matches a small stamp pressed beside s",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Itchy",
+   "item": "sealed contract",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "It is a bill of contract — a property transfer, written in the clipped formal hand of a Kothian notary.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Itchy",
+   "item": "sealed documents (counting house)",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "On the table: three sealed documents in a neat row, a Kothian merchant's mark stamped in red wax on each.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Itchy",
+   "item": "serpent-bow iron key",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Itchy",
+   "item": "counting house documents",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The buyer's seal is a coiled serpent pressed into red wax.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Itchy",
+   "item": "leather roll",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The open drawer of the writing desk holds a small leather roll — the kind a physician or a navigator carries. Something clinks inside it.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Itchy",
+   "item": "folded slip of paper",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Itchy",
+   "item": "bronze serpent disc",
+   "status": "dead",
+   "verdict": "uncertain",
+   "effect": "Palm-sized bronze disc, unnaturally heavy for its size, whose serpent engraving seems to shift in torchlight; described in-fiction as 'the key' to a counting-house night lock that cannot be picked, and Itchy attempts to open a lock by touching the disc to it. Paolo, who wears the same serpent symbol, goes still and says 'That is not supposed to be here.'",
+   "drawback": "Marks the bearer as connected to a serpent cult whose contracts are signed in blood and whose couriers get killed; two rival employers are hunting the disc.",
+   "evidence": "The bronze disc sits heavy in the palm—heavier than its size should allow, the serpent lines catching the light in a way that makes the coil seem to shift.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Itchy",
+   "item": "dark vial",
+   "status": "dead",
+   "verdict": "magical",
+   "effect": "A finger-length vial whose contents refuse to flow when tilted, sitting thick and still as tar, and which emits a faint bruised-green luminescence visible in total darkness with no flame or heat source.",
+   "drawback": "Unknown contents of cult provenance; Paolo stepped back from it and tracked it with his eyes, implying he knows it to be dangerous.",
+   "evidence": "The liquid does not move when tilted. It sits thick and still as tar, but faintly luminescent — a bruised greenish light, visible only in the dark.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Itchy",
+   "item": "red cord",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The red cord unravels easily.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "leather apron",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "satchel of alchemical ingredients (basic)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "3 glass vials",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Three vials stoppered and packed with care into the satchel — volatile enough to make a man regret standing close, stable enough to survive a rough road.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "small brazier & tongs",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The brazier catches on the third strike of flint.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "parchment notebook & charcoal",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Your charcoal notes are cramped and practical — a merchant's hand turned scholar.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "alchemical bomb",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "volatile enough to make a man regret standing close",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "cold chisel",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a cold chisel, a broad-headed stone hammer, and a smaller pointing chisel, all good iron, well-maintained",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "stone hammer",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a broad-headed stone hammer",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "pointing chisel",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "jar of powdered lime",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "dried wormwood bundle",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "sulfur (half pound)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "saltpeter (quarter pound)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "pitch cake",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "glass vial",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "loaf of bread",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "ledger",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "marked shrine stone",
+   "status": "captured",
+   "verdict": "uncertain",
+   "effect": "A dressed limestone slab with a shallow basin-ring and worn devotional script, taken from an untended shrine circle; its removal is treated in the fiction as the desecration behind an unnatural three-month drought, and the shrine site it came from presses with an unnatural stillness in which even the vials in Brock's satchel 'stop, as though reluctant to make noise here.' Returning it and a freely given blood offering is the proposed remedy.",
+   "drawback": "Bound up in the offence against the site's god — the theft is blamed for the drought, the deaths in the hamlet, and the mason's ruin; handling it invites the debt rather than settling it.",
+   "evidence": "a wide flat slab of pale limestone, edges dressed smooth by a mason's hand, carved on one face with a shallow basin-ring and faint markings that might once have been devotional script",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "Harva's list",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Brock Brewerman",
+   "item": "Harva's parchment list",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boots",
+   "item": "Lhamira's knife",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Pelias turns, and Boots sees the old sorcerer holds a small knife — not a weapon, a tool, the blade barely two fingers long and ground thin as a reed.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boots",
+   "item": "leather token",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boots",
+   "item": "cartographer's token",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "A cartographer's token doesn't appear in a young thief's hand by accident — someone gave it, someone left it, or someone lost it near enough for you to find.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boots",
+   "item": "folded note",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boots",
+   "item": "road man's belt knife",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boots",
+   "item": "watcher's short sword",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Plain soldier's blade, worn grip, good edge — taken from the road watcher north of Ianthe.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boots",
+   "item": "watcher's belt knife",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "grey wool travel cloak",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "She holds it up without much ceremony — heavy wool, road-grey, with a deep hood. \"Two silver,\" she says",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "rough burlap cloth",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a length of rough burlap from beneath the counter — the kind used for wrapping bolts of fabric, nothing special.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "coarse linen sack",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a coarse linen sack, the kind grain gets measured into. \"Same price. Copper.\"",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "obsidian disc",
+   "status": "active",
+   "verdict": "magical",
+   "effect": "A palm-sized obsidian disc whose concave face swallows light instead of reflecting it, showing the viewer's face dimmer than it should be, 'like looking at yourself through deep water'; in true darkness the bowl is said to show a place the viewer has already been as it looks at that moment. Its worked face bears no tool marks, as though the stone grew that way.",
+   "drawback": "A Mitran priest refuses to have it in his house and warns Boomer to keep it wrapped; a stranger died delivering it, and interested parties appear to be tracking its bearer.",
+   "evidence": "The concave face catches light wrong, pooling it in the shallow bowl without giving it back. Your own face looking into it is dim, darker than it should be, like looking at yourself through deep water.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "wine skin",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Wine skins are a half-silver each, filled on the spot from a clay jug that does indeed smell honest, if rough.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "silver ring",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "A silver ring on his right hand, plain-banded.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "oilskin note",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The note is short, written in a cramped hand in the trade-tongue common to Ophir and its neighbors",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "belt pouch",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "riding horse",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a calm animal, better trained than most hired riders deserve",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "hard tack",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "The hard tack is exactly what it always is — something between food and punishment.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "bag of oats",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a small tied bag of oats — enough for a horse's morning feed",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "leather cord",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a coil of spare leather cord",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "clay bottle",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a stoppered clay bottle that sloshes like oil or spirits",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "boiled leather armor",
+   "status": "active",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "His armor is boiled leather reinforced at the shoulders.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Boomer",
+   "item": "iron serpent pendant",
+   "status": "active",
+   "verdict": "uncertain",
+   "effect": "Nothing demonstrated. It is worn as an identifying token by an organized band of ambushers, is unusually heavy for its size, is described as cold, and bears scales carved one by one.",
+   "drawback": "Wearing or carrying it may mark Boomer as connected to the serpent-token faction that sent the ambushers.",
+   "evidence": "The iron serpent pendant is cold and heavier than it looks, the coil detailed enough that the scales were carved one by one.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Urmph",
+   "item": "quiver of arrows (20)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Twenty iron-tipped shafts, goose-feather fletched, in a leather quiver.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Urmph",
+   "item": "dried meat rations (3 days)",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "Jerked venison, tough and smoky. Trail food.",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Urmph",
+   "item": "the thugs' note",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "a folded scrap of parchment gone damp at the edges",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Urmph",
+   "item": "hard bread and cured pork",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "ale",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Miscy",
+   "item": "bag",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "box",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "small iron key",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Dude",
+   "item": "map",
+   "status": "captured",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  },
+  {
+   "character": "Itchy",
+   "item": "iron key",
+   "status": "dead",
+   "verdict": "mundane",
+   "effect": "",
+   "drawback": "",
+   "evidence": "",
+   "scannedAt": "2026-09-10"
+  }
+ ]
+}
