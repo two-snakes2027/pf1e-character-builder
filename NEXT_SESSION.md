@@ -35,6 +35,10 @@ Five deploys. Everything below was checked at the end of the session, not recall
    known.** Never move that call earlier — an unscoped sweep reaches into whoever used the
    browser last.
 
+**Before you believe a green result in this repo, read trap 10 below.** Five harness
+artifacts — results produced by the measuring apparatus rather than the code — happened in a
+single day here, and two of them were about to be reported as confirmations.
+
 **Open here:** non-ability Arduin mods are inert (item 6 below) · the write-back of magic verdicts
 into Two Snakes is not started, and a new field on an inventory item will NOT survive that game's
 `##IDESC##` applier · re-run the scan whenever somebody is captured or killed.
@@ -221,6 +225,26 @@ origin for the cookie, and `/me` + `/data/get` belonging to the game. Point it a
 
 9. **Never print a secret.** The DM PIN was leaked into a transcript by `cat`-ing a temp file
    after being careful everywhere else. It has been rotated. Compare secrets by **hash**.
+
+10. **Harness artifacts — the apparatus lying, not the code.** Five in one day (2026-09-10):
+
+    - `curl localhost:8740` returned **200** and I nearly called the page verified. My server and
+      devproxy had both died on `EADDRINUSE`; an instance from an earlier session answered.
+    - A check that magic items had left the gear list read each row's **first cell, which holds an
+      input, not text** — every string was empty, so it returned "not in gear" whether or not the
+      item was there.
+    - `storage_tests.js` failed 12 of 12 because the fake `localStorage` sat behind a `Proxy` and
+      `Object.keys()` came back empty. The code under test never ran.
+    - A replication of `buildStamp()` **double-hashed the path** of the missing `favicon.ico`,
+      making a correct `/api/build` look like it was serving a stale cached value.
+    - `server_tests.js` run against a backup in `backups/` moved `__dirname`, so every static file
+      404'd and it read as four regressions.
+
+    **A false red costs an hour; a false green ends the investigation** — nothing prompts anyone
+    to look again. Before believing a pass, ask whether it *could* have failed, and ask it of the
+    FIXTURE: `keys.includes('ts_char:bob') === false` passes fine when no such key exists
+    anywhere. That is what every `--mutate=` flag in `test.sh` is for — a standing, cheap answer
+    to "could this have failed?".
 
 ---
 
