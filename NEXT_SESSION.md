@@ -7,6 +7,40 @@
 
 ---
 
+## Session of 2026-09-10 — what changed, in one screen
+
+Five deploys. Everything below was checked at the end of the session, not recalled.
+
+| | | |
+|---|---|---|
+| (k) | 29 wrong class-table cells across 7 classes, corrected | shipped with (l) |
+| (l) | **point buy retired** — imported scores are the scores; the only change is the +1 at 4th | `6f694c524094` |
+| (m) | **magic items leave the gear pile** — a curated table, not a pattern match | `199098f5da62` |
+| (n) | the scan became `scan_magic.mjs`, incremental and checked in | no deploy needed |
+| (o) | **every field editable**, including typed overrides of computed totals | `f48a2fb38b48` |
+| (p) | **no unnamed characters**; local drafts scoped to their owner | `f4da6f28194a` |
+
+**Four things to know before touching any of it.**
+
+1. **`js/data/magic_import.js` is GENERATED.** Correct a verdict in `magic_scan.json` and run
+   `node scan_magic.mjs --table-only`; editing the generated file is silently reverted. A test
+   pins the two together in both directions.
+2. **`scan_magic.mjs` cannot spend money without `--run`.** A bare run is a dry run that reports
+   what it would send and what it would cost. Default scope is **captured and dead characters
+   only** — their loadouts are final — skipping anything already in the ledger.
+3. **Overrides are applied LAST in `E.derive`, and that is load-bearing.** Anything earlier feeds
+   back into the math and one typed number would rewrite half the sheet. Three tests assert the
+   non-leak; `--mutate=nooverride` proves they bite.
+4. **`storage.js` husk-sweeping is scoped to the signed-in user and runs after identity is
+   known.** Never move that call earlier — an unscoped sweep reaches into whoever used the
+   browser last.
+
+**Open here:** non-ability Arduin mods are inert (item 6 below) · the write-back of magic verdicts
+into Two Snakes is not started, and a new field on an inventory item will NOT survive that game's
+`##IDESC##` applier · re-run the scan whenever somebody is captured or killed.
+
+---
+
 ## Where it stands
 
 | | |
