@@ -56,6 +56,12 @@
 
     S.probe().then(function (r) {
       renderSync();
+      /* Sweep the empty husks AFTER identity is known, never before: the sweep is scoped to the
+         signed-in person, and running it while nobody is identified would reach into drafts
+         belonging to whoever used this browser last. Husks hold nothing, but that is still not
+         ours to delete. */
+      const gone = S.pruneHusks(CH.id);
+      if (gone) { renderPicker(); }
       if (r.active && r.status === 'signed-out') openLogin();
       else if (r.active && r.status === 'signed-in') {
         S.pullAll().then(function (n) { afterPull(n); });
@@ -151,8 +157,16 @@
   /* ================================================================ chrome */
   function wireChrome() {
     $('btnNew').onclick = function () {
+      /* Pressing New on a character you have not touched yet used to mint ANOTHER empty draft,
+         and every one of them shows up in the picker as "(unnamed)". If the current sheet is
+         already blank, this IS the new character. */
+      if (E.isPristine(CH) && !String(CH.name || '').trim()) {
+        toast('This character is already new and empty — give it a name to keep it.', 'info', 4000);
+        return;
+      }
+      S.pruneHusks(CH.id);
       CH = E.blankCharacter(); render(); dirty = false; renderSync();
-      toast('New character started. Press Save when you want to keep it.', 'info', 5000);
+      toast('New character started. Name it, then press Save to keep it.', 'info', 5000);
     };
     $('btnExport').onclick = function () { S.download(CH); };
     $('btnPrint').onclick = function () { window.print(); };
@@ -272,6 +286,15 @@
     clearTimeout(saveTimer);
     S.saveLocalOnly(CH);
     if (E.isPristine(CH)) { toast('Nothing to save yet.', 'info'); return; }
+    /* A NAME IS REQUIRED (owner, 2026-09-10). The server refuses an unnamed record too — this
+       check exists to say so in words rather than showing a 400. The work is already safe in the
+       local draft either way, so nothing is lost by refusing here. */
+    if (!String(CH.name || '').trim()) {
+      toast('Give the character a name before saving — unnamed characters cannot be stored.', 'warn', 6000);
+      const f = $('fName');
+      if (f) { f.focus(); f.select && f.select(); }
+      return;
+    }
     commitNow(false);
   }
 
@@ -378,10 +401,12 @@
     sel.innerHTML = '';
     list.forEach(function (c) {
       const lv = c.levels.reduce(function (s, l) { return s + l.n; }, 0);
-      sel.appendChild(new Option(c.name + (lv ? '  (' + lv + ')' : ''), c.id));
+      /* S.describe already folds the level into an unnamed draft's label, so adding it again
+         would read "(unnamed · Sorcerer 1)  (1)". */
+      sel.appendChild(new Option(c.name + (lv && !c.unnamed ? '  (' + lv + ')' : ''), c.id));
     });
     if (!list.some(function (c) { return c.id === CH.id; })) {
-      sel.appendChild(new Option((CH.name || '(unnamed)'), CH.id));
+      sel.appendChild(new Option(S.describe(CH), CH.id));
     }
     sel.appendChild(new Option('— New character —', '__new__'));
     sel.value = CH.id;

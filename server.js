@@ -295,6 +295,18 @@ function handleApi(req, res, url, who) {
            server records. The server is the one place every device shares, so the rule lives
            here too. */
         const incoming = body.character || {};
+
+        /* A CHARACTER MUST HAVE A NAME TO BE STORED. Owner, 2026-09-10: "Players shouldn't be
+           able to save an unnamed character."
+
+           Enforced here rather than only in the browser for the same reason the one-build rule
+           is: the server is the only place every device shares, and a client check is a request,
+           not a guarantee. An unnamed record is also indistinguishable from every other unnamed
+           record in a picker — which is exactly the mess this is meant to prevent. */
+        if (!String(incoming.name || '').trim()) {
+          return send(res, 400, { error: 'A character needs a name before it can be saved.' });
+        }
+
         const key = incoming.twoSnakes && incoming.twoSnakes.key;
         const dupes = key ? Object.keys(DATA.characters).filter(function (k) {
           const c = DATA.characters[k];

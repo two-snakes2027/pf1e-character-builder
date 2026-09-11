@@ -38,16 +38,75 @@
     try { return Object.keys(window.localStorage); } catch (e) { return Object.keys(memory); }
   }
 
-  S.list = function () {
+  /* Local drafts are per-BROWSER, and more than one person signs in from the same browser —
+     the DM and a player at the same table, most obviously. A draft therefore records who was
+     signed in when it was written, and the picker shows only the current person's. Drafts from
+     before this existed carry no owner and are shown to everyone rather than hidden, because
+     hiding somebody's unsaved work is worse than showing one stale row. */
+  S.currentUser = function () {
+    /* S.remote is defined further down this file (the remote-sync block); by the time anything
+       calls this, it exists. Guarded anyway so a local-only page — no server behind it — reports
+       "nobody signed in" and shows every draft rather than none. */
+    return String((S.remote && S.remote.user) || '').toLowerCase();
+  };
+
+  function draftOwner(c) { return String((c && c.localOwner) || '').toLowerCase(); }
+
+  S.visibleToCurrentUser = function (c) {
+    const me = S.currentUser();
+    const owner = draftOwner(c);
+    if (!me || !owner) return true;          /* signed out, or a draft from before owners existed */
+    return owner === me;
+  };
+
+  /* An EMPTY, UNNAMED draft is a husk: pressing "New" and walking away leaves one, and they
+     accumulate into a column of identical "(unnamed)" rows nobody can tell apart. They hold
+     nothing, so they are dropped rather than listed. An unnamed draft that DOES hold work is
+     kept and labelled by what is in it — losing somebody's unsaved character to tidy a menu
+     would be a far worse bug than the one being fixed. */
+  S.isHusk = function (c) {
+    if (!c) return true;
+    if (String(c.name || '').trim()) return false;
+    const E = PF.ENGINE;
+    return E && typeof E.isPristine === 'function' ? E.isPristine(c) : false;
+  };
+
+  S.describe = function (c) {
+    const name = String(c.name || '').trim();
+    if (name) return name;
+    const lv = (c.levels || []).filter(function (l) { return l.n > 0; })
+      .map(function (l) { return l.cls + ' ' + l.n; }).join('/');
+    const when = c.savedAt ? new Date(c.savedAt).toLocaleString(undefined,
+      { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+    /* Never two bare "(unnamed)" rows: whatever is in the draft is what tells them apart. */
+    return '(unnamed' + (lv ? ' · ' + lv : '') + (when ? ' · ' + when : '') + ')';
+  };
+
+  S.rawList = function () {
     return lsKeys()
       .filter(function (k) { return k.indexOf(KEY) === 0; })
-      .map(function (k) {
-        try {
-          const c = JSON.parse(lsGet(k));
-          return { id: c.id, name: c.name || '(unnamed)', savedAt: c.savedAt || 0, levels: c.levels || [] };
-        } catch (e) { return null; }
+      .map(function (k) { try { return JSON.parse(lsGet(k)); } catch (e) { return null; } })
+      .filter(Boolean);
+  };
+
+  /* Delete the empty husks, except the one currently open. Returns how many went. */
+  S.pruneHusks = function (keepId) {
+    let n = 0;
+    S.rawList().forEach(function (c) {
+      if (!c.id || c.id === keepId) return;
+      if (!S.visibleToCurrentUser(c)) return;     /* never touch another person's drafts */
+      if (S.isHusk(c)) { lsDel(KEY + c.id); n++; }
+    });
+    return n;
+  };
+
+  S.list = function () {
+    return S.rawList()
+      .filter(function (c) { return S.visibleToCurrentUser(c); })
+      .map(function (c) {
+        return { id: c.id, name: S.describe(c), unnamed: !String(c.name || '').trim(),
+                 savedAt: c.savedAt || 0, levels: c.levels || [] };
       })
-      .filter(Boolean)
       .sort(function (a, b) { return (b.savedAt || 0) - (a.savedAt || 0); });
   };
 
@@ -59,6 +118,9 @@
 
   S.save = function (ch) {
     ch.savedAt = Date.now();
+    /* Stamp the draft with whoever is signed in, so the picker can scope it later. */
+    const me = S.currentUser();
+    if (me && !ch.localOwner) ch.localOwner = me;
     lsSet(KEY + ch.id, JSON.stringify(ch));
     lsSet(LAST, ch.id);
     return ch.savedAt;

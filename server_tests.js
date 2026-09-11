@@ -69,7 +69,12 @@ async function req(method, urlPath, opts) {
   return { status: res.status, json: json, text: text, res: res };
 }
 
-const child = spawn(process.execPath, [path.join(__dirname, 'server.js')], {
+/* Which server.js to exercise. Defaults to the real one; pass a path to run the suite against
+   a backup and prove a new assertion actually fails there:
+     node server_tests.js backups/server.js_pre-namescope_20260910_170311 */
+const SERVER_UNDER_TEST = (process.argv.slice(2).find(function (a) { return a.indexOf('--') !== 0; })
+  || path.join(__dirname, 'server.js'));
+const child = spawn(process.execPath, [SERVER_UNDER_TEST], {
   env: Object.assign({}, process.env, {
     PF1CB_PORT: String(PORT), PF1CB_DATA: DATA,
     PF1CB_TS_ORIGIN: 'http://127.0.0.1:' + TS_PORT
@@ -150,6 +155,25 @@ async function waitUp(ms) {
   r = await req('GET', '/api/characters/mike1', { cookie: mikeCookie });
   eq('player reads it back', [r.status, r.json.character.name], [200, 'Conan of Cimmeria']);
   eq('ownership recorded', r.json.owner, 'michael');
+
+  /* A CHARACTER NEEDS A NAME. Owner, 2026-09-10: "Players shouldn't be able to save an unnamed
+     character." A picker full of identical "(unnamed)" rows is the symptom; the cause is that
+     anything could be stored. Enforced on the server because that is the one place every device
+     shares — the browser check is a courtesy message, not the rule. */
+  r = await req('PUT', '/api/characters/noname', {
+    cookie: mikeCookie, body: { character: { id: 'noname', levels: [{ cls: 'Fighter', n: 1 }] } }
+  });
+  eq('an unnamed character is refused', r.status, 400);
+  r = await req('PUT', '/api/characters/blankname', {
+    cookie: mikeCookie, body: { character: { id: 'blankname', name: '   ' } }
+  });
+  eq('whitespace is not a name either', r.status, 400);
+  r = await req('GET', '/api/characters/noname', { cookie: mikeCookie });
+  eq('and nothing was stored under it', r.status, 404);
+  r = await req('PUT', '/api/characters/noname', {
+    cookie: dmCookie, body: { character: { id: 'noname', name: '' } }
+  });
+  eq('not even for the DM', r.status, 400);
 
   const huckChar = { id: 'huck1', name: 'Someone Else', levels: [{ cls: 'Rogue', n: 2 }] };
   await req('PUT', '/api/characters/huck1', { cookie: huckCookie, body: { character: huckChar } });

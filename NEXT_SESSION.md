@@ -12,10 +12,10 @@
 | | |
 |---|---|
 | **Live** | https://reunion2027-twosnakes.com/builder/ |
-| **Build stamp** | `f48a2fb38b48` (`GET /api/build`) — moved four times on 2026-09-10: (k)+(l), (m), (o) |
+| **Build stamp** | `f4da6f28194a` (`GET /api/build`) — moved five times on 2026-09-10: (k)+(l), (m), (o), (p) |
 | **Git** | clean and **fully pushed** as of 2026-09-10 (`12acd4e..3fd2c0a`). Read `git rev-parse --short HEAD origin/main` rather than trusting this row. |
 | **Remote** | `git@github.com:two-snakes2027/pf1e-character-builder.git` (private) |
-| **Tests** | **726** assertions, **22** mutations all proven to fail |
+| **Tests** | **742** assertions, **24** mutations all proven to fail |
 | **Stored characters** | **3** as of 2026-09-10 (was 1) — people are using it; a deploy now interrupts real work |
 | **Services** | `two-snakes`, `pf1cb`, `caddy` — all active |
 

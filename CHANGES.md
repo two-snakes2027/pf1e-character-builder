@@ -4,6 +4,87 @@ Newest first. Each entry says what changed, why, and how to undo it.
 
 ---
 
+## 2026-09-10 — (p) NO UNNAMED CHARACTERS, AND DRAFTS BELONG TO WHOEVER MADE THEM. ✅ DEPLOYED `f4da6f28194a`
+
+**Why.** The owner, with a screenshot of the picker showing four rows — `Dude`, `(unnamed)`,
+`(unnamed)`, `Hakim`, `(unnamed)`, `Rango`: *"You should never save or have as a selection option
+more than one (unnamed) character. Players shouldn't be able to save an unnamed character. Also,
+if I'm logged in as player Bill, the only options that I should have available to me for import
+at the characters I've played. I should not be able to see player James's characters to import."*
+
+**Three claims; the third was already true, and saying so mattered more than "fixing" it.**
+
+**1. Unnamed characters could be saved.** `doSave` refused only a *pristine* character, so
+anything with a level or an import could be stored nameless. Now refused in `server.js` — the one
+place every device shares, the same reasoning as the one-build-per-character rule — and in the
+client, which says so in words and focuses the name field rather than showing a 400. Whitespace
+is not a name, and the DM is not exempt.
+
+**2. The picker accumulated identical `(unnamed)` rows, and showed another login's drafts.**
+`S.list()` read **every** `pf1cb:char:*` key in localStorage with no owner and no filter. Two
+distinct faults behind one symptom:
+
+- Pressing **New** on an already-blank sheet minted another empty draft. It now recognises that
+  a blank sheet *is* the new character.
+- Empty unnamed drafts ("husks") are swept at boot, **after** identity is known — never before,
+  because the sweep is scoped to the signed-in person and a sweep by nobody would reach into
+  whoever used the browser last.
+- An unnamed draft that **holds work is never deleted**; it is labelled by what is in it —
+  `(unnamed · Sorcerer 1 · Sep 10, 05:07 PM)`. Losing somebody's unsaved character to tidy a
+  menu would be a far worse bug than the one being fixed.
+- Drafts now record who was signed in when written, and the picker shows only that person's. A
+  draft from before this existed has no owner and is shown to everyone — hiding unsaved work is
+  worse than one stale row.
+
+**3. Import scoping was ALREADY correct, and is now pinned by a test.** The builder builds its
+import list from the game's `/data/get` with the caller's own cookie, and Two Snakes' `canRead`
+ends at `ownsKey(sess.user, key)`, which matches `ts_char:<user>` exactly and `ts_hist:<user>:`
+by prefix. **Bill cannot see James's characters.** What the screenshot showed is the DM view —
+the import dialog says so in as many words: *"you are the DM, so this is the whole table."*
+`chronicles_tests.js` already asserted `/data/get` withholds another player's `ts_hist:`; it now
+also asserts the **live** `ts_char:` slot, which is the one an importer actually reaches for, and
+the seed gained `ts_char:alice` / `ts_char:bob` so the assertion is not vacuous — **before that,
+it would have passed with no boundary at all.**
+
+**Verification.**
+
+- `./test.sh` green: engine 136, import 393, server **77** (was 73), class tables 124, **local
+  drafts 12 (new suite)**. 742 assertions, 24 mutations.
+- **`storage_tests.js` is new**, driving `storage.js` over a localStorage stub, with mutations
+  `nohusk` and `noscope`; each kills exactly the assertions that depend on it.
+- **`server_tests.js` now accepts a path argument** so a suite can be run against a backup. The
+  four new refusal assertions **fail against the pre-change `server.js`** (copied to the repo
+  root first — running it from `backups/` made `__dirname` wrong and 404'd every static file,
+  which is a harness artifact and not evidence).
+- Driven in the browser: three empty husks planted, reload swept them, the unnamed-with-work
+  draft survived with a distinguishing label, **zero bare `(unnamed)` rows and no duplicate
+  labels**, and pressing Save on an unnamed character moved focus to the name field and stored
+  nothing.
+- **A harness bug of mine, recorded because it cost a cycle:** the first `storage_tests.js` stub
+  hid its entries behind a `Proxy`, `Object.keys()` came back empty, and all twelve assertions
+  failed for a reason unrelated to the code under test.
+
+**Not changed:** no constraint was loosened and no role gained or lost access. A player still
+sees only their own; the DM still sees everything, deliberately.
+
+**Activation.** `server.js` changed → **the service was restarted**, not just reloaded. Players
+with the builder open must reload; `staleguard.js` will say so.
+
+**Deployed 2026-09-10.** Build stamp **`f48a2fb38b48` → `f4da6f28194a`**. Verified: the deployed
+`server.js` md5 matches local exactly (`392522fb…`), the refusal text is present in the file on
+the box, the service came up on a fresh process, all **3 stored characters survived**, and the
+served `storage.js`/`ui.js` are byte-identical to local. **Then the deployed `server.js` was
+pulled back down and `server_tests.js` run against that exact file — 77/77** — so the guard is
+proven in the bytes that are running, not merely in the bytes that were sent. VPS undo:
+`/opt/pf1cb/backups/served_pre-namescope_20260910_*.tgz` (this one includes `server.js`) and
+`pf1cb_data_pre-namescope_*.json`; a restore needs a restart.
+
+**Undo.** `backups/*_pre-namescope_20260910_170311` (server, storage, ui, server_tests); delete
+`storage_tests.js` and its two lines in `test.sh`. In Two Snakes:
+`backups/chronicles_tests.js_pre-charkey_*`.
+
+---
+
 ## 2026-09-10 — (o) EVERY FIELD IS EDITABLE. ✅ DEPLOYED `f48a2fb38b48`
 
 **Why.** The owner: *"now I would like the ability to edit every field — whether manually

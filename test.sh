@@ -5,6 +5,7 @@ echo "=== engine ==="; node engine_tests.js
 echo "=== import ==="; node import_tests.js
 echo "=== server ==="; node server_tests.js
 echo "=== class tables ==="; node class_table_tests.js
+echo "=== local drafts ==="; node storage_tests.js
 echo
 echo "=== mutation checks (each MUST fail) ==="
 for m in bab save mod crit skillrank hp ac bonusspells pointbuy nooverride; do
@@ -16,6 +17,11 @@ for m in nostats nospells noskillranks notseized dropgear dropard weaponmatch no
   if node import_tests.js --mutate="$m" >/dev/null 2>&1; then
     echo "  !! import --mutate=$m PASSED — that mapping is not covered"; exit 1
   else echo "  ok import --mutate=$m fails as it should"; fi
+done
+for m in nohusk noscope; do
+  if node storage_tests.js --mutate="$m" >/dev/null 2>&1; then
+    echo "  !! storage --mutate=$m PASSED — that draft rule is not covered"; exit 1
+  else echo "  ok storage --mutate=$m fails as it should"; fi
 done
 for m in spd known prof skills; do
   if node class_table_tests.js --mutate="$m" >/dev/null 2>&1; then
